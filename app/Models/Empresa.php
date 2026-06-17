@@ -12,7 +12,6 @@ class Empresa extends Model
 
     protected $fillable = ['nombre'];
 
-    // Relationship stubs (implemented in later phases)
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
@@ -26,5 +25,31 @@ class Empresa extends Model
     public function examenes(): HasMany
     {
         return $this->hasMany(Examen::class);
+    }
+
+    /**
+     * Check if any user in this empresa has an active subscription.
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->users()->whereHas('subscriptions', function ($q) {
+            $q->where('stripe_status', 'active')
+              ->where('ends_at', '>', now());
+        })->exists();
+    }
+
+    /**
+     * Get the active subscription for this empresa (first found).
+     */
+    public function activeSubscription()
+    {
+        return $this->users()
+            ->whereHas('subscriptions', function ($q) {
+                $q->where('stripe_status', 'active')->where('ends_at', '>', now());
+            })
+            ->with(['subscriptions' => function ($q) {
+                $q->where('stripe_status', 'active')->where('ends_at', '>', now())->orderBy('ends_at', 'desc');
+            }])
+            ->first()?->subscription('default');
     }
 }

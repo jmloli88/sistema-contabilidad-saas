@@ -66,12 +66,12 @@ Chain strategy: pending
 
 ## Phase 3: Subscriptions
 
-- [ ] 3.1 [RED] Test: `Empresa::hasActiveSubscription()` returns true/false
-- [ ] 3.2 [RED] Test: dual-path resolves empresa sub first, clinic-shared fallback second
-- [ ] 3.3 [GREEN] Add `hasActiveSubscription()` on `Empresa` model
-- [ ] 3.4 [GREEN] Update `EnsureSubscriptionIsActive` with dual-path logic + logging
-- [ ] 3.5 [GREEN] SaaS admin: empresa subscription management (Stripe actions)
-- [ ] 3.6 ✅ Gate: dual-path subscribed/expired scenarios pass; log records correct path
+- [x] 3.1 [RED] Test: `Empresa::hasActiveSubscription()` returns true/false
+- [x] 3.2 [RED] Test: dual-path resolves empresa sub first, clinic-shared fallback second
+- [x] 3.3 [GREEN] Add `hasActiveSubscription()` on `Empresa` model
+- [x] 3.4 [GREEN] Update `EnsureSubscriptionIsActive` with dual-path logic + logging
+- [x] 3.5 [GREEN] SaaS admin: empresa subscription management (Stripe actions)
+- [x] 3.6 ✅ Gate: dual-path subscribed/expired scenarios pass; log records correct path
 
 ## Phase 4: SaaS Admin
 

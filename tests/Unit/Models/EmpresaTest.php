@@ -78,4 +78,82 @@ class EmpresaTest extends TestCase
             class_uses(Empresa::class)
         );
     }
+
+    // === hasActiveSubscription ===
+
+    public function test_empresa_with_active_subscription_returns_true(): void
+    {
+        $empresa = Empresa::factory()->create();
+        $user = \App\Models\User::factory()->create(['empresa_id' => $empresa->id]);
+        $user->subscriptions()->create([
+            'type' => 'default',
+            'stripe_id' => 'sub_active_test',
+            'stripe_status' => 'active',
+            'stripe_price' => 'price_test',
+            'ends_at' => now()->addDays(30),
+        ]);
+
+        $this->assertTrue($empresa->hasActiveSubscription());
+    }
+
+    public function test_empresa_with_expired_subscription_returns_false(): void
+    {
+        $empresa = Empresa::factory()->create();
+        $user = \App\Models\User::factory()->create(['empresa_id' => $empresa->id]);
+        $user->subscriptions()->create([
+            'type' => 'default',
+            'stripe_id' => 'sub_expired_test',
+            'stripe_status' => 'active',
+            'stripe_price' => 'price_test',
+            'ends_at' => now()->subDays(1),
+        ]);
+
+        $this->assertFalse($empresa->hasActiveSubscription());
+    }
+
+    public function test_empresa_with_no_users_returns_false(): void
+    {
+        $empresa = Empresa::factory()->create();
+
+        $this->assertFalse($empresa->hasActiveSubscription());
+    }
+
+    public function test_empresa_with_canceled_subscription_returns_false(): void
+    {
+        $empresa = Empresa::factory()->create();
+        $user = \App\Models\User::factory()->create(['empresa_id' => $empresa->id]);
+        $user->subscriptions()->create([
+            'type' => 'default',
+            'stripe_id' => 'sub_canceled_test',
+            'stripe_status' => 'canceled',
+            'stripe_price' => 'price_test',
+            'ends_at' => now()->addDays(30),
+        ]);
+
+        $this->assertFalse($empresa->hasActiveSubscription());
+    }
+
+    public function test_empresa_with_multiple_users_one_active_returns_true(): void
+    {
+        $empresa = Empresa::factory()->create();
+        $userWithSub = \App\Models\User::factory()->create(['empresa_id' => $empresa->id]);
+        $userWithSub->subscriptions()->create([
+            'type' => 'default',
+            'stripe_id' => 'sub_active_multi',
+            'stripe_status' => 'active',
+            'stripe_price' => 'price_test',
+            'ends_at' => now()->addDays(30),
+        ]);
+        \App\Models\User::factory()->count(2)->create(['empresa_id' => $empresa->id]);
+
+        $this->assertTrue($empresa->hasActiveSubscription());
+    }
+
+    public function test_empresa_with_users_but_no_subscriptions_returns_false(): void
+    {
+        $empresa = Empresa::factory()->create();
+        \App\Models\User::factory()->count(3)->create(['empresa_id' => $empresa->id]);
+
+        $this->assertFalse($empresa->hasActiveSubscription());
+    }
 }

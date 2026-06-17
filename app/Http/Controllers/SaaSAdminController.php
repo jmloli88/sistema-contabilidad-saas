@@ -104,7 +104,15 @@ class SaaSAdminController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Suscripción extendida 30 días.');
+        \Log::info('Subscription extended for empresa', [
+            'user_id' => $user->id,
+            'empresa_id' => $user->empresa_id,
+            'empresa_nombre' => $user->empresa?->nombre,
+        ]);
+
+        return back()->with('success', $user->empresa
+            ? "Suscripción de {$user->empresa->nombre} extendida 30 días."
+            : 'Suscripción extendida 30 días.');
     }
 
     /**
