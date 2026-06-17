@@ -72,6 +72,18 @@
                     @endif
                 </a>
 
+                <!-- Empresas -->
+                <a href="{{ route('saas.admin.empresas.index') }}" 
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
+                   style="{{ request()->routeIs('saas.admin.empresas*') ? 'background: linear-gradient(135deg, rgba(79, 70, 229, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%); color: #818cf8;' : 'color: #94a3b8;' }}"
+                   onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(255,255,255,0.05)'; this.style.color='#e2e8f0'; }"
+                   onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#94a3b8'; }">
+                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('saas.admin.empresas*') ? 1 : 0 }};">business</span>
+                    <span class="font-medium text-sm">Empresas</span>
+                    @if(request()->routeIs('saas.admin.empresas*'))
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #818cf8;"></span>
+                    @endif
+                </a>
 
             </div>
         </div>

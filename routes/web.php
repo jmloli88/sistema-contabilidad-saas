@@ -4,6 +4,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\ClinicaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ExamenController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RepaseController;
@@ -136,6 +137,15 @@ Route::middleware(['auth:saas'])->prefix('saas/admin')->name('saas.admin.')->gro
     Route::post('/{user}/update', [SaaSAdminController::class, 'updateUser'])->name('update');
     Route::get('/{user}/edit', [SaaSAdminController::class, 'edit'])->name('edit');
     Route::get('/{user}/history', [SaaSAdminController::class, 'history'])->name('history');
+
+    // Empresa management
+    Route::get('/empresas', [EmpresaController::class, 'index'])->name('empresas.index');
+    Route::get('/empresas/create', [EmpresaController::class, 'create'])->name('empresas.create');
+    Route::post('/empresas', [EmpresaController::class, 'store'])->name('empresas.store');
+    Route::get('/empresas/{empresa}', [EmpresaController::class, 'show'])->name('empresas.show');
+    Route::get('/empresas/{empresa}/edit', [EmpresaController::class, 'edit'])->name('empresas.edit');
+    Route::put('/empresas/{empresa}', [EmpresaController::class, 'update'])->name('empresas.update');
+    Route::delete('/empresas/{empresa}', [EmpresaController::class, 'destroy'])->name('empresas.destroy');
 });
 
 // SaaS logout

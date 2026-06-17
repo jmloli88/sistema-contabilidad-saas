@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clinica;
+use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,12 @@ class SaaSAdminController extends Controller
             $q->where('ends_at', '>', now())->where('ends_at', '<=', now()->addDays(7));
         })->count();
 
+        // Empresa-aware KPIs
+        $totalEmpresas = Empresa::withoutGlobalScope('empresa')->count();
+        $activeEmpresas = Empresa::withoutGlobalScope('empresa')->whereHas('users', function ($q) {
+            $q->whereHas('subscriptions', fn($sq) => $sq->where('stripe_status', 'active')->where('ends_at', '>', now()));
+        })->count();
+
         // Clinic-aware KPIs
         $activeClinics = Clinica::withoutGlobalScope('empresa')->whereHas('users', function ($q) {
             $q->whereHas('subscriptions', fn($sq) => $sq->where('stripe_status', 'active')->where('ends_at', '>', now()));
@@ -39,6 +46,8 @@ class SaaSAdminController extends Controller
             'activeCount',
             'expiredCount',
             'expiringSoon',
+            'totalEmpresas',
+            'activeEmpresas',
             'activeClinics',
             'estimatedMRR',
             'recentUsers'
@@ -48,12 +57,21 @@ class SaaSAdminController extends Controller
     /**
      * Display paginated list of users with subscription status.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::withoutGlobalScope('empresa')->with('subscriptions', 'clinica')->orderBy('name')->paginate(20);
-        $clinicas = Clinica::withoutGlobalScope('empresa')->orderBy('nombre')->get();
+        $query = User::withoutGlobalScope('empresa')
+            ->with('subscriptions', 'clinica', 'empresa')
+            ->orderBy('name');
 
-        return view('saas-admin.index', compact('users', 'clinicas'));
+        if ($request->filled('empresa_id')) {
+            $query->where('empresa_id', $request->empresa_id);
+        }
+
+        $users = $query->paginate(20);
+        $clinicas = Clinica::withoutGlobalScope('empresa')->orderBy('nombre')->get();
+        $empresas = Empresa::withoutGlobalScope('empresa')->orderBy('nombre')->get();
+
+        return view('saas-admin.index', compact('users', 'clinicas', 'empresas'));
     }
 
     /**

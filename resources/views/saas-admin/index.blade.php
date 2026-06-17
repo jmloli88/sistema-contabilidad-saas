@@ -7,6 +7,29 @@
 
     <div x-data="userEditor" class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Empresa Filter -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <form method="GET" class="flex items-center gap-4">
+                        <label for="empresa_id" class="text-sm font-medium text-gray-700">Filtrar por empresa:</label>
+                        <select name="empresa_id" id="empresa_id" onchange="this.form.submit()"
+                                class="text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">— Todas las empresas —</option>
+                            @foreach($empresas as $emp)
+                                <option value="{{ $emp->id }}" {{ request('empresa_id') == $emp->id ? 'selected' : '' }}>
+                                    {{ $emp->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @if(request('empresa_id'))
+                            <a href="{{ route('saas.admin.index') }}" class="text-xs text-indigo-600 hover:underline">
+                                Limpiar filtro
+                            </a>
+                        @endif
+                    </form>
+                </div>
+            </div>
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <div class="overflow-x-auto">
@@ -16,6 +39,7 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clínica</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vence</th>
@@ -40,6 +64,9 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: #414753;">
                                             {{ $u->role }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: #414753;">
+                                            {{ $u->empresa?->nombre ?? '—' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: #414753;">
                                             {{ $u->clinica?->nombre ?? '—' }}
@@ -108,7 +135,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="px-6 py-4 text-center text-sm" style="color: #727784;">
+                                        <td colspan="8" class="px-6 py-4 text-center text-sm" style="color: #727784;">
                                             No hay usuarios registrados.
                                         </td>
                                     </tr>

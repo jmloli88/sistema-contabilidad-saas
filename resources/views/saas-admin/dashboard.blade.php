@@ -7,8 +7,34 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- KPI Cards Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            <!-- KPI Cards Grid — Row 1: Empresa-level KPIs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Empresas -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-200 hover:shadow-md">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 mb-1">Total Empresas</p>
+                            <p class="text-3xl font-bold" style="color: #1a1a2e;">{{ $totalEmpresas }}</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(79, 70, 229, 0.1);">
+                            <span class="material-symbols-outlined text-2xl" style="color: #4f46e5; font-variation-settings: 'FILL' 1;">business</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empresas Activas -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-200 hover:shadow-md">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500 mb-1">Empresas Activas</p>
+                            <p class="text-3xl font-bold text-indigo-600">{{ $activeEmpresas }}</p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(99, 102, 241, 0.1);">
+                            <span class="material-symbols-outlined text-2xl" style="color: #6366f1; font-variation-settings: 'FILL' 1;">check_circle</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Total Usuarios -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-200 hover:shadow-md">
                     <div class="flex items-center justify-between">
@@ -34,7 +60,10 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <!-- KPI Cards Grid — Row 2: Subscription KPIs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <!-- Suscripciones Activas -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-200 hover:shadow-md">
                     <div class="flex items-center justify-between">
@@ -161,9 +190,17 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h3 class="text-lg font-semibold mb-4" style="color: #1a1a2e;">Acciones Rápidas</h3>
                 <div class="flex flex-wrap gap-4">
-                    <a href="{{ route('saas.admin.index') }}" 
+                    <a href="{{ route('saas.admin.empresas.index') }}" 
                        class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium text-white transition-all duration-200 hover:opacity-90"
                        style="background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);">
+                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">business</span>
+                        Ver Empresas
+                    </a>
+                    <a href="{{ route('saas.admin.index') }}" 
+                       class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:opacity-90"
+                       style="background-color: #f1f5f9; color: #1a1a2e;"
+                       onmouseover="this.style.backgroundColor='#e2e8f0';"
+                       onmouseout="this.style.backgroundColor='#f1f5f9';">
                         <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">group</span>
                         Ver Todos los Usuarios
                     </a>
