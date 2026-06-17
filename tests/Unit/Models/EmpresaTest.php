@@ -13,14 +13,15 @@ class EmpresaTest extends TestCase
 
     public function test_can_create_empresa_with_nombre(): void
     {
-        $empresa = Empresa::create(['nombre' => 'Zumed Medicina Diagnóstica']);
+        // Use a unique name that doesn't conflict with the seed empresa ("Zumed Medicina Diagnóstica")
+        $empresa = Empresa::create(['nombre' => 'Clínica Nuevo Sol']);
 
         $this->assertDatabaseHas('empresas', [
             'id' => $empresa->id,
-            'nombre' => 'Zumed Medicina Diagnóstica',
+            'nombre' => 'Clínica Nuevo Sol',
         ]);
         $this->assertNotNull($empresa->id);
-        $this->assertEquals('Zumed Medicina Diagnóstica', $empresa->nombre);
+        $this->assertEquals('Clínica Nuevo Sol', $empresa->nombre);
     }
 
     public function test_empresa_factory_creates_valid_record(): void
@@ -51,7 +52,8 @@ class EmpresaTest extends TestCase
         Empresa::create(['nombre' => 'Empresa Beta']);
         Empresa::create(['nombre' => 'Empresa Gamma']);
 
-        $this->assertCount(3, Empresa::all());
+        // 4 including the seed empresa ("Zumed Medicina Diagnóstica") from the data migration
+        $this->assertCount(4, Empresa::all());
         $this->assertEquals('Empresa Alpha', Empresa::where('nombre', 'Empresa Alpha')->first()->nombre);
         $this->assertEquals('Empresa Beta', Empresa::where('nombre', 'Empresa Beta')->first()->nombre);
         $this->assertEquals('Empresa Gamma', Empresa::where('nombre', 'Empresa Gamma')->first()->nombre);
@@ -59,12 +61,13 @@ class EmpresaTest extends TestCase
 
     public function test_empresa_can_be_retrieved_from_database(): void
     {
-        $empresa = Empresa::create(['nombre' => 'Zumed Medicina Diagnóstica']);
+        // Use a unique name that doesn't conflict with the seed empresa
+        $empresa = Empresa::create(['nombre' => 'Clínica Nuevo Sol']);
 
         $retrieved = Empresa::find($empresa->id);
 
         $this->assertNotNull($retrieved);
-        $this->assertEquals('Zumed Medicina Diagnóstica', $retrieved->nombre);
+        $this->assertEquals('Clínica Nuevo Sol', $retrieved->nombre);
         $this->assertInstanceOf(Empresa::class, $retrieved);
     }
 

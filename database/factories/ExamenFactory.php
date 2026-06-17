@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Empresa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,6 +24,7 @@ class ExamenFactory extends Factory
             'nombre' => fake()->words(3, true) . ' - Examen',
             'precio_sin_nota' => $precioSinNota,
             'precio_con_nota' => $precioConNota,
+            'empresa_id' => Empresa::factory(),
         ];
     }
 }

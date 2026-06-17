@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\ScopedByEmpresa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,7 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Examen extends Model
 {
-    use HasFactory;
+    use HasFactory, ScopedByEmpresa;
+
     /**
      * El nombre de la tabla asociada al modelo.
      *
@@ -26,6 +28,7 @@ class Examen extends Model
         'nombre',
         'precio_sin_nota',
         'precio_con_nota',
+        'empresa_id',
     ];
 
     /**
@@ -122,7 +125,7 @@ class Examen extends Model
         $query = $query->with(['repaseExamenes' => function ($q) use ($filters) {
             $q->select('id', 'examen_id', 'repase_id', 'subtotal', 'tipo_precio')
               ->with(['repase:id,clinica_id,fecha,total_neto']);
-            
+
             // Filtros a través de la relación repase
             if (isset($filters['fecha_inicio']) || isset($filters['fecha_fin']) || isset($filters['clinica_id'])) {
                 $q->whereHas('repase', function ($subQ) use ($filters) {
@@ -131,7 +134,7 @@ class Examen extends Model
                          ->when($filters['clinica_id'] ?? null, fn($q, $id) => $q->where('clinica_id', $id));
                 });
             }
-            
+
             // Filtro por tipo de precio (a través de repase)
             if (isset($filters['tipo_precio'])) {
                 $q->whereHas('repase', function ($subQ) use ($filters) {
@@ -351,7 +354,7 @@ class Examen extends Model
 
     /**
      * Calcular estadísticas de utilización del examen
-     * 
+     *
      * @param array $filters
      * @return array
      */
@@ -409,14 +412,14 @@ class Examen extends Model
 
     /**
      * Calcular tendencia de utilización del examen
-     * 
+     *
      * @param int $months Número de meses a analizar
      * @return array
      */
     public function calculateUtilizationTrend(int $months = 12): array
     {
         $startDate = now()->subMonths($months)->format('Y-m-d');
-        
+
         $monthlyData = $this->repaseExamenes()
             ->join('repases', 'repase_examenes.repase_id', '=', 'repases.id')
             ->select([
@@ -469,7 +472,7 @@ class Examen extends Model
 
     /**
      * Obtener ranking de popularidad del examen
-     * 
+     *
      * @param array $filters
      * @return array
      */
@@ -515,7 +518,7 @@ class Examen extends Model
 
     /**
      * Detectar anomalías en la utilización del examen
-     * 
+     *
      * @param array $filters
      * @return array
      */
@@ -543,7 +546,7 @@ class Examen extends Model
         if ($stats['precio_promedio'] > 0) {
             $expectedPrice = ($this->precio_sin_nota + $this->precio_con_nota) / 2;
             $priceEfficiency = ($stats['precio_promedio'] / $expectedPrice) * 100;
-            
+
             if ($priceEfficiency < 70) {
                 $anomalies[] = [
                     'type' => 'price_efficiency',
@@ -577,7 +580,7 @@ class Examen extends Model
 
     /**
      * Calcular eficiencia de precio del examen
-     * 
+     *
      * @param object $stats
      * @return float
      */
@@ -588,7 +591,7 @@ class Examen extends Model
         }
 
         $expectedPrice = ($this->precio_sin_nota + $this->precio_con_nota) / 2;
-        
+
         if ($expectedPrice <= 0) {
             return 0.0;
         }
@@ -598,7 +601,7 @@ class Examen extends Model
 
     /**
      * Obtener categoría de popularidad basada en ranking
-     * 
+     *
      * @param int $position
      * @param int $total
      * @return string
@@ -606,9 +609,9 @@ class Examen extends Model
     private function getPopularityCategory(int $position, int $total): string
     {
         if ($total === 0) return 'unknown';
-        
+
         $percentile = (($total - $position + 1) / $total) * 100;
-        
+
         if ($percentile >= 90) return 'muy_popular';
         if ($percentile >= 70) return 'popular';
         if ($percentile >= 50) return 'moderado';

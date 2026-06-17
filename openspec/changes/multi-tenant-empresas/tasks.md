@@ -37,15 +37,15 @@ Chain strategy: pending
 
 ## Phase 1: Schema Expansion
 
-- [ ] 1.1 [RED] Test: factories assign empresa_id from seed empresa
-- [ ] 1.2 [RED] Test: migration adds FK columns correctly
-- [ ] 1.3 [GREEN] 5 migrations: add nullable `empresa_id` FK to clinicas, users, examenes, subscriptions, prediction_configs
-- [ ] 1.4 [GREEN] Data migration: seed "zumeddg" empresa + assign all existing records
-- [ ] 1.5 [GREEN] Trait: `ScopedByEmpresa` (empresa BelongsTo + scopeForCurrentEmpresa + boot)
-- [ ] 1.6 [GREEN] Singleton: `EmpresaContext` (get/set/isSet)
-- [ ] 1.7 [GREEN] Update User, Clinica, Examen factories: +empresa relationship in afterCreating
-- [ ] 1.8 [GREEN] Add `belongsTo(Empresa)` to Clinica, User, Examen models
-- [ ] 1.9 ✅ Gate: all existing tests pass with empresa-context factories
+- [x] 1.1 [RED] Test: factories assign empresa_id from seed empresa
+- [x] 1.2 [RED] Test: migration adds FK columns correctly
+- [x] 1.3 [GREEN] 4 migrations: add nullable `empresa_id` FK to clinicas, users, examenes, subscriptions
+- [x] 1.4 [GREEN] Data migration: seed "zumeddg" empresa + assign all existing records
+- [x] 1.5 [GREEN] Trait: `ScopedByEmpresa` (empresa BelongsTo + scopeForCurrentEmpresa + boot)
+- [x] 1.6 [GREEN] Singleton: `EmpresaContext` (get/set/isSet)
+- [x] 1.7 [GREEN] Update User, Clinica, Examen factories: +empresa relationship in definition
+- [x] 1.8 [GREEN] Add `belongsTo(Empresa)` to Clinica, User, Examen models
+- [x] 1.9 ✅ Gate: 318 passed, 19 pre-existing failures — no regressions
 
 ## Phase 2: Tenant Isolation
 

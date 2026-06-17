@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Traits\ScopedByEmpresa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,7 +13,7 @@ use Laravel\Cashier\Billable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, Billable;
+    use HasFactory, Notifiable, Billable, ScopedByEmpresa;
 
     /**
      * The attributes that are mass assignable.
@@ -25,21 +26,22 @@ class User extends Authenticatable
         'password',
         'role',
         'clinica_id',
+        'empresa_id',
     ];
-    
+
     /**
      * Verifica si el usuario es administrador
-     * 
+     *
      * @return bool
      */
     public function isAdmin(): bool
     {
         return $this->role === 'administrador';
     }
-    
+
     /**
      * Verifica si el usuario es usuario regular
-     * 
+     *
      * @return bool
      */
     public function isUser(): bool

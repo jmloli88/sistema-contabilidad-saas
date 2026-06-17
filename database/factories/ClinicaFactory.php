@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Empresa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,6 +21,7 @@ class ClinicaFactory extends Factory
             'nombre' => fake()->company() . ' - Clínica',
             'direccion' => fake()->address(),
             'telefono' => fake()->phoneNumber(),
+            'empresa_id' => Empresa::factory(),
         ];
     }
 }

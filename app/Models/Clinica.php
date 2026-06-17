@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\ScopedByEmpresa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Clinica extends Model
 {
-    use HasFactory;
+    use HasFactory, ScopedByEmpresa;
 
     /**
      * Obtener los usuarios asociados a esta clínica.
@@ -42,6 +43,7 @@ class Clinica extends Model
         'nombre',
         'direccion',
         'telefono',
+        'empresa_id',
     ];
 
     /**
@@ -120,8 +122,8 @@ class Clinica extends Model
         $driver = config('database.default');
         $connection = config("database.connections.{$driver}.driver");
 
-        $dateFormat = $connection === 'sqlite' 
-            ? "strftime('%Y-%m', repases.fecha)" 
+        $dateFormat = $connection === 'sqlite'
+            ? "strftime('%Y-%m', repases.fecha)"
             : "DATE_FORMAT(repases.fecha, '%Y-%m')";
 
         return $query->select([
@@ -159,7 +161,7 @@ class Clinica extends Model
             ->select([
                 'clinicas.id as clinica_id',
                 'clinicas.nombre',
-                \DB::raw($connection === 'sqlite' 
+                \DB::raw($connection === 'sqlite'
                     ? "strftime('%Y-%m', repases.fecha) as month"
                     : "DATE_FORMAT(repases.fecha, '%Y-%m') as month"),
                 \DB::raw('COUNT(repases.id) as monthly_repases'),
@@ -239,7 +241,7 @@ class Clinica extends Model
                 \DB::raw("{$maxCapacityPerClinic} as max_capacity"),
                 \DB::raw("ROUND((COUNT(DISTINCT repase_examenes.id) * 100.0 / {$maxCapacityPerClinic}), 2) as utilization_percentage"),
                 \DB::raw("({$maxCapacityPerClinic} - COUNT(DISTINCT repase_examenes.id)) as remaining_capacity"),
-                \DB::raw("CASE 
+                \DB::raw("CASE
                     WHEN (COUNT(DISTINCT repase_examenes.id) * 100.0 / {$maxCapacityPerClinic}) >= 90 THEN 'critical'
                     WHEN (COUNT(DISTINCT repase_examenes.id) * 100.0 / {$maxCapacityPerClinic}) >= 75 THEN 'high'
                     WHEN (COUNT(DISTINCT repase_examenes.id) * 100.0 / {$maxCapacityPerClinic}) >= 50 THEN 'normal'
@@ -285,7 +287,7 @@ class Clinica extends Model
 
     /**
      * Calcular la utilización actual de la clínica
-     * 
+     *
      * @param array $filters
      * @return array
      */
@@ -320,14 +322,14 @@ class Clinica extends Model
 
     /**
      * Calcular tendencia de crecimiento de la clínica
-     * 
+     *
      * @param int $months Número de meses a analizar
      * @return array
      */
     public function calculateGrowthTrend(int $months = 12): array
     {
         $startDate = now()->subMonths($months)->format('Y-m-d');
-        
+
         $monthlyData = $this->repases()
             ->select([
                 \DB::raw("strftime('%Y-%m', fecha) as month"),
@@ -375,7 +377,7 @@ class Clinica extends Model
 
     /**
      * Detectar cuellos de botella en la clínica
-     * 
+     *
      * @param array $filters
      * @return array
      */
@@ -418,7 +420,7 @@ class Clinica extends Model
 
     /**
      * Proyectar fecha de saturación de capacidad
-     * 
+     *
      * @param array $filters
      * @return array|null
      */
@@ -459,7 +461,7 @@ class Clinica extends Model
 
     /**
      * Obtener estado de utilización basado en porcentaje
-     * 
+     *
      * @param float $utilizationPercentage
      * @return string
      */
@@ -478,7 +480,7 @@ class Clinica extends Model
 
     /**
      * Agregar estadísticas de capacidad a la consulta
-     * 
+     *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param array $filters
      * @return \Illuminate\Database\Eloquent\Builder
@@ -499,9 +501,9 @@ class Clinica extends Model
             'utilization_percentage' => \DB::raw("
                 ROUND((
                     (SELECT COUNT(DISTINCT repase_examenes.id)
-                     FROM repases 
+                     FROM repases
                      JOIN repase_examenes ON repases.id = repase_examenes.repase_id
-                     WHERE repases.clinica_id = clinicas.id 
+                     WHERE repases.clinica_id = clinicas.id
                      AND repases.fecha >= '" . now()->startOfMonth()->format('Y-m-d') . "'
                      AND repases.fecha <= '" . now()->endOfMonth()->format('Y-m-d') . "'
                     ) * 100.0 / {$maxCapacity}
