@@ -13,23 +13,23 @@ class SaaSAdminController extends Controller
      */
     public function dashboard()
     {
-        $totalUsers = User::count();
-        $activeCount = User::whereHas('subscriptions', function ($q) {
+        $totalUsers = User::withoutGlobalScope('empresa')->count();
+        $activeCount = User::withoutGlobalScope('empresa')->whereHas('subscriptions', function ($q) {
             $q->where('stripe_status', 'active')->where('ends_at', '>', now());
         })->count();
-        $expiredCount = User::whereHas('subscriptions', function ($q) {
+        $expiredCount = User::withoutGlobalScope('empresa')->whereHas('subscriptions', function ($q) {
             $q->where('ends_at', '<=', now());
         })->orWhereDoesntHave('subscriptions')->count();
-        $expiringSoon = User::whereHas('subscriptions', function ($q) {
+        $expiringSoon = User::withoutGlobalScope('empresa')->whereHas('subscriptions', function ($q) {
             $q->where('ends_at', '>', now())->where('ends_at', '<=', now()->addDays(7));
         })->count();
 
         // Clinic-aware KPIs
-        $activeClinics = Clinica::whereHas('users', function ($q) {
+        $activeClinics = Clinica::withoutGlobalScope('empresa')->whereHas('users', function ($q) {
             $q->whereHas('subscriptions', fn($sq) => $sq->where('stripe_status', 'active')->where('ends_at', '>', now()));
         })->count();
 
-        $recentUsers = User::with('subscriptions', 'clinica')->latest()->take(5)->get();
+        $recentUsers = User::withoutGlobalScope('empresa')->with('subscriptions', 'clinica')->latest()->take(5)->get();
 
         // Estimated MRR: R$50 per active subscription
         $estimatedMRR = $activeCount * 50;
@@ -50,8 +50,8 @@ class SaaSAdminController extends Controller
      */
     public function index()
     {
-        $users = User::with('subscriptions', 'clinica')->orderBy('name')->paginate(20);
-        $clinicas = Clinica::orderBy('nombre')->get();
+        $users = User::withoutGlobalScope('empresa')->with('subscriptions', 'clinica')->orderBy('name')->paginate(20);
+        $clinicas = Clinica::withoutGlobalScope('empresa')->orderBy('nombre')->get();
 
         return view('saas-admin.index', compact('users', 'clinicas'));
     }
@@ -61,7 +61,7 @@ class SaaSAdminController extends Controller
      */
     public function edit(User $user)
     {
-        $clinicas = Clinica::orderBy('nombre')->get();
+        $clinicas = Clinica::withoutGlobalScope('empresa')->orderBy('nombre')->get();
         return view('saas-admin.edit', compact('user', 'clinicas'));
     }
 

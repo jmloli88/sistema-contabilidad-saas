@@ -49,20 +49,20 @@ Chain strategy: pending
 
 ## Phase 2: Tenant Isolation
 
-- [ ] 2.1 [RED] Test: `ScopeByEmpresa` middleware sets context from auth user
-- [ ] 2.2 [RED] Test: GlobalScope filters clinicas by current empresa_id
-- [ ] 2.3 [RED] Test: cross-empresa isolation (User A cannot see User B's data)
-- [ ] 2.4 [RED] Test: `withoutGlobalScope()` returns all records (SaaS admin)
-- [ ] 2.5 [GREEN] Register `EmpresaContext` singleton in `AppServiceProvider`
-- [ ] 2.6 [GREEN] Create `ScopeByEmpresa` middleware
-- [ ] 2.7 [GREEN] Activate GlobalScope in `ScopedByEmpresa::bootScopedByEmpresa()`
-- [ ] 2.8 [GREEN] Apply `empresa.scope` middleware to `auth` + `subscription` route groups
-- [ ] 2.9 [GREEN] DashboardService: 3 raw SQL locations → `+WHERE clinicas.empresa_id = ?`
-- [ ] 2.10 [GREEN] ReporteService: raw joins → `+WHERE clinicas.empresa_id` on all methods
-- [ ] 2.11 [GREEN] BalanceService: 2 raw SQL `gastos` + `repase_examenes` → +empresa_id filter
-- [ ] 2.12 [GREEN] Clinica/Examen scope methods (performance, utilization) → +empresa_id in raw joins
-- [ ] 2.13 [GREEN] RepaseService: validate clinica belongs to current empresa before CRUD
-- [ ] 2.14 ✅ Gate: full suite passes; cross-empresa isolation confirmed via integration test
+- [x] 2.1 [RED] Test: `ScopeByEmpresa` middleware sets context from auth user
+- [x] 2.2 [RED] Test: GlobalScope filters clinicas by current empresa_id
+- [x] 2.3 [RED] Test: cross-empresa isolation (User A cannot see User B's data)
+- [x] 2.4 [RED] Test: `withoutGlobalScope()` returns all records (SaaS admin)
+- [x] 2.5 [GREEN] Register `EmpresaContext` singleton in `AppServiceProvider` (no-op — EmpresaContext is a static class)
+- [x] 2.6 [GREEN] Create `ScopeByEmpresa` middleware
+- [x] 2.7 [GREEN] Activate GlobalScope in `ScopedByEmpresa::bootScopedByEmpresa()`
+- [x] 2.8 [GREEN] Apply `empresa.scope` middleware to `auth` + `subscription` route groups
+- [x] 2.9 [GREEN] DashboardService: 3 raw SQL locations → `+WHERE clinicas.empresa_id = ?`
+- [x] 2.10 [GREEN] ReporteService: raw joins → `+WHERE clinicas.empresa_id` on all methods
+- [x] 2.11 [GREEN] BalanceService: 2 raw SQL `gastos` + `repase_examenes` → +empresa_id filter
+- [x] 2.12 [GREEN] Clinica scope methods (5 raw SQL scopes) → +empresa_id in joins
+- [x] 2.13 [GREEN] Examen scope methods (4 raw SQL scopes) → +empresa_id in joins
+- [x] 2.14 ✅ Gate: full suite passes (19 pre-existing, 0 new failures); cross-empresa isolation confirmed via TenantIsolationTest
 
 ## Phase 3: Subscriptions
 

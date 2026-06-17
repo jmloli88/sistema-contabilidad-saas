@@ -13,11 +13,14 @@ class ExamenPrecioClinicaTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+    private \App\Models\Empresa $empresa;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->empresa = \App\Models\Empresa::factory()->create(['nombre' => 'Test Empresa Precios']);
         $this->admin = User::factory()->create([
+            'empresa_id' => $this->empresa->id,
             'role' => 'administrador',
         ]);
         // Give admin a subscription so subscription middleware passes
@@ -36,11 +39,11 @@ class ExamenPrecioClinicaTest extends TestCase
 
     public function test_edit_page_includes_clinicas_in_view_data(): void
     {
-        // GIVEN 3 clinics exist
-        $clinicaA = Clinica::factory()->create(['nombre' => 'Centro Alpha']);
-        $clinicaB = Clinica::factory()->create(['nombre' => 'Centro Beta']);
-        $clinicaC = Clinica::factory()->create(['nombre' => 'Centro Gamma']);
-        $examen = Examen::factory()->create();
+        // GIVEN 3 clinics exist under the same empresa
+        $clinicaA = Clinica::factory()->create(['empresa_id' => $this->empresa->id, 'nombre' => 'Centro Alpha']);
+        $clinicaB = Clinica::factory()->create(['empresa_id' => $this->empresa->id, 'nombre' => 'Centro Beta']);
+        $clinicaC = Clinica::factory()->create(['empresa_id' => $this->empresa->id, 'nombre' => 'Centro Gamma']);
+        $examen = Examen::factory()->create(['empresa_id' => $this->empresa->id]);
 
         // WHEN viewing exam edit page
         $response = $this->actingAs($this->admin)
@@ -62,10 +65,11 @@ class ExamenPrecioClinicaTest extends TestCase
 
     public function test_guardar_precios_por_clinica_persiste_en_pivot(): void
     {
-        // GIVEN 2 clinics and 1 examen exist
-        $clinicaA = Clinica::factory()->create();
-        $clinicaB = Clinica::factory()->create();
+        // GIVEN 2 clinics and 1 examen exist under the same empresa
+        $clinicaA = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
+        $clinicaB = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
         $examen = Examen::factory()->create([
+            'empresa_id' => $this->empresa->id,
             'precio_sin_nota' => 100.00,
             'precio_con_nota' => 200.00,
         ]);
@@ -111,9 +115,10 @@ class ExamenPrecioClinicaTest extends TestCase
 
     public function test_guardar_precios_vacios_guarda_null_en_pivot(): void
     {
-        // GIVEN 1 clinic and 1 examen exist
-        $clinica = Clinica::factory()->create();
+        // GIVEN 1 clinic and 1 examen exist under the same empresa
+        $clinica = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
         $examen = Examen::factory()->create([
+            'empresa_id' => $this->empresa->id,
             'precio_sin_nota' => 100.00,
             'precio_con_nota' => 200.00,
         ]);
@@ -149,9 +154,10 @@ class ExamenPrecioClinicaTest extends TestCase
 
     public function test_indice_muestra_badge_cuando_hay_overrides(): void
     {
-        // GIVEN Examen X has override for 1 clinic
-        $clinica = Clinica::factory()->create();
+        // GIVEN Examen X has override for 1 clinic (same empresa)
+        $clinica = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
         $examen = Examen::factory()->create([
+            'empresa_id' => $this->empresa->id,
             'nombre' => 'Examen Con Override',
         ]);
         $examen->clinicas()->attach($clinica->id, [
@@ -171,8 +177,9 @@ class ExamenPrecioClinicaTest extends TestCase
 
     public function test_indice_no_muestra_badge_sin_overrides(): void
     {
-        // GIVEN Examen Y has zero overrides
+        // GIVEN Examen Y has zero overrides (same empresa)
         $examen = Examen::factory()->create([
+            'empresa_id' => $this->empresa->id,
             'nombre' => 'Examen Sin Override',
         ]);
 

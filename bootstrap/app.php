@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
             'prevent.duplicate.submissions' => \App\Http\Middleware\PreventDuplicateSubmissions::class,
             'subscription' => \App\Http\Middleware\EnsureSubscriptionIsActive::class,
+            'empresa.scope' => \App\Http\Middleware\ScopeByEmpresa::class,
         ]);
 
         $middleware->redirectGuestsTo(function (Request $request) {

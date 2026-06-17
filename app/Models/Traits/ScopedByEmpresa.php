@@ -16,12 +16,11 @@ trait ScopedByEmpresa
      */
     public static function bootScopedByEmpresa(): void
     {
-        // Phase 2: activate Global Scope
-        // static::addGlobalScope('empresa', function (Builder $builder) {
-        //     if (EmpresaContext::isSet()) {
-        //         $builder->where($builder->getModel()->getTable() . '.empresa_id', EmpresaContext::get());
-        //     }
-        // });
+        static::addGlobalScope('empresa', function (Builder $builder) {
+            if (EmpresaContext::isSet()) {
+                $builder->where($builder->getModel()->getTable() . '.empresa_id', EmpresaContext::get());
+            }
+        });
     }
 
     /**

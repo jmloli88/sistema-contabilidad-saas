@@ -25,8 +25,8 @@ Route::middleware('guest:saas')->prefix('saas')->name('saas.')->group(function (
     Route::post('login', [App\Http\Controllers\Auth\SaasLoginController::class, 'store']);
 });
 
-// Grupo de rutas con middleware auth + subscription check
-Route::middleware(['auth', 'verified', 'subscription'])->group(function () {
+// Grupo de rutas con middleware auth + subscription check (tenant-scoped)
+Route::middleware(['auth', 'verified', 'subscription', 'empresa.scope'])->group(function () {
     // Dashboard - accesible para todos
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
@@ -58,8 +58,8 @@ Route::middleware(['auth', 'verified', 'subscription'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rutas solo para administradores (subscription gated + administrador role)
-Route::middleware(['auth', 'verified', 'subscription', 'admin'])->group(function () {
+// Rutas solo para administradores (subscription gated + administrador role, tenant-scoped)
+Route::middleware(['auth', 'verified', 'subscription', 'admin', 'empresa.scope'])->group(function () {
     // Ruta de prueba
     Route::get('/test-admin', function() {
         return 'Admin access works! User: ' . auth()->user()->name . ' Role: ' . auth()->user()->role;

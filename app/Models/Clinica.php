@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\ScopedByEmpresa;
+use App\Support\EmpresaContext;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -139,6 +140,7 @@ class Clinica extends Model
             ->leftJoin('repase_examenes', 'repases.id', '=', 'repase_examenes.repase_id')
             ->when($filters['fecha_inicio'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '>=', $fecha))
             ->when($filters['fecha_fin'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '<=', $fecha))
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->groupBy('clinicas.id', 'clinicas.nombre', 'month')
             ->orderBy('clinicas.nombre')
             ->orderBy('month');
@@ -172,6 +174,7 @@ class Clinica extends Model
             ->leftJoin('repase_examenes', 'repases.id', '=', 'repase_examenes.repase_id')
             ->when($filters['fecha_inicio'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '>=', $fecha))
             ->when($filters['fecha_fin'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '<=', $fecha))
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->groupBy('clinicas.id', 'clinicas.nombre', 'month');
 
         return $query->joinSub($monthlyMetrics, 'monthly_data', function ($join) {
@@ -219,6 +222,7 @@ class Clinica extends Model
             ->leftJoin('gastos', 'repases.id', '=', 'gastos.repase_id')
             ->when($filters['fecha_inicio'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '>=', $fecha))
             ->when($filters['fecha_fin'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '<=', $fecha))
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->groupBy('clinicas.id', 'clinicas.nombre', 'clinicas.direccion', 'clinicas.telefono')
             ->orderBy('total_ingresos', 'desc');
     }
@@ -252,6 +256,7 @@ class Clinica extends Model
             ->leftJoin('repase_examenes', 'repases.id', '=', 'repase_examenes.repase_id')
             ->when($filters['fecha_inicio'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '>=', $fecha))
             ->when($filters['fecha_fin'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '<=', $fecha))
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->groupBy('clinicas.id', 'clinicas.nombre')
             ->orderBy('utilization_percentage', 'desc');
     }
@@ -276,6 +281,7 @@ class Clinica extends Model
             ->leftJoin('repase_examenes', 'repases.id', '=', 'repase_examenes.repase_id')
             ->where('repases.fecha', '>=', now()->startOfMonth())
             ->where('repases.fecha', '<=', now()->endOfMonth())
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->groupBy('clinicas.id', 'clinicas.nombre', 'clinicas.direccion', 'clinicas.telefono')
             ->havingRaw("(COUNT(DISTINCT repase_examenes.id) * 100.0 / {$maxCapacityPerClinic}) >= ?", [$threshold])
             ->orderBy('utilization_percentage', 'desc');

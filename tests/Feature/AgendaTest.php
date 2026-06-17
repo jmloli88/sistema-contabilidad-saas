@@ -13,10 +13,15 @@ class AgendaTest extends TestCase
 {
     use RefreshDatabase;
 
+    private \App\Models\Empresa $empresa;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->empresa = \App\Models\Empresa::factory()->create(['nombre' => 'Test Empresa Agenda']);
+        $this->user = User::factory()->create([
+            'empresa_id' => $this->empresa->id,
+        ]);
         $this->user->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_agenda_test',
@@ -35,7 +40,7 @@ class AgendaTest extends TestCase
 
     public function test_puede_crear_agenda_unica(): void
     {
-        $clinica = Clinica::factory()->create();
+        $clinica = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
 
         $response = $this->actingAs($this->user)->postJson(route('agendas.store'), [
             'clinica_id' => $clinica->id,
@@ -57,7 +62,7 @@ class AgendaTest extends TestCase
 
     public function test_detecta_conflicto_horario(): void
     {
-        $clinica = Clinica::factory()->create();
+        $clinica = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
         $fecha = Carbon::tomorrow()->format('Y-m-d');
 
         // Crear primera agenda
@@ -86,7 +91,7 @@ class AgendaTest extends TestCase
 
     public function test_puede_crear_agendas_repetitivas(): void
     {
-        $clinica = Clinica::factory()->create();
+        $clinica = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
 
         $response = $this->actingAs($this->user)->postJson(route('agendas.store'), [
             'clinica_id' => $clinica->id,
@@ -107,7 +112,7 @@ class AgendaTest extends TestCase
 
     public function test_omite_domingos_en_agendas_repetitivas(): void
     {
-        $clinica = Clinica::factory()->create();
+        $clinica = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
         
         // Encontrar el próximo domingo
         $proximoDomingo = Carbon::now();
@@ -139,7 +144,7 @@ class AgendaTest extends TestCase
 
     public function test_puede_actualizar_agenda(): void
     {
-        $clinica = Clinica::factory()->create();
+        $clinica = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
         $agenda = Agenda::factory()->create([
             'clinica_id' => $clinica->id,
         ]);
@@ -164,7 +169,8 @@ class AgendaTest extends TestCase
 
     public function test_puede_eliminar_agenda(): void
     {
-        $agenda = Agenda::factory()->create();
+        $clinica = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
+        $agenda = Agenda::factory()->create(['clinica_id' => $clinica->id]);
 
         $response = $this->actingAs($this->user)->deleteJson(route('agendas.destroy', $agenda), [
             'eliminar_todas' => false,
@@ -177,7 +183,7 @@ class AgendaTest extends TestCase
 
     public function test_puede_obtener_eventos_calendario(): void
     {
-        $clinica = Clinica::factory()->create();
+        $clinica = Clinica::factory()->create(['empresa_id' => $this->empresa->id]);
         Agenda::factory()->count(3)->create(['clinica_id' => $clinica->id]);
 
         $response = $this->actingAs($this->user)->getJson(route('agendas.events'));

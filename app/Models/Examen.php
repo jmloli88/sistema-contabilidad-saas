@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\ScopedByEmpresa;
+use App\Support\EmpresaContext;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -185,6 +186,8 @@ class Examen extends Model
             ])
             ->leftJoin('repase_examenes', 'examenes.id', '=', 'repase_examenes.examen_id')
             ->leftJoin('repases', 'repase_examenes.repase_id', '=', 'repases.id')
+            ->join('clinicas', 'repases.clinica_id', '=', 'clinicas.id')
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->when($filters['clinica_id'] ?? null, fn($q, $id) => $q->where('repases.clinica_id', $id))
             ->when($filters['fecha_inicio'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '>=', $fecha))
             ->when($filters['fecha_fin'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '<=', $fecha))
@@ -237,6 +240,8 @@ class Examen extends Model
             ])
             ->leftJoin('repase_examenes', 'examenes.id', '=', 'repase_examenes.examen_id')
             ->leftJoin('repases', 'repase_examenes.repase_id', '=', 'repases.id')
+            ->join('clinicas', 'repases.clinica_id', '=', 'clinicas.id')
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->when($filters['clinica_id'] ?? null, fn($q, $id) => $q->where('repases.clinica_id', $id))
             ->when($filters['fecha_inicio'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '>=', $fecha))
             ->when($filters['fecha_fin'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '<=', $fecha))
@@ -268,6 +273,7 @@ class Examen extends Model
             ->join('repase_examenes', 'examenes.id', '=', 'repase_examenes.examen_id')
             ->join('repases', 'repase_examenes.repase_id', '=', 'repases.id')
             ->join('clinicas', 'repases.clinica_id', '=', 'clinicas.id')
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->when($filters['clinica_id'] ?? null, fn($q, $id) => $q->where('repases.clinica_id', $id))
             ->when($filters['fecha_inicio'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '>=', $fecha))
             ->when($filters['fecha_fin'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '<=', $fecha))
@@ -301,6 +307,8 @@ class Examen extends Model
             ])
             ->leftJoin('repase_examenes', 'examenes.id', '=', 'repase_examenes.examen_id')
             ->leftJoin('repases', 'repase_examenes.repase_id', '=', 'repases.id')
+            ->join('clinicas', 'repases.clinica_id', '=', 'clinicas.id')
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->when($filters['clinica_id'] ?? null, fn($q, $id) => $q->where('repases.clinica_id', $id))
             ->when($filters['fecha_inicio'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '>=', $fecha))
             ->when($filters['fecha_fin'] ?? null, fn($q, $fecha) => $q->where('repases.fecha', '<=', $fecha))

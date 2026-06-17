@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Repase;
+use App\Support\EmpresaContext;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -254,6 +255,10 @@ class DashboardService
     {
         $gastos = DB::table('gastos')
             ->join('repases', 'gastos.repase_id', '=', 'repases.id')
+            ->join('clinicas', 'repases.clinica_id', '=', 'clinicas.id')
+            ->when(EmpresaContext::isSet(), function ($query) {
+                return $query->where('clinicas.empresa_id', EmpresaContext::get());
+            })
             ->when($filters['clinica_id'] ?? null, function ($query, $clinicaId) {
                 return $query->where('repases.clinica_id', $clinicaId);
             })
@@ -319,6 +324,10 @@ class DashboardService
         $examenes = DB::table('repase_examenes')
             ->join('repases', 'repase_examenes.repase_id', '=', 'repases.id')
             ->join('examenes', 'repase_examenes.examen_id', '=', 'examenes.id')
+            ->join('clinicas', 'repases.clinica_id', '=', 'clinicas.id')
+            ->when(EmpresaContext::isSet(), function ($query) {
+                return $query->where('clinicas.empresa_id', EmpresaContext::get());
+            })
             ->when($filters['clinica_id'] ?? null, function ($query, $clinicaId) {
                 return $query->where('repases.clinica_id', $clinicaId);
             })
@@ -434,6 +443,9 @@ class DashboardService
             ->join('clinicas', 'repases.clinica_id', '=', 'clinicas.id')
             ->whereNotNull('repases.fecha_pago')
             ->where('repases.estado', 'pagado')
+            ->when(EmpresaContext::isSet(), function ($query) {
+                return $query->where('clinicas.empresa_id', EmpresaContext::get());
+            })
             ->when($filters['clinica_id'] ?? null, function ($query, $clinicaId) {
                 return $query->where('repases.clinica_id', $clinicaId);
             })

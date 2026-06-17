@@ -6,6 +6,7 @@ use App\Models\Repase;
 use App\Models\Clinica;
 use App\Models\Examen;
 use App\Models\RepaseExamen;
+use App\Support\EmpresaContext;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,8 @@ class ReporteService
                 $query->where('id', $filtros['clinica_id']);
             }
             
+            $query->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()));
+            
             return $query->get()->map(function ($clinica) {
                 return (object) [
                     'clinica_id' => $clinica->id,
@@ -74,6 +77,7 @@ class ReporteService
                     ->whereIn('repases.id', $repasesIds)
                     ->whereNull('repases.deleted_at');
             })
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->groupBy('clinicas.id', 'clinicas.nombre');
 
         // Filtrar por clínica específica si se proporciona
@@ -234,6 +238,7 @@ class ReporteService
             ->leftJoin('repases', 'clinicas.id', '=', 'repases.clinica_id')
             ->leftJoin('repase_examenes', 'repases.id', '=', 'repase_examenes.repase_id')
             ->whereIn('repases.id', $repasesIds)
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->groupBy('clinicas.id', 'clinicas.nombre');
 
         if (isset($filtros['clinica_id']) && $filtros['clinica_id']) {
@@ -433,6 +438,7 @@ class ReporteService
             ])
             ->leftJoin('repases', 'clinicas.id', '=', 'repases.clinica_id')
             ->whereIn('repases.id', $repasesIds)
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->groupBy('clinicas.id', 'clinicas.nombre');
 
         if (isset($filtros['clinica_id']) && $filtros['clinica_id']) {

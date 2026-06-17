@@ -6,6 +6,7 @@ use App\Models\Repase;
 use App\Models\Clinica;
 use App\Models\Examen;
 use App\Models\RepaseExamen;
+use App\Support\EmpresaContext;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -103,12 +104,14 @@ class BalanceService
 
         return DB::table('gastos')
             ->join('repases', 'gastos.repase_id', '=', 'repases.id')
+            ->join('clinicas', 'repases.clinica_id', '=', 'clinicas.id')
             ->selectRaw("
                 {$dateFormat} as period,
                 gastos.tipo,
                 COALESCE(SUM(gastos.monto), 0) as total
             ")
             ->whereNull('repases.deleted_at')
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->when($filtros['clinica_id'] ?? null, fn($q, $id) => $q->where('repases.clinica_id', $id))
             ->when($filtros['fecha_inicio'] ?? null, fn($q, $f) => $q->where('repases.fecha', '>=', $f))
             ->when($filtros['fecha_fin'] ?? null, fn($q, $f) => $q->where('repases.fecha', '<=', $f))
@@ -125,6 +128,7 @@ class BalanceService
         return DB::table('repase_examenes')
             ->join('repases', 'repase_examenes.repase_id', '=', 'repases.id')
             ->join('examenes', 'repase_examenes.examen_id', '=', 'examenes.id')
+            ->join('clinicas', 'repases.clinica_id', '=', 'clinicas.id')
             ->selectRaw("
                 {$dateFormat} as period,
                 examenes.id as examen_id,
@@ -133,6 +137,7 @@ class BalanceService
                 COALESCE(SUM(repase_examenes.subtotal), 0) as total_ingresos
             ")
             ->whereNull('repases.deleted_at')
+            ->when(EmpresaContext::isSet(), fn($q) => $q->where('clinicas.empresa_id', EmpresaContext::get()))
             ->when($filtros['clinica_id'] ?? null, fn($q, $id) => $q->where('repases.clinica_id', $id))
             ->when($filtros['fecha_inicio'] ?? null, fn($q, $f) => $q->where('repases.fecha', '>=', $f))
             ->when($filtros['fecha_fin'] ?? null, fn($q, $f) => $q->where('repases.fecha', '<=', $f))

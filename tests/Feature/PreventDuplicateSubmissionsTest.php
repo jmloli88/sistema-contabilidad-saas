@@ -17,13 +17,17 @@ class PreventDuplicateSubmissionsTest extends TestCase
     protected User $admin;
     protected Clinica $clinica;
     protected Examen $examen;
+    protected \App\Models\Empresa $empresa;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        // Crear usuario admin
+        $this->empresa = \App\Models\Empresa::factory()->create(['nombre' => 'Test Empresa Duplicate']);
+
+        // Crear usuario admin bajo la misma empresa
         $this->admin = User::factory()->create([
+            'empresa_id' => $this->empresa->id,
             'role' => 'administrador',
         ]);
         // Give admin a subscription so subscription middleware passes
@@ -35,11 +39,14 @@ class PreventDuplicateSubmissionsTest extends TestCase
             'ends_at' => now()->addDays(30),
         ]);
 
-        // Crear clínica
-        $this->clinica = Clinica::factory()->create();
+        // Crear clínica bajo la misma empresa
+        $this->clinica = Clinica::factory()->create([
+            'empresa_id' => $this->empresa->id,
+        ]);
 
-        // Crear examen
+        // Crear examen bajo la misma empresa
         $this->examen = Examen::factory()->create([
+            'empresa_id' => $this->empresa->id,
             'precio_sin_nota' => 100.00,
             'precio_con_nota' => 150.00,
         ]);
@@ -141,7 +148,7 @@ class PreventDuplicateSubmissionsTest extends TestCase
     /** @test */
     public function detecta_repase_duplicado_en_controlador()
     {
-        // Crear primer repase
+        // Crear primer repase (uses the clinica which is already under the same empresa)
         $repase1 = Repase::factory()->create([
             'clinica_id' => $this->clinica->id,
             'fecha' => now()->format('Y-m-d'),
