@@ -1,0 +1,61 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Laravel 12, PHP 8.2, MySQL (prod) / SQLite (test), Vite 7, TailwindCSS 3, Alpine.js 3, Flowbite 4
+  Architecture: Laravel MVC + DTOs, Services, Jobs, Exports, Contracts. Spanish-language medical accounting system.
+  Testing: PHPUnit 11.5.3 (Unit + Feature), Mockery, 46 test files. No coverage tooling configured. No E2E.
+  Style: Laravel Pint, EditorConfig (4-space, LF, UTF-8).
+  Dependencies: barryvdh/laravel-dompdf, maatwebsite/excel, FullCalendar 6, Chart.js 4.
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    - Follow existing Laravel patterns (Services, DTOs, Jobs, Contracts)
+    tdd: true
+    test_command: "php artisan test --parallel --stop-on-failure"
+  verify:
+    test_command: "php artisan test --parallel"
+    build_command: "npm run build"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
+
+testing:
+  strict_tdd: true
+  detected: 2026-06-16
+  test_runner:
+    command: "php artisan test"
+    framework: "PHPUnit 11.5.3"
+  layers:
+    unit:
+      available: true
+      tool: "PHPUnit"
+    integration:
+      available: true
+      tool: "PHPUnit Feature tests"
+    e2e:
+      available: false
+      tool: "—"
+  coverage:
+    available: false
+    command: "—"
+  quality:
+    linter:
+      available: true
+      command: "vendor/bin/pint --test"
+    type_checker:
+      available: false
+      command: "—"
+    formatter:
+      available: true
+      command: "vendor/bin/pint"
