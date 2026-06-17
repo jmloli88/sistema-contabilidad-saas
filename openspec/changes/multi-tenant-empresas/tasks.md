@@ -29,11 +29,11 @@ Chain strategy: pending
 
 ## Phase 0: Foundation
 
-- [ ] 0.1 [RED] Test: EmpresaFactory creates empresa
-- [ ] 0.2 [GREEN] Migration: `create_empresas_table`
-- [ ] 0.3 [GREEN] Model: `Empresa` with relationship stubs
-- [ ] 0.4 [GREEN] Factory: `EmpresaFactory`
-- [ ] 0.5 ✅ Gate: create & retrieve empresa via tinker
+- [x] 0.1 [RED] Test: EmpresaFactory creates empresa
+- [x] 0.2 [GREEN] Migration: `create_empresas_table`
+- [x] 0.3 [GREEN] Model: `Empresa` with relationship stubs
+- [x] 0.4 [GREEN] Factory: `EmpresaFactory`
+- [x] 0.5 ✅ Gate: create & retrieve empresa via tinker
 
 ## Phase 1: Schema Expansion
 
