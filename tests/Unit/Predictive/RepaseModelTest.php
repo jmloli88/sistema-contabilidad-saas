@@ -3,8 +3,9 @@
 namespace Tests\Unit\Predictive;
 
 use Tests\TestCase;
-use App\Models\Repase;
 use App\Models\Clinica;
+use App\Models\Empresa;
+use App\Models\Repase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RepaseModelTest extends TestCase
@@ -16,10 +17,12 @@ class RepaseModelTest extends TestCase
         parent::setUp();
         
         // Crear datos de prueba
+        $empresa = Empresa::factory()->create();
         $clinica = Clinica::create([
             'nombre' => 'Clínica Test',
             'direccion' => 'Dirección Test',
-            'telefono' => '123456789'
+            'telefono' => '123456789',
+            'empresa_id' => $empresa->id,
         ]);
 
         Repase::create([
@@ -172,10 +175,12 @@ class RepaseModelTest extends TestCase
     public function test_for_capacity_analysis_scope()
     {
         // Crear examen primero para satisfacer la foreign key
+        $empresa = \App\Models\Empresa::factory()->create();
         $examen = \App\Models\Examen::create([
             'nombre' => 'Examen Test',
             'precio_sin_nota' => 400.00,
-            'precio_con_nota' => 500.00
+            'precio_con_nota' => 500.00,
+            'empresa_id' => $empresa->id,
         ]);
 
         // Crear datos de prueba con exámenes

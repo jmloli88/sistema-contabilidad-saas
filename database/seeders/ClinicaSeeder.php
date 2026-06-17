@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Clinica;
+use App\Models\Empresa;
 use Illuminate\Database\Seeder;
 
 class ClinicaSeeder extends Seeder
@@ -12,6 +13,8 @@ class ClinicaSeeder extends Seeder
      */
     public function run(): void
     {
+        $empresa = Empresa::firstOrCreate(['nombre' => 'Default Seed Empresa']);
+
         $clinicas = [
             [
                 'nombre' => 'Clínica San José',
@@ -41,6 +44,7 @@ class ClinicaSeeder extends Seeder
         ];
 
         foreach ($clinicas as $clinica) {
+            $clinica['empresa_id'] = $empresa->id;
             Clinica::create($clinica);
         }
     }

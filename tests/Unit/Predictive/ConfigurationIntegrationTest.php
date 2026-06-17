@@ -8,8 +8,9 @@ use App\Services\Predictive\ExpenseForecaster;
 use App\Contracts\PredictiveConfigInterface;
 use App\Contracts\Predictive\ExpenseForecasterInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\Repase;
 use App\Models\Clinica;
+use App\Models\Empresa;
+use App\Models\Repase;
 use Carbon\Carbon;
 
 class ConfigurationIntegrationTest extends TestCase
@@ -136,12 +137,15 @@ class ConfigurationIntegrationTest extends TestCase
 
     private function createTestData(): void
     {
+        $empresa = Empresa::factory()->create();
+
         // Create a test clinic
         $clinica = Clinica::create([
             'nombre' => 'Test Clinic',
             'direccion' => 'Test Address',
             'telefono' => '123456789',
-            'email' => 'test@clinic.com'
+            'email' => 'test@clinic.com',
+            'empresa_id' => $empresa->id,
         ]);
 
         // Create test repases with expenses for the last 24 months

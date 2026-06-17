@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Empresa;
 use App\Models\Examen;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,6 +17,9 @@ class ExamenSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create or retrieve a default empresa for seed data
+        $empresa = Empresa::firstOrCreate(['nombre' => 'Default Seed Empresa']);
+
         $examenes = [
             [
                 'nombre' => 'Electroencefalograma c/ mapeamento 3d + foto estimulo',
@@ -55,6 +59,7 @@ class ExamenSeeder extends Seeder
         ];
 
         foreach ($examenes as $examen) {
+            $examen['empresa_id'] = $empresa->id;
             Examen::create($examen);
         }
     }

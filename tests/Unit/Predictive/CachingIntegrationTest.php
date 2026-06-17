@@ -5,8 +5,9 @@ namespace Tests\Unit\Predictive;
 use Tests\TestCase;
 use App\Contracts\Predictive\IncomePredictorInterface;
 use App\Contracts\Predictive\CacheServiceInterface;
-use App\Models\Repase;
 use App\Models\Clinica;
+use App\Models\Empresa;
+use App\Models\Repase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Carbon\Carbon;
 
@@ -116,17 +117,21 @@ class CachingIntegrationTest extends TestCase
 
     private function createTestData(): void
     {
+        $empresa = Empresa::factory()->create();
+
         // Create test clinics
         $clinica1 = Clinica::create([
             'nombre' => 'Test Clinic 1',
             'direccion' => 'Test Address 1',
-            'telefono' => '123456789'
+            'telefono' => '123456789',
+            'empresa_id' => $empresa->id,
         ]);
 
         $clinica2 = Clinica::create([
             'nombre' => 'Test Clinic 2',
             'direccion' => 'Test Address 2',
-            'telefono' => '987654321'
+            'telefono' => '987654321',
+            'empresa_id' => $empresa->id,
         ]);
 
         // Create test repases with historical data for both clinics

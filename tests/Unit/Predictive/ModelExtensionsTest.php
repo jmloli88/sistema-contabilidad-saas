@@ -4,9 +4,10 @@ namespace Tests\Unit\Predictive;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\Gasto;
 use App\Models\Clinica;
+use App\Models\Empresa;
 use App\Models\Examen;
+use App\Models\Gasto;
 use App\Models\Repase;
 use App\Models\RepaseExamen;
 use Carbon\Carbon;
@@ -158,30 +159,36 @@ class ModelExtensionsTest extends TestCase
 
     private function createTestData()
     {
+        $empresa = Empresa::factory()->create();
+
         // Create clinicas
         $clinica1 = Clinica::create([
             'nombre' => 'Clínica Test 1',
             'direccion' => 'Dirección Test 1',
-            'telefono' => '123456789'
+            'telefono' => '123456789',
+            'empresa_id' => $empresa->id,
         ]);
 
         $clinica2 = Clinica::create([
             'nombre' => 'Clínica Test 2',
             'direccion' => 'Dirección Test 2',
-            'telefono' => '987654321'
+            'telefono' => '987654321',
+            'empresa_id' => $empresa->id,
         ]);
 
         // Create examenes
         $examen1 = Examen::create([
             'nombre' => 'Examen Test 1',
             'precio_sin_nota' => 100.00,
-            'precio_con_nota' => 150.00
+            'precio_con_nota' => 150.00,
+            'empresa_id' => $empresa->id,
         ]);
 
         $examen2 = Examen::create([
             'nombre' => 'Examen Test 2',
             'precio_sin_nota' => 200.00,
-            'precio_con_nota' => 250.00
+            'precio_con_nota' => 250.00,
+            'empresa_id' => $empresa->id,
         ]);
 
         // Create repases for the last 6 months

@@ -60,49 +60,14 @@ class User extends Authenticatable
     }
 
     /**
-     * Determina si el usuario (o su clínica) tiene una suscripción activa.
-     *
-     * Los usuarios sin clínica verifican su propia suscripción (backward compat).
-     * Los usuarios con clínica verifican si ALGÚN miembro de la clínica tiene una suscripción activa.
-     *
-     * @return bool
-     */
-    public function hasActiveSubscriptionInClinic(): bool
-    {
-        if (!$this->clinica_id) {
-            // Users without a clinic: check their own subscription (backward compat)
-            $sub = $this->subscription('default');
-
-            return $sub && $sub->ends_at && $sub->ends_at->isFuture();
-        }
-
-        return static::where('clinica_id', $this->clinica_id)
-            ->whereHas('subscriptions', function ($q) {
-                $q->where('stripe_status', 'active')
-                  ->where('ends_at', '>', now());
-            })
-            ->exists();
-    }
-
-    /**
-     * Determina si la suscripción del usuario (o de su clínica) está próxima a vencer.
+     * Determina si la suscripción del usuario (a nivel de empresa) está próxima a vencer.
      *
      * @param  int  $days
      * @return bool
      */
     public function subscriptionEndingSoon(int $days): bool
     {
-        if ($this->clinica_id) {
-            // Find ANY subscription in the clinic that's ending within the given days
-            return static::where('clinica_id', $this->clinica_id)
-                ->whereHas('subscriptions', function ($q) use ($days) {
-                    $q->where('ends_at', '>', now()->startOfDay())
-                      ->where('ends_at', '<=', now()->startOfDay()->addDays($days));
-                })
-                ->exists();
-        }
-
-        // No clinic: check own subscription (backward compat)
+        // Check own subscription (empresa-level — legacy clinic-shared fallback removed in Phase 5)
         $endsAt = $this->subscription('default')?->ends_at ?? $this->ends_at;
 
         if ($endsAt === null) {

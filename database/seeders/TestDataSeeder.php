@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Clinica;
+use App\Models\Empresa;
 use App\Models\Repase;
 
 class TestDataSeeder extends Seeder
@@ -13,23 +14,28 @@ class TestDataSeeder extends Seeder
      */
     public function run(): void
     {
+        $empresa = Empresa::firstOrCreate(['nombre' => 'Default Test Empresa']);
+
         // Crear clínicas de prueba
         $clinica1 = Clinica::create([
             'nombre' => 'Clínica Central',
             'direccion' => 'Av. Principal 123',
-            'telefono' => '555-0001'
+            'telefono' => '555-0001',
+            'empresa_id' => $empresa->id,
         ]);
 
         $clinica2 = Clinica::create([
             'nombre' => 'Clínica Norte',
             'direccion' => 'Calle Norte 456',
-            'telefono' => '555-0002'
+            'telefono' => '555-0002',
+            'empresa_id' => $empresa->id,
         ]);
 
         $clinica3 = Clinica::create([
             'nombre' => 'Clínica Sur',
             'direccion' => 'Av. Sur 789',
-            'telefono' => '555-0003'
+            'telefono' => '555-0003',
+            'empresa_id' => $empresa->id,
         ]);
 
         // Crear repases de prueba para enero 2024

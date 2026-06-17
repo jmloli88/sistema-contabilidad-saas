@@ -260,9 +260,9 @@ class TenantIsolationTest extends TestCase
         Clinica::factory()->create(['empresa_id' => $this->empresaA->id]);
         Clinica::factory()->create(['empresa_id' => $this->empresaB->id]);
 
-        // SaaS admin users don't have empresa_id on their User model
+        // SaaS admin is assigned to empresa A for the foreign key constraint
         $saasAdmin = User::factory()->create([
-            'empresa_id' => null,
+            'empresa_id' => $this->empresaA->id,
             'role' => 'administrador',
             'name' => 'SaaS Admin',
         ]);

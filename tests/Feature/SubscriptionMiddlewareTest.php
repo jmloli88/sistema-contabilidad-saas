@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Clinica;
+use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -98,8 +99,10 @@ class SubscriptionMiddlewareTest extends TestCase
 
     public function test_user_in_clinic_with_active_subscription_passes_through(): void
     {
-        $clinic = Clinica::factory()->create();
+        $empresa = Empresa::factory()->create();
+        $clinic = Clinica::factory()->create(['empresa_id' => $empresa->id]);
         $admin = User::factory()->create([
+            'empresa_id' => $empresa->id,
             'clinica_id' => $clinic->id,
             'role' => 'administrador',
         ]);
@@ -111,6 +114,7 @@ class SubscriptionMiddlewareTest extends TestCase
             'ends_at' => now()->addDays(30),
         ]);
         $member = User::factory()->create([
+            'empresa_id' => $empresa->id,
             'clinica_id' => $clinic->id,
             'role' => 'usuario',
         ]);
