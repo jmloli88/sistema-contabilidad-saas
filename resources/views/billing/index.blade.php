@@ -11,16 +11,17 @@
             @php
                 $showPayment = !$isActive || $isExpired || ($daysRemaining > 0 && $daysRemaining <= 7);
                 $user = auth()->user();
-                $clinicName = $user->clinica?->nombre;
+                $empresaName = $user->empresa?->nombre;
+                $stripeKey = config('services.stripe.key');
             @endphp
 
-            @if($clinicName)
+            @if($empresaName)
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <div class="flex items-center">
                         <span class="material-symbols-outlined text-blue-600 mr-2">business</span>
                         <span class="text-blue-800 font-medium text-sm">
-                            Esta suscripción cubre a todos los usuarios de <strong>{{ $clinicName }}</strong>.
-                            El administrador de la clínica gestiona el pago.
+                            Esta suscripción cubre a todos los usuarios de <strong>{{ $empresaName }}</strong>.
+                            El administrador de la empresa gestiona el pago.
                         </span>
                     </div>
                 </div>
@@ -65,7 +66,7 @@
                             <div class="mt-4">
                                 <button id="pay-with-pix"
                                         class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                    {{ __('Pagar con PIX') }}
+                                            {{ __('Pagar con Tarjeta') }}
                                 </button>
                             </div>
                         </div>
@@ -83,7 +84,7 @@
                             <div class="mt-4">
                                 <button id="pay-with-pix"
                                         class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                    {{ __('Pagar con PIX') }}
+                                            {{ __('Pagar con Tarjeta') }}
                                 </button>
                             </div>
                         </div>
@@ -114,39 +115,20 @@
                 </div>
             </div>
 
-            <!-- PIX Payment Section (hidden when active and not ending soon) -->
+            <!-- Card Payment Section -->
             @if ($showPayment)
-            <div id="pix-payment-section" class="bg-white overflow-hidden shadow-sm sm:rounded-lg hidden">
+            <div id="card-payment-section" class="bg-white overflow-hidden shadow-sm sm:rounded-lg hidden">
                 <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Pagar con PIX') }}</h3>
-
-                    <div id="pix-loading" class="text-center py-8">
-                        <span class="material-symbols-outlined text-4xl text-indigo-600 animate-spin">refresh</span>
-                        <p class="mt-4 text-gray-600">{{ __('Generando código PIX...') }}</p>
-                    </div>
-
-                    <div id="pix-qr-section" class="hidden text-center">
-                        <div id="pix-qr-code" class="mb-4 inline-block p-4 bg-white border rounded-lg">
-                            {{-- QR code image rendered here --}}
-                        </div>
-                        <div class="max-w-md mx-auto">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Código PIX (copiar y pegar)') }}</label>
-                            <div class="flex">
-                                <input id="pix-copy-paste" type="text" readonly
-                                       class="flex-1 rounded-l-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
-                                <button id="pix-copy-btn"
-                                        class="px-3 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-sm text-gray-700 hover:bg-gray-200">
-                                    {{ __('Copiar') }}
-                                </button>
-                            </div>
-                        </div>
-                        <div class="mt-6">
-                            <button id="check-payment-btn"
-                                    class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                                {{ __('Ya pagué — Verificar') }}
-                            </button>
-                        </div>
-                        <div id="pix-error" class="mt-4 text-red-600 text-sm hidden"></div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Pagar con Tarjeta') }}</h3>
+                    <div id="card-element" class="p-3 border border-gray-300 rounded-md"></div>
+                    <div id="card-errors" class="mt-2 text-red-600 text-sm hidden"></div>
+                    <div class="mt-4 flex gap-3">
+                        <button id="card-cancel-btn" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                            Cancelar
+                        </button>
+                        <button id="card-submit-btn" class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
+                            Pagar R$ 50,00
+                        </button>
                     </div>
                 </div>
             </div>
@@ -172,11 +154,11 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach ($paymentHistory as $payment)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $payment['date'] ?? '' }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $payment['amount'] ?? '' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $payment->created_at->format('d/m/Y') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">R$ 50,00</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ ($payment['status'] ?? '') === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                                {{ $payment['status'] ?? '' }}
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $payment->stripe_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                                {{ $payment->stripe_status === 'active' ? 'Pagado' : $payment->stripe_status }}
                                             </span>
                                         </td>
                                     </tr>
@@ -195,22 +177,40 @@
     <script src="https://js.stripe.com/v3/"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const stripe = Stripe('{{ $stripeKey }}');
+            const elements = stripe.elements();
+            const cardElement = elements.create('card', { 
+                style: { base: { fontSize: '16px' } },
+                hidePostalCode: true
+            });
             const payButton = document.getElementById('pay-with-pix');
-            const pixSection = document.getElementById('pix-payment-section');
-            const pixLoading = document.getElementById('pix-loading');
-            const pixQrSection = document.getElementById('pix-qr-section');
-            const pixQrCode = document.getElementById('pix-qr-code');
-            const pixCopyPaste = document.getElementById('pix-copy-paste');
-            const pixCopyBtn = document.getElementById('pix-copy-btn');
-            const pixError = document.getElementById('pix-error');
-            const checkPaymentBtn = document.getElementById('check-payment-btn');
+            const cardSection = document.getElementById('card-payment-section');
+            const cardErrors = document.getElementById('card-errors');
+            const submitBtn = document.getElementById('card-submit-btn');
+            const cancelBtn = document.getElementById('card-cancel-btn');
+            let cardMounted = false;
 
             if (payButton) {
-                payButton.addEventListener('click', async function () {
-                    if (pixSection) pixSection.classList.remove('hidden');
-                    if (pixLoading) pixLoading.classList.remove('hidden');
-                    if (pixQrSection) pixQrSection.classList.add('hidden');
-                    if (pixError) pixError.classList.add('hidden');
+                payButton.addEventListener('click', function () {
+                    cardSection.classList.remove('hidden');
+                    if (!cardMounted) {
+                        cardElement.mount('#card-element');
+                        cardMounted = true;
+                    }
+                });
+            }
+
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', function () {
+                    cardSection.classList.add('hidden');
+                });
+            }
+
+            if (submitBtn) {
+                submitBtn.addEventListener('click', async function () {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Procesando...';
+                    cardErrors.classList.add('hidden');
 
                     try {
                         const response = await fetch('{{ route('billing.pay') }}', {
@@ -221,63 +221,37 @@
                             },
                         });
 
-                        if (!response.ok) {
-                            throw new Error('Payment failed');
-                        }
+                        if (!response.ok) throw new Error('Payment failed');
 
                         const data = await response.json();
 
                         if (data.client_secret) {
-                            const stripe = Stripe('{{ config('services.stripe.key') }}');
-
-                            // For PIX, we use the client_secret and Stripe.confirmPayment
-                            const { error } = await stripe.confirmPayment({
-                                elements: stripe.elements(),
-                                confirmParams: {
-                                    return_url: '{{ route('billing.index') }}',
-                                },
-                                redirect: 'if_required',
+                            const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret, {
+                                payment_method: { card: cardElement },
                             });
 
                             if (error) {
-                                if (pixError) {
-                                    pixError.textContent = error.message;
-                                    pixError.classList.remove('hidden');
-                                }
+                                cardErrors.textContent = error.message;
+                                cardErrors.classList.remove('hidden');
+                            } else if (paymentIntent.status === 'succeeded') {
+                                await fetch('{{ route('billing.pay') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'X-Confirm-Payment': paymentIntent.id,
+                                    },
+                                });
+                                window.location.reload();
                             }
                         }
-
-                        if (pixLoading) pixLoading.classList.add('hidden');
-                        if (pixQrSection) pixQrSection.classList.remove('hidden');
-
                     } catch (err) {
-                        if (pixLoading) pixLoading.classList.add('hidden');
-                        if (pixError) {
-                            pixError.textContent = '{{ __('Error al procesar el pago. Intente nuevamente.') }}';
-                            pixError.classList.remove('hidden');
-                        }
+                        cardErrors.textContent = '{{ __('Error al procesar el pago. Intente nuevamente.') }}';
+                        cardErrors.classList.remove('hidden');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Pagar R$ 50,00';
                     }
-                });
-            }
-
-            // Copy to clipboard
-            if (pixCopyBtn) {
-                pixCopyBtn.addEventListener('click', function () {
-                    if (pixCopyPaste) {
-                        pixCopyPaste.select();
-                        document.execCommand('copy');
-                        pixCopyBtn.textContent = '{{ __('Copiado') }}';
-                        setTimeout(() => {
-                            pixCopyBtn.textContent = '{{ __('Copiar') }}';
-                        }, 2000);
-                    }
-                });
-            }
-
-            // Check payment status by reloading
-            if (checkPaymentBtn) {
-                checkPaymentBtn.addEventListener('click', function () {
-                    window.location.reload();
                 });
             }
         });

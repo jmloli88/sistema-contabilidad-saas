@@ -19,7 +19,8 @@ class SubscriptionDualPathTest extends TestCase
     {
         $empresa = Empresa::factory()->create();
         $user = User::factory()->create(['empresa_id' => $empresa->id]);
-        $user->subscriptions()->create([
+        // Subscription on the empresa
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_empresa_active',
             'stripe_status' => 'active',
@@ -65,7 +66,8 @@ class SubscriptionDualPathTest extends TestCase
     {
         $empresa = Empresa::factory()->create();
         $user = User::factory()->create(['empresa_id' => $empresa->id]);
-        $user->subscriptions()->create([
+        // Expired subscription on the empresa
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_expired_no_fallback',
             'stripe_status' => 'active',

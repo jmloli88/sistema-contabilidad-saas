@@ -8,12 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, Billable, ScopedByEmpresa;
+    use HasFactory, Notifiable, ScopedByEmpresa;
 
     /**
      * The attributes that are mass assignable.
@@ -60,21 +59,34 @@ class User extends Authenticatable
     }
 
     /**
-     * Determina si la suscripción del usuario (a nivel de empresa) está próxima a vencer.
+     * Relación con la empresa a la que pertenece el usuario.
+     *
+     * @return BelongsTo
+     */
+    public function empresa(): BelongsTo
+    {
+        return $this->belongsTo(Empresa::class);
+    }
+
+    /**
+     * Determina si la suscripción de la empresa del usuario está próxima a vencer.
      *
      * @param  int  $days
      * @return bool
      */
     public function subscriptionEndingSoon(int $days): bool
     {
-        // Check own subscription (empresa-level — legacy clinic-shared fallback removed in Phase 5)
-        $endsAt = $this->subscription('default')?->ends_at ?? $this->ends_at;
+        if (! $this->empresa_id || ! $this->empresa) {
+            return false;
+        }
+
+        $endsAt = $this->empresa->subscription('default')?->ends_at;
 
         if ($endsAt === null) {
             return false;
         }
 
-        return $endsAt->endOfDay()->isFuture() && $endsAt->startOfDay()->lte(now()->startOfDay()->addDays($days));
+        return $endsAt->startOfDay()->isFuture() && $endsAt->startOfDay()->lte(now()->startOfDay()->addDays($days));
     }
 
     /**

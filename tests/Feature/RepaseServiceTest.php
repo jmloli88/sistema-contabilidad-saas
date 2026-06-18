@@ -304,6 +304,84 @@ class RepaseServiceTest extends TestCase
         $this->assertSame(900.00, $total);
     }
 
+    // ────────────────────────────────────────────────────────────
+    // Dynamic laudo honorarios — normalizeGastos prefix handler
+    // ────────────────────────────────────────────────────────────
+
+    public function test_dynamic_laudo_key_normalizes_to_laudos_tipo(): void
+    {
+        // GIVEN an active examen exists
+        $examen = Examen::factory()->create([
+            'nombre' => 'EEG',
+            'precio_sin_nota' => 100.00,
+            'precio_con_nota' => 200.00,
+        ]);
+        $clinica = Clinica::factory()->create();
+
+        // WHEN creating a repase with a dynamic laudo gasto key
+        $data = $this->makeCreateData($clinica->id, $examen);
+        $data['gastos'] = [
+            'honorarios_laudo_examen_' . $examen->id => 200.00,
+        ];
+
+        $repase = $this->service->createRepase($data);
+
+        // THEN the gasto row has tipo='laudos', descripcion includes the exam name
+        $repase->load('gastos');
+        $this->assertCount(1, $repase->gastos);
+        $gasto = $repase->gastos->first();
+        $this->assertSame('laudos', $gasto->tipo);
+        $this->assertSame('Honorarios Laudos EEG', $gasto->descripcion);
+        $this->assertSame('honorarios_laudo_examen_' . $examen->id, $gasto->gasto_key);
+        $this->assertSame(200.00, (float) $gasto->monto);
+    }
+
+    public function test_legacy_keys_still_resolve_via_tipo_map(): void
+    {
+        // GIVEN an examen and clinica
+        $examen = Examen::factory()->create();
+        $clinica = Clinica::factory()->create();
+
+        // WHEN creating a repase with legacy laudo keys
+        $data = $this->makeCreateData($clinica->id, $examen);
+        $data['gastos'] = [
+            'honorarios_laudos_egg' => 100.00,
+            'honorarios_laudos_potencial' => 150.00,
+            'honorarios_laudo_electromiografia' => 200.00,
+        ];
+
+        $repase = $this->service->createRepase($data);
+
+        // THEN all rows have tipo='laudos'
+        $repase->load('gastos');
+        $this->assertCount(3, $repase->gastos);
+        foreach ($repase->gastos as $gasto) {
+            $this->assertSame('laudos', $gasto->tipo);
+        }
+    }
+
+    public function test_unknown_key_falls_back_to_extra_tipo(): void
+    {
+        // GIVEN an examen and clinica
+        $examen = Examen::factory()->create();
+        $clinica = Clinica::factory()->create();
+
+        // WHEN creating a repase with an unknown custom gasto key
+        $data = $this->makeCreateData($clinica->id, $examen);
+        $data['gastos'] = [
+            'custom_fee' => 50.00,
+        ];
+
+        $repase = $this->service->createRepase($data);
+
+        // THEN it falls back to tipo='extra'
+        $repase->load('gastos');
+        $this->assertCount(1, $repase->gastos);
+        $gasto = $repase->gastos->first();
+        $this->assertSame('extra', $gasto->tipo);
+        $this->assertSame('Custom fee', $gasto->descripcion);
+    }
+
     public function test_calculate_total_examenes_without_clinica_uses_global(): void
     {
         // GIVEN Examen X global=100

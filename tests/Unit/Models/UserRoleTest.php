@@ -11,37 +11,13 @@ class UserRoleTest extends TestCase
 {
     use RefreshDatabase;
 
-    // === subscriptionEndingSoon ===
+    // === subscriptionEndingSoon (now checks empresa's subscription) ===
 
-    public function test_subscription_ending_soon_returns_true_when_ends_at_is_within_days(): void
-    {
-        $user = User::factory()->create();
-        $user->ends_at = now()->addDays(6);
-
-        $this->assertTrue($user->subscriptionEndingSoon(7));
-    }
-
-    public function test_subscription_ending_soon_returns_false_when_ends_at_is_beyond_days(): void
-    {
-        $user = User::factory()->create();
-        $user->ends_at = now()->addDays(8);
-
-        $this->assertFalse($user->subscriptionEndingSoon(7));
-    }
-
-    public function test_subscription_ending_soon_returns_false_when_ends_at_is_null(): void
-    {
-        $user = User::factory()->create();
-        $user->ends_at = null;
-
-        $this->assertFalse($user->subscriptionEndingSoon(7));
-    }
-
-    public function test_subscription_ending_soon_returns_true_when_own_subscription_is_ending_soon(): void
+    public function test_subscription_ending_soon_returns_true_when_empresa_subscription_is_ending_soon(): void
     {
         $empresa = Empresa::factory()->create();
         $user = User::factory()->create(['empresa_id' => $empresa->id]);
-        $user->subscriptions()->create([
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_ending_soon',
             'stripe_status' => 'active',
@@ -52,11 +28,11 @@ class UserRoleTest extends TestCase
         $this->assertTrue($user->subscriptionEndingSoon(7));
     }
 
-    public function test_subscription_ending_soon_returns_false_when_own_subscription_is_not_ending_soon(): void
+    public function test_subscription_ending_soon_returns_false_when_empresa_subscription_is_not_ending_soon(): void
     {
         $empresa = Empresa::factory()->create();
         $user = User::factory()->create(['empresa_id' => $empresa->id]);
-        $user->subscriptions()->create([
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_far_away',
             'stripe_status' => 'active',
@@ -67,10 +43,34 @@ class UserRoleTest extends TestCase
         $this->assertFalse($user->subscriptionEndingSoon(7));
     }
 
-    public function test_subscription_ending_soon_returns_false_when_no_subscription(): void
+    public function test_subscription_ending_soon_returns_false_when_no_empresa_subscription(): void
     {
         $empresa = Empresa::factory()->create();
         $user = User::factory()->create(['empresa_id' => $empresa->id]);
+
+        $this->assertFalse($user->subscriptionEndingSoon(7));
+    }
+
+    public function test_subscription_ending_soon_returns_false_when_empresa_has_no_subscription(): void
+    {
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['empresa_id' => $empresa->id]);
+
+        // User has an empresa, but it has no subscriptions
+        $this->assertFalse($user->subscriptionEndingSoon(7));
+    }
+
+    public function test_subscription_ending_soon_returns_false_when_empresa_subscription_is_expired(): void
+    {
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['empresa_id' => $empresa->id]);
+        $empresa->subscriptions()->create([
+            'type' => 'default',
+            'stripe_id' => 'sub_expired',
+            'stripe_status' => 'active',
+            'stripe_price' => 'price_test',
+            'ends_at' => now()->subDays(1),
+        ]);
 
         $this->assertFalse($user->subscriptionEndingSoon(7));
     }

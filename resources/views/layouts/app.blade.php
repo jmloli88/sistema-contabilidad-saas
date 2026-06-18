@@ -63,17 +63,9 @@
                             @if(auth()->user()->subscriptionEndingSoon(7))
                                 @php
                                     $user = auth()->user();
-                                    $clinicName = $user->clinica?->nombre;
-                                    if ($user->clinica_id) {
-                                        $clinicSubUser = \App\Models\User::where('clinica_id', $user->clinica_id)
-                                            ->whereHas('subscriptions', fn($q) => $q->where('ends_at', '>', now()))
-                                            ->with(['subscriptions' => fn($q) => $q->where('ends_at', '>', now())->orderBy('ends_at')])
-                                            ->first();
-                                        $clinicSub = $clinicSubUser?->subscription('default');
-                                    } else {
-                                        $clinicSub = $user->subscription('default');
-                                    }
-                                    $daysRemaining = $clinicSub?->ends_at ? (int) ceil(now()->diffInDays($clinicSub->ends_at, true)) : null;
+                                    $empresa = $user->empresa;
+                                    $empresaSub = $empresa ? $empresa->subscription('default') : null;
+                                    $daysRemaining = $empresaSub?->ends_at ? (int) ceil(now()->diffInDays($empresaSub->ends_at, true)) : null;
                                 @endphp
                                 <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-0">
                                     <div class="flex items-center">
@@ -84,10 +76,8 @@
                                         </div>
                                         <div class="ml-3">
                                             <p class="text-sm text-yellow-700">
-                                                @if($clinicName && $daysRemaining !== null)
-                                                    La suscripción de {{ $clinicName }} vence en {{ $daysRemaining }} día(s).
-                                                @elseif($daysRemaining !== null)
-                                                    Tu suscripción vence en {{ $daysRemaining }} día(s).
+                                                @if($empresa && $daysRemaining !== null)
+                                                    La suscripción de {{ $empresa->nombre }} vence en {{ $daysRemaining }} día(s).
                                                 @else
                                                     Tu suscripción está por vencer.
                                                 @endif

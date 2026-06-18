@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Empresa;
+use App\Models\Examen;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Use Empresa as the Cashier customer model — subscriptions are per-empresa
+        Cashier::useCustomerModel(Empresa::class);
+
+        // Auto-seed 7 default exams when a new empresa is created
+        Empresa::created(function (Empresa $empresa) {
+            if ($empresa->examenes()->count() === 0) {
+                foreach (Examen::defaults() as $exam) {
+                    $empresa->examenes()->create($exam);
+                }
+            }
+        });
     }
 
     /**

@@ -14,6 +14,13 @@
                         @method('PUT')
 
                         <div class="mb-6">
+                            <x-input-label for="nombre" value="Nombre del Examen *" />
+                            <x-text-input id="nombre" type="text" name="nombre" 
+                                          :value="old('nombre', $examen->nombre)" required class="block mt-1 w-full" />
+                            <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
+                        </div>
+
+                        <div class="mb-6">
                             <x-input-label for="precio_sin_nota" value="Precio Sin Nota *" />
                             <x-text-input id="precio_sin_nota" type="number" step="0.01" min="0" name="precio_sin_nota" 
                                           :value="old('precio_sin_nota', $examen->precio_sin_nota)" required class="block mt-1 w-full" />

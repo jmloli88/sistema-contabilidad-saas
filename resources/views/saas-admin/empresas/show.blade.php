@@ -100,6 +100,19 @@
                         <dt class="text-sm font-medium text-gray-500">Última actualización</dt>
                         <dd class="mt-1 text-sm" style="color: #191c22;">{{ $empresa->updated_at->format('d/m/Y H:i') }}</dd>
                     </div>
+                    @if ($activeSubscription)
+                        @php
+                            $sub = $empresa->subscription('default');
+                        @endphp
+                        @if ($sub)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Vencimiento</dt>
+                            <dd class="mt-1 text-sm" style="color: #191c22;">
+                                {{ $sub->ends_at ? $sub->ends_at->format('d/m/Y H:i') : '—' }}
+                            </dd>
+                        </div>
+                        @endif
+                    @endif
                 </dl>
             </div>
 
@@ -120,10 +133,6 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse($empresa->users as $u)
-                                @php
-                                    $sub = $u->subscription('default');
-                                    $isActive = $sub && $sub->ends_at && $sub->ends_at->isFuture() && $sub->stripe_status === 'active';
-                                @endphp
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" style="color: #191c22;">
                                         {{ $u->name }}
@@ -135,15 +144,9 @@
                                         {{ $u->role }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($isActive)
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Activo
-                                            </span>
-                                        @else
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                Sin suscripción
-                                            </span>
-                                        @endif
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $activeSubscription ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                            {{ $activeSubscription ? 'Activo' : 'Sin suscripción' }}
+                                        </span>
                                     </td>
                                 </tr>
                             @empty

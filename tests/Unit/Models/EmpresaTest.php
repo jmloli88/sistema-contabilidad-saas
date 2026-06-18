@@ -79,13 +79,12 @@ class EmpresaTest extends TestCase
         );
     }
 
-    // === hasActiveSubscription ===
+    // === hasActiveSubscription (now uses Billable trait directly) ===
 
     public function test_empresa_with_active_subscription_returns_true(): void
     {
         $empresa = Empresa::factory()->create();
-        $user = \App\Models\User::factory()->create(['empresa_id' => $empresa->id]);
-        $user->subscriptions()->create([
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_active_test',
             'stripe_status' => 'active',
@@ -99,8 +98,7 @@ class EmpresaTest extends TestCase
     public function test_empresa_with_expired_subscription_returns_false(): void
     {
         $empresa = Empresa::factory()->create();
-        $user = \App\Models\User::factory()->create(['empresa_id' => $empresa->id]);
-        $user->subscriptions()->create([
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_expired_test',
             'stripe_status' => 'active',
@@ -111,7 +109,7 @@ class EmpresaTest extends TestCase
         $this->assertFalse($empresa->hasActiveSubscription());
     }
 
-    public function test_empresa_with_no_users_returns_false(): void
+    public function test_empresa_with_no_subscriptions_returns_false(): void
     {
         $empresa = Empresa::factory()->create();
 
@@ -121,8 +119,7 @@ class EmpresaTest extends TestCase
     public function test_empresa_with_canceled_subscription_returns_false(): void
     {
         $empresa = Empresa::factory()->create();
-        $user = \App\Models\User::factory()->create(['empresa_id' => $empresa->id]);
-        $user->subscriptions()->create([
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_canceled_test',
             'stripe_status' => 'canceled',
@@ -133,27 +130,28 @@ class EmpresaTest extends TestCase
         $this->assertFalse($empresa->hasActiveSubscription());
     }
 
-    public function test_empresa_with_multiple_users_one_active_returns_true(): void
+    public function test_empresa_has_billable_trait(): void
+    {
+        $this->assertContains(
+            'Laravel\Cashier\Billable',
+            class_uses(Empresa::class)
+        );
+    }
+
+    public function test_empresa_can_use_cashier_subscription_methods(): void
     {
         $empresa = Empresa::factory()->create();
-        $userWithSub = \App\Models\User::factory()->create(['empresa_id' => $empresa->id]);
-        $userWithSub->subscriptions()->create([
+        $empresa->subscriptions()->create([
             'type' => 'default',
-            'stripe_id' => 'sub_active_multi',
+            'stripe_id' => 'sub_cashier_test',
             'stripe_status' => 'active',
             'stripe_price' => 'price_test',
             'ends_at' => now()->addDays(30),
         ]);
-        \App\Models\User::factory()->count(2)->create(['empresa_id' => $empresa->id]);
 
-        $this->assertTrue($empresa->hasActiveSubscription());
-    }
-
-    public function test_empresa_with_users_but_no_subscriptions_returns_false(): void
-    {
-        $empresa = Empresa::factory()->create();
-        \App\Models\User::factory()->count(3)->create(['empresa_id' => $empresa->id]);
-
-        $this->assertFalse($empresa->hasActiveSubscription());
+        $sub = $empresa->subscription('default');
+        $this->assertNotNull($sub);
+        $this->assertEquals('active', $sub->stripe_status);
+        $this->assertCount(1, $empresa->subscriptions);
     }
 }

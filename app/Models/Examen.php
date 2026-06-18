@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\ScopedByEmpresa;
 use App\Support\EmpresaContext;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -30,6 +31,7 @@ class Examen extends Model
         'precio_sin_nota',
         'precio_con_nota',
         'empresa_id',
+        'is_active',
     ];
 
     /**
@@ -40,6 +42,7 @@ class Examen extends Model
     protected $casts = [
         'precio_sin_nota' => 'decimal:2',
         'precio_con_nota' => 'decimal:2',
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -100,6 +103,67 @@ class Examen extends Model
         return [
             'sin_nota' => $this->getPrecioParaClinica($clinicaId, 'sin_nota'),
             'con_nota' => $this->getPrecioParaClinica($clinicaId, 'con_nota'),
+        ];
+    }
+
+    // ========================================
+    // ACTIVE EXAM SCOPE
+    // ========================================
+
+    /**
+     * Scope: Filter to only active exams.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Get the 7 default exam templates for new empresas.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function defaults(): array
+    {
+        return [
+            [
+                'nombre' => 'Electroencefalograma c/ mapeamento 3d + foto estimulo',
+                'precio_sin_nota' => 200.00,
+                'precio_con_nota' => 220.00,
+            ],
+            [
+                'nombre' => 'Electroencefalograma c/ mapa',
+                'precio_sin_nota' => 120.00,
+                'precio_con_nota' => 140.00,
+            ],
+            [
+                'nombre' => 'Electroencefalograma',
+                'precio_sin_nota' => 100.00,
+                'precio_con_nota' => 120.00,
+            ],
+            [
+                'nombre' => 'Electroneuromiografia MEMBROS unilateral',
+                'precio_sin_nota' => 150.00,
+                'precio_con_nota' => 180.00,
+            ],
+            [
+                'nombre' => 'Electroneuromiografia FACIAL unilateral',
+                'precio_sin_nota' => 170.00,
+                'precio_con_nota' => 200.00,
+            ],
+            [
+                'nombre' => 'Potencial evocado VISUAL unilateral',
+                'precio_sin_nota' => 146.00,
+                'precio_con_nota' => 166.00,
+            ],
+            [
+                'nombre' => 'Potencial evocado AUDITIVO unilateral',
+                'precio_sin_nota' => 146.00,
+                'precio_con_nota' => 166.00,
+            ],
         ];
     }
 

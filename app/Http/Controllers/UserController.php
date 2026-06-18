@@ -24,8 +24,9 @@ class UserController extends Controller
     public function index(): View
     {
         $users = User::orderBy('name')->paginate(15);
+        $emailDomain = strtolower(substr(strrchr(auth()->user()->email, '@'), 1) ?: '');
         
-        return view('users.index', compact('users'));
+        return view('users.index', compact('users', 'emailDomain'));
     }
 
     /**
@@ -46,24 +47,34 @@ class UserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $adminDomain = strtolower(substr(strrchr(auth()->user()->email, '@'), 1) ?: '');
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email_local' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9._%+-]+$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => 'required|in:administrador,usuario',
         ], [
             'name.required' => 'El nombre es requerido.',
-            'email.required' => 'El correo electrónico es requerido.',
-            'email.email' => 'El correo electrónico debe ser válido.',
-            'email.unique' => 'Este correo electrónico ya está registrado.',
+            'email_local.required' => 'El nombre de correo es requerido.',
+            'email_local.regex' => 'El nombre de correo contiene caracteres no válidos.',
             'password.required' => 'La contraseña es requerida.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
             'role.required' => 'El rol es requerido.',
             'role.in' => 'El rol seleccionado no es válido.',
         ]);
 
+        $email = $validated['email_local'] . '@' . $adminDomain;
+
+        // Validate full email uniqueness
+        if (User::where('email', $email)->exists()) {
+            return back()->withErrors(['email_local' => 'Este correo electrónico ya está registrado.'])->withInput();
+        }
+
+        $validated['email'] = $email;
         $validated['password'] = Hash::make($validated['password']);
-        $validated['clinica_id'] = auth()->user()->clinica_id;
+        $validated['empresa_id'] = auth()->user()->empresa_id;
+        unset($validated['email_local']);
 
         User::create($validated);
 
@@ -92,20 +103,30 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user): RedirectResponse
     {
+        $adminDomain = strtolower(substr(strrchr(auth()->user()->email, '@'), 1) ?: '');
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email_local' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9._%+-]+$/'],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'role' => 'required|in:administrador,usuario',
         ], [
             'name.required' => 'El nombre es requerido.',
-            'email.required' => 'El correo electrónico es requerido.',
-            'email.email' => 'El correo electrónico debe ser válido.',
-            'email.unique' => 'Este correo electrónico ya está registrado.',
+            'email_local.required' => 'El nombre de correo es requerido.',
+            'email_local.regex' => 'El nombre de correo contiene caracteres no válidos.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
             'role.required' => 'El rol es requerido.',
             'role.in' => 'El rol seleccionado no es válido.',
         ]);
+
+        $email = $validated['email_local'] . '@' . $adminDomain;
+
+        if (User::where('email', $email)->where('id', '!=', $user->id)->exists()) {
+            return back()->withErrors(['email_local' => 'Este correo electrónico ya está registrado.'])->withInput();
+        }
+
+        $validated['email'] = $email;
+        unset($validated['email_local']);
 
         // Solo actualizar la contraseña si se proporcionó una nueva
         if (!empty($validated['password'])) {

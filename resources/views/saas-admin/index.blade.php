@@ -31,6 +31,14 @@
             </div>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="text-base font-semibold" style="color: #191c22;">Usuarios</h3>
+                    <button type="button" @click="createUser()"
+                            class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors">
+                        <span class="material-symbols-outlined text-lg">person_add</span>
+                        Nuevo Usuario
+                    </button>
+                </div>
                 <div class="p-6">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
@@ -40,7 +48,6 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clínica</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vence</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
@@ -49,9 +56,9 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($users as $u)
                                     @php
-                                        $sub = $u->subscription('default');
-                                        $status = $sub?->stripe_status ?? 'none';
-                                        $endsAt = $sub?->ends_at;
+                                        $empresaSub = $u->empresa ? $u->empresa->subscription('default') : null;
+                                        $status = $empresaSub?->stripe_status ?? 'none';
+                                        $endsAt = $empresaSub?->ends_at;
                                         $isExpired = $endsAt && $endsAt->isPast();
                                         $isActive = $endsAt && $endsAt->isFuture();
                                     @endphp
@@ -67,9 +74,6 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: #414753;">
                                             {{ $u->empresa?->nombre ?? '—' }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: #414753;">
-                                            {{ $u->clinica?->nombre ?? '—' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @if($status === 'none')
@@ -93,7 +97,7 @@
                                             <div class="flex items-center gap-0.5">
                                                 {{-- Editar --}}
                                                 <button type="button" title="Editar usuario"
-                                                        @click="editUser({ id: {{ $u->id }}, name: @js($u->name), email: @js($u->email), role: @js($u->role), clinica_id: {{ $u->clinica_id ?? 'null' }} })"
+                                                        @click="editUser({ id: {{ $u->id }}, name: @js($u->name), email: @js($u->email), role: @js($u->role), empresa_id: {{ $u->empresa_id ?? 'null' }} })"
                                                         class="p-1.5 rounded hover:bg-indigo-50 text-indigo-500 transition-colors">
                                                     <span class="material-symbols-outlined text-lg">edit</span>
                                                 </button>
@@ -135,7 +139,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="px-6 py-4 text-center text-sm" style="color: #727784;">
+                                        <td colspan="7" class="px-6 py-4 text-center text-sm" style="color: #727784;">
                                             No hay usuarios registrados.
                                         </td>
                                     </tr>
@@ -160,12 +164,12 @@
             {{-- Modal --}}
             <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 p-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold" style="color: #191c22;">Editar Usuario</h3>
+                    <h3 class="text-lg font-semibold" style="color: #191c22;" x-text="isEditing ? 'Editar Usuario' : 'Nuevo Usuario'"></h3>
                     <button @click="close()" class="p-1 rounded hover:bg-gray-100 text-gray-400">
                         <span class="material-symbols-outlined">close</span>
                     </button>
                 </div>
-                <form :action="'/saas/admin/' + userId + '/update'" method="POST" class="space-y-4">
+                <form :action="isEditing ? '/saas/admin/' + userId + '/update' : '/saas/admin/usuarios'" method="POST" class="space-y-4">
                     @csrf
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Nombre</label>
@@ -177,6 +181,11 @@
                         <input type="email" name="email" x-model="userEmail" required
                                class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     </div>
+                    <div x-show="!isEditing">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Contraseña</label>
+                        <input type="password" name="password" required x-show="!isEditing"
+                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Rol</label>
                         <select name="role" x-model="userRole" required
@@ -186,12 +195,12 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Clínica</label>
-                        <select name="clinica_id" x-model="userClinicaId"
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Empresa</label>
+                        <select name="empresa_id" x-model="userEmpresaId"
                                 class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            <option value="">— Sin clínica —</option>
-                            @foreach($clinicas as $c)
-                                <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+                            <option value="">— Sin empresa —</option>
+                            @foreach($empresas as $e)
+                                <option value="{{ $e->id }}">{{ $e->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -201,8 +210,8 @@
                             Cancelar
                         </button>
                         <button type="submit"
-                                class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
-                            Guardar
+                                class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+                                x-text="isEditing ? 'Guardar cambios' : 'Crear usuario'">
                         </button>
                     </div>
                 </form>
@@ -214,17 +223,28 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('userEditor', () => ({
                 open: false,
+                isEditing: false,
                 userId: null,
                 userName: '',
                 userEmail: '',
                 userRole: 'usuario',
-                userClinicaId: null,
+                userEmpresaId: null,
+                createUser() {
+                    this.isEditing = false;
+                    this.userId = null;
+                    this.userName = '';
+                    this.userEmail = '';
+                    this.userRole = 'usuario';
+                    this.userEmpresaId = null;
+                    this.open = true;
+                },
                 editUser(data) {
+                    this.isEditing = true;
                     this.userId = data.id;
                     this.userName = data.name;
                     this.userEmail = data.email;
                     this.userRole = data.role;
-                    this.userClinicaId = data.clinica_id;
+                    this.userEmpresaId = data.empresa_id;
                     this.open = true;
                 },
                 close() {

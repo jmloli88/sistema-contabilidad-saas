@@ -54,8 +54,9 @@ class EmpresaController extends Controller
             ->withCount(['users', 'clinicas', 'examenes'])
             ->findOrFail($id);
 
+        // Load users sorted by name (no need to eager load subscriptions on users anymore)
         $empresa->load(['users' => function ($q) {
-            $q->with('subscriptions')->orderBy('name');
+            $q->orderBy('name');
         }]);
 
         $activeSubscription = $empresa->hasActiveSubscription();

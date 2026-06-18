@@ -2,34 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Empresa;
 use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Http\Controllers\WebhookController as CashierWebhookController;
 
 class StripeWebhookController extends CashierWebhookController
 {
     /**
-     * Handle payment_intent.succeeded — create or extend subscription +30 days.
+     * Handle payment_intent.succeeded — create or extend subscription +30 days on the empresa.
      */
     protected function handlePaymentIntentSucceeded(array $payload)
     {
         $intent = $payload['data']['object'];
-        $userId = $intent['metadata']['user_id'] ?? null;
+        $empresaId = $intent['metadata']['empresa_id'] ?? $intent['metadata']['user_id'] ?? null;
 
-        if (!$userId) {
+        if (! $empresaId) {
             return $this->successMethod();
         }
 
-        $user = User::find($userId);
-        if (!$user) {
+        // Try by empresa_id first, then fallback to user_id → empresa
+        $empresa = Empresa::find($empresaId);
+
+        if (! $empresa) {
+            // Try to find via user's empresa
+            $user = \App\Models\User::find($empresaId);
+            if ($user && $user->empresa) {
+                $empresa = $user->empresa;
+            }
+        }
+
+        if (! $empresa) {
             return $this->successMethod();
         }
 
-        $subscription = $user->subscription('default');
+        $subscription = $empresa->subscription('default');
 
         if (!$subscription || $subscription->stripe_status === 'incomplete') {
             // First payment or incomplete: create subscription
-            $user->subscriptions()->updateOrCreate(
+            $empresa->subscriptions()->updateOrCreate(
                 ['type' => 'default'],
                 [
                     'stripe_id' => $intent['id'],
@@ -40,14 +50,8 @@ class StripeWebhookController extends CashierWebhookController
                 ]
             );
         } else {
-            // Extend existing subscription by 30 days from current ends_at (or now)
-            $currentEndsAt = $subscription->ends_at ?? now();
-            $newEndsAt = $currentEndsAt->gt(now()) ? $currentEndsAt->addDays(30) : now()->addDays(30);
-
-            $subscription->update([
-                'stripe_status' => 'active',
-                'ends_at' => $newEndsAt,
-            ]);
+            // Already exists (created by X-Confirm-Payment) — don't add extra days
+            $subscription->update(['stripe_status' => 'active']);
         }
 
         return $this->successMethod();

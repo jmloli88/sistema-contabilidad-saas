@@ -14,7 +14,19 @@ class BillingController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $subscription = $user->subscription('default');
+
+        if (! $user->empresa) {
+            return view('billing.index', [
+                'subscription' => null,
+                'isActive' => false,
+                'isExpired' => true,
+                'daysRemaining' => 0,
+                'endsAt' => null,
+                'paymentHistory' => collect(),
+            ]);
+        }
+
+        $subscription = $user->empresa->subscription('default');
 
         $isActive = false;
         $isExpired = false;
@@ -26,7 +38,7 @@ class BillingController extends Controller
             $secondsRemaining = max(0, $endsAt->timestamp - now()->timestamp);
             $daysRemaining = (int) ceil($secondsRemaining / 86400);
 
-            if ($endsAt->isFuture()) {
+            if ($endsAt->startOfDay()->isFuture()) {
                 $isActive = true;
             } else {
                 $isExpired = true;
@@ -35,8 +47,10 @@ class BillingController extends Controller
             $isExpired = true;
         }
 
-        // Mock payment history — real history would come from a payments table
-        $paymentHistory = collect();
+        // Payment history from empresa's subscription records
+        $paymentHistory = $user->empresa
+            ? $user->empresa->subscriptions()->orderByDesc('created_at')->get()
+            : collect();
 
         return view('billing.index', compact(
             'subscription',
@@ -55,26 +69,51 @@ class BillingController extends Controller
     {
         $user = auth()->user();
 
+        if (! $user->empresa) {
+            return response()->json(['error' => 'No se encontró la empresa del usuario.'], 400);
+        }
+
+        $empresa = $user->empresa;
+
+        // Create subscription immediately (webhook will also fire, use updateOrCreate to avoid double-add)
+        if ($request->header('X-Confirm-Payment')) {
+            $empresa->subscriptions()->updateOrCreate(
+                ['type' => 'default'],
+                [
+                    'stripe_id' => $request->header('X-Confirm-Payment'),
+                    'stripe_status' => 'active',
+                    'stripe_price' => 'price_manual',
+                    'ends_at' => now()->addDays(30),
+                ]
+            );
+            return response()->json(['status' => 'ok']);
+        }
+
         Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
             $intent = PaymentIntent::create([
                 'amount' => 5000,
                 'currency' => 'brl',
-                'payment_method_types' => ['pix'],
+                'payment_method_types' => ['card'],
                 'metadata' => [
+                    'empresa_id' => $empresa->id,
                     'user_id' => $user->id,
                 ],
             ]);
 
-            // Store the PaymentIntent ID temporarily on the user
-            $user->update(['stripe_id' => $intent->id]);
+            // Store the PaymentIntent ID temporarily on the empresa
+            $empresa->update(['stripe_id' => $intent->id]);
 
             return response()->json([
                 'client_secret' => $intent->client_secret,
                 'payment_intent_id' => $intent->id,
             ]);
         } catch (\Exception $e) {
+            \Log::error('Stripe PaymentIntent error: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'empresa_id' => $empresa->id,
+            ]);
             return response()->json([
                 'error' => __('Error al procesar el pago. Intente nuevamente.'),
             ], 500);

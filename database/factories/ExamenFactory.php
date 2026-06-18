@@ -25,6 +25,7 @@ class ExamenFactory extends Factory
             'precio_sin_nota' => $precioSinNota,
             'precio_con_nota' => $precioConNota,
             'empresa_id' => Empresa::factory(),
+            'is_active' => true,
         ];
     }
 }

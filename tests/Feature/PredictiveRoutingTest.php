@@ -12,32 +12,42 @@ class PredictiveRoutingTest extends TestCase
 
     private User $adminUser;
     private User $regularUser;
+    private \App\Models\Empresa $adminEmpresa;
+    private \App\Models\Empresa $regularEmpresa;
 
     protected function setUp(): void
     {
         parent::setUp();
         
+        // Create empresa for admin user
+        $this->adminEmpresa = \App\Models\Empresa::factory()->create(['nombre' => 'Admin Empresa Route']);
+        
         // Create admin user
         $this->adminUser = User::factory()->create([
+            'empresa_id' => $this->adminEmpresa->id,
             'role' => 'administrador',
             'email' => 'admin@test.com'
         ]);
         
+        // Create empresa for regular user
+        $this->regularEmpresa = \App\Models\Empresa::factory()->create(['nombre' => 'Regular Empresa Route']);
+        
         // Create regular user
         $this->regularUser = User::factory()->create([
+            'empresa_id' => $this->regularEmpresa->id,
             'role' => 'usuario',
             'email' => 'user@test.com'
         ]);
         
-        // Create subscriptions so users pass through subscription middleware
-        $this->adminUser->subscriptions()->create([
+        // Create subscriptions on the empresas so users pass through subscription middleware
+        $this->adminEmpresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_admin_route',
             'stripe_status' => 'active',
             'stripe_price' => 'price_test',
             'ends_at' => now()->addDays(30),
         ]);
-        $this->regularUser->subscriptions()->create([
+        $this->regularEmpresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_regular_route',
             'stripe_status' => 'active',

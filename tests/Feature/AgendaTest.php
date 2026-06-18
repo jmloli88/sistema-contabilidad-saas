@@ -22,7 +22,7 @@ class AgendaTest extends TestCase
         $this->user = User::factory()->create([
             'empresa_id' => $this->empresa->id,
         ]);
-        $this->user->subscriptions()->create([
+        $this->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_agenda_test',
             'stripe_status' => 'active',

@@ -419,6 +419,17 @@ class RepaseService
                             'monto' => $montoFloat,
                         ];
                     }
+                    // Dynamic laudo honorarios: honorarios_laudo_examen_{id}
+                    elseif (str_starts_with($tipoKey, 'honorarios_laudo_examen_')) {
+                        $examId = (int) substr($tipoKey, strlen('honorarios_laudo_examen_'));
+                        $exam = \App\Models\Examen::find($examId);
+                        $normalized[] = [
+                            'tipo' => 'laudos',
+                            'descripcion' => $exam ? 'Honorarios Laudos ' . $exam->nombre : 'Honorarios Laudos Examen #' . $examId,
+                            'gasto_key' => $tipoKey,
+                            'monto' => $montoFloat,
+                        ];
+                    }
                     // Si no existe en el mapeo, usar 'extra' como tipo por defecto
                     else {
                         $normalized[] = [

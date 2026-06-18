@@ -91,6 +91,10 @@ Route::middleware(['auth', 'verified', 'subscription', 'admin', 'empresa.scope']
     
     // Gestión de exámenes (precios)
     Route::get('/examenes', [ExamenController::class, 'index'])->name('examenes.index');
+    Route::get('/examenes/create', [ExamenController::class, 'create'])->name('examenes.create');
+    Route::post('/examenes', [ExamenController::class, 'store'])->name('examenes.store');
+    Route::patch('/examenes/{examen}/toggle', [ExamenController::class, 'toggle'])->name('examenes.toggle');
+    Route::delete('/examenes/{examen}', [ExamenController::class, 'destroy'])->name('examenes.destroy');
     Route::get('/examenes/{examen}/edit', [ExamenController::class, 'edit'])->name('examenes.edit');
     Route::put('/examenes/{examen}', [ExamenController::class, 'update'])->name('examenes.update');
     
@@ -131,6 +135,7 @@ Route::middleware(['auth', 'verified', 'subscription', 'admin', 'empresa.scope']
 Route::middleware(['auth:saas'])->prefix('saas/admin')->name('saas.admin.')->group(function () {
     Route::get('/', [SaaSAdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/usuarios', [SaaSAdminController::class, 'index'])->name('index');
+    Route::post('/usuarios', [SaaSAdminController::class, 'storeUser'])->name('users.store');
     Route::post('/{user}/extend', [SaaSAdminController::class, 'extend'])->name('extend');
     Route::post('/{user}/cancel', [SaaSAdminController::class, 'cancel'])->name('cancel');
     Route::post('/{user}/expiry', [SaaSAdminController::class, 'setExpiry'])->name('expiry');

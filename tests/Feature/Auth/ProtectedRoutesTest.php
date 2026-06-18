@@ -19,8 +19,9 @@ class ProtectedRoutesTest extends TestCase
 
     public function test_authenticated_users_can_access_dashboard(): void
     {
-        $user = User::factory()->create();
-        $user->subscriptions()->create([
+        $empresa = \App\Models\Empresa::factory()->create();
+        $user = User::factory()->create(['empresa_id' => $empresa->id]);
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_protected_test',
             'stripe_status' => 'active',
@@ -42,8 +43,9 @@ class ProtectedRoutesTest extends TestCase
 
     public function test_authenticated_users_can_access_profile(): void
     {
-        $user = User::factory()->create();
-        $user->subscriptions()->create([
+        $empresa = \App\Models\Empresa::factory()->create();
+        $user = User::factory()->create(['empresa_id' => $empresa->id]);
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_protected_profile',
             'stripe_status' => 'active',

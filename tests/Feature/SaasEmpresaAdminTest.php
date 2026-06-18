@@ -109,7 +109,7 @@ class SaasEmpresaAdminTest extends TestCase
             'clinica_id' => $clinica->id,
             'name' => 'User Detalle',
         ]);
-        $user->subscriptions()->create([
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_detalle_active',
             'stripe_status' => 'active',
@@ -130,7 +130,7 @@ class SaasEmpresaAdminTest extends TestCase
     {
         $empresa = Empresa::factory()->create(['nombre' => 'Sub Active Test']);
         $user = User::factory()->create(['empresa_id' => $empresa->id]);
-        $user->subscriptions()->create([
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_active',
             'stripe_status' => 'active',

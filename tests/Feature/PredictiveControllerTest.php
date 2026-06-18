@@ -18,19 +18,23 @@ class PredictiveControllerTest extends TestCase
     {
         parent::setUp();
         
-        // Create test users
-        $this->adminUser = User::factory()->create(['role' => 'administrador']);
-        $this->regularUser = User::factory()->create(['role' => 'usuario']);
+        // Create empresas for test users
+        $adminEmpresa = \App\Models\Empresa::factory()->create(['nombre' => 'Admin Pred Empresa']);
+        $regularEmpresa = \App\Models\Empresa::factory()->create(['nombre' => 'Regular Pred Empresa']);
         
-        // Create subscriptions so users pass through subscription middleware
-        $this->adminUser->subscriptions()->create([
+        // Create test users
+        $this->adminUser = User::factory()->create(['role' => 'administrador', 'empresa_id' => $adminEmpresa->id]);
+        $this->regularUser = User::factory()->create(['role' => 'usuario', 'empresa_id' => $regularEmpresa->id]);
+        
+        // Create subscriptions on the empresas so users pass through subscription middleware
+        $adminEmpresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_admin_test',
             'stripe_status' => 'active',
             'stripe_price' => 'price_test',
             'ends_at' => now()->addDays(30),
         ]);
-        $this->regularUser->subscriptions()->create([
+        $regularEmpresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_regular_test',
             'stripe_status' => 'active',

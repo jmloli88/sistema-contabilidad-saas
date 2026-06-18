@@ -30,8 +30,8 @@ class PreventDuplicateSubmissionsTest extends TestCase
             'empresa_id' => $this->empresa->id,
             'role' => 'administrador',
         ]);
-        // Give admin a subscription so subscription middleware passes
-        $this->admin->subscriptions()->create([
+        // Give the empresa a subscription so subscription middleware passes
+        $this->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_admin_test',
             'stripe_status' => 'active',

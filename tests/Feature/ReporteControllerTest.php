@@ -18,8 +18,9 @@ class ReporteControllerTest extends TestCase
 
     private function createAdminWithSubscription(array $extra = []): User
     {
-        $user = User::factory()->create(array_merge(['role' => 'administrador'], $extra));
-        $user->subscriptions()->create([
+        $empresa = \App\Models\Empresa::factory()->create(['nombre' => 'Admin ' . uniqid()]);
+        $user = User::factory()->create(array_merge(['role' => 'administrador', 'empresa_id' => $empresa->id], $extra));
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_admin_' . uniqid(),
             'stripe_status' => 'active',
@@ -31,8 +32,9 @@ class ReporteControllerTest extends TestCase
 
     private function createUserWithSubscription(array $extra = []): User
     {
-        $user = User::factory()->create(array_merge(['role' => 'usuario'], $extra));
-        $user->subscriptions()->create([
+        $empresa = \App\Models\Empresa::factory()->create(['nombre' => 'User ' . uniqid()]);
+        $user = User::factory()->create(array_merge(['role' => 'usuario', 'empresa_id' => $empresa->id], $extra));
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_user_' . uniqid(),
             'stripe_status' => 'active',

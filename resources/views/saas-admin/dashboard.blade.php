@@ -48,28 +48,12 @@
                     </div>
                 </div>
 
-                <!-- Clínicas Activas -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-200 hover:shadow-md">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500 mb-1">Clínicas Activas</p>
-                            <p class="text-3xl font-bold text-indigo-600">{{ $activeClinics }}</p>
-                        </div>
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(99, 102, 241, 0.1);">
-                            <span class="material-symbols-outlined text-2xl" style="color: #6366f1; font-variation-settings: 'FILL' 1;">business</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KPI Cards Grid — Row 2: Subscription KPIs -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Suscripciones Activas -->
+                <!-- Suscripciones Activas (Empresas) -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-200 hover:shadow-md">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-500 mb-1">Suscripciones Activas</p>
-                            <p class="text-3xl font-bold text-green-600">{{ $activeCount }}</p>
+                            <p class="text-3xl font-bold text-green-600">{{ $activeEmpresas }}</p>
                         </div>
                         <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(34, 197, 94, 0.1);">
                             <span class="material-symbols-outlined text-2xl" style="color: #22c55e; font-variation-settings: 'FILL' 1;">check_circle</span>
@@ -77,12 +61,12 @@
                     </div>
                 </div>
 
-                <!-- Suscripciones Expiradas -->
+                <!-- Suscripciones Expiradas (Empresas) -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-200 hover:shadow-md">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-500 mb-1">Suscripciones Expiradas</p>
-                            <p class="text-3xl font-bold text-red-600">{{ $expiredCount }}</p>
+                            <p class="text-3xl font-bold text-red-600">{{ $expiredEmpresas }}</p>
                         </div>
                         <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background-color: rgba(239, 68, 68, 0.1);">
                             <span class="material-symbols-outlined text-2xl" style="color: #ef4444; font-variation-settings: 'FILL' 1;">warning</span>
@@ -90,7 +74,7 @@
                     </div>
                 </div>
 
-                <!-- Por Vencer -->
+                <!-- Por Vencer (Empresas) -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-200 hover:shadow-md">
                     <div class="flex items-center justify-between">
                         <div>
@@ -110,7 +94,7 @@
                     <div>
                         <p class="text-indigo-200 text-sm font-medium mb-1">Ingreso Mensual Estimado (MRR)</p>
                         <p class="text-4xl font-bold">R$ {{ number_format($estimatedMRR, 0, ',', '.') }}</p>
-                        <p class="text-indigo-200 text-xs mt-1">Basado en R$50 por suscripción activa</p>
+                        <p class="text-indigo-200 text-xs mt-1">Basado en R$50 por suscripción activa de empresa</p>
                     </div>
                     <div class="w-16 h-16 rounded-2xl flex items-center justify-center bg-white/20">
                         <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">trending_up</span>
@@ -118,42 +102,38 @@
                 </div>
             </div>
 
-            <!-- Usuarios Recientes -->
+            <!-- Empresas Recientes -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold" style="color: #1a1a2e;">Usuarios Recientes</h3>
-                    <a href="{{ route('saas.admin.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline">
-                        Ver todos
+                    <h3 class="text-lg font-semibold" style="color: #1a1a2e;">Empresas Recientes</h3>
+                    <a href="{{ route('saas.admin.empresas.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline">
+                        Ver todas
                     </a>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clínica</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuarios</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vence</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse($recentUsers as $u)
+                            @forelse($recentEmpresas as $emp)
                                 @php
-                                    $sub = $u->subscription('default');
+                                    $sub = $emp->subscription('default');
                                     $status = $sub?->stripe_status ?? 'none';
                                     $endsAt = $sub?->ends_at;
                                     $isActive = $endsAt && $endsAt->isFuture();
                                 @endphp
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" style="color: #191c22;">
-                                        {{ $u->name }}
+                                        {{ $emp->nombre }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: #414753;">
-                                        {{ $u->email }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: #414753;">
-                                        {{ $u->clinica?->nombre ?? '—' }}
+                                        {{ $emp->users->count() }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($status === 'none')
@@ -176,8 +156,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-4 text-center text-sm" style="color: #727784;">
-                                        No hay usuarios registrados.
+                                    <td colspan="4" class="px-6 py-4 text-center text-sm" style="color: #727784;">
+                                        No hay empresas registradas.
                                     </td>
                                 </tr>
                             @endforelse
@@ -203,14 +183,6 @@
                        onmouseout="this.style.backgroundColor='#f1f5f9';">
                         <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">group</span>
                         Ver Todos los Usuarios
-                    </a>
-                    <a href="{{ route('billing.index') }}" 
-                       class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:opacity-90"
-                       style="background-color: #f1f5f9; color: #1a1a2e;"
-                       onmouseover="this.style.backgroundColor='#e2e8f0';"
-                       onmouseout="this.style.backgroundColor='#f1f5f9';">
-                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">credit_card</span>
-                        Ir a Facturación
                     </a>
                 </div>
             </div>

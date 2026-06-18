@@ -36,6 +36,9 @@
             </div>
             <div class="flex-1 min-w-0">
                 <h1 class="text-base font-bold tracking-tight" style="color: #191c22; line-height: 1.2;">Contabilidad</h1>
+                @if(Auth::user()->empresa_id)
+                    <p class="text-[11px] font-medium truncate" style="color: #005ab6;">{{ Auth::user()->empresa->nombre }}</p>
+                @endif
             </div>
         </div>
 

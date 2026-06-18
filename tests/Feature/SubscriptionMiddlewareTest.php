@@ -16,8 +16,9 @@ class SubscriptionMiddlewareTest extends TestCase
 
     public function test_expired_user_is_redirected_to_billing(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
-        $user->subscriptions()->create([
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
+        $user->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_expired',
             'stripe_status' => 'active',
@@ -32,8 +33,9 @@ class SubscriptionMiddlewareTest extends TestCase
 
     public function test_active_user_passes_through(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
-        $user->subscriptions()->create([
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
+        $user->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_active',
             'stripe_status' => 'active',
@@ -48,8 +50,9 @@ class SubscriptionMiddlewareTest extends TestCase
 
     public function test_expired_user_can_access_billing_page(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
-        $user->subscriptions()->create([
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
+        $user->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_billing',
             'stripe_status' => 'active',
@@ -65,8 +68,9 @@ class SubscriptionMiddlewareTest extends TestCase
 
     public function test_expired_user_can_access_profile_page(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
-        $user->subscriptions()->create([
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
+        $user->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_profile',
             'stripe_status' => 'active',
@@ -88,7 +92,8 @@ class SubscriptionMiddlewareTest extends TestCase
 
     public function test_expired_user_without_subscription_row_is_redirected(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
 
         $response = $this->actingAs($user)->get('/dashboard');
 
@@ -106,7 +111,8 @@ class SubscriptionMiddlewareTest extends TestCase
             'clinica_id' => $clinic->id,
             'role' => 'administrador',
         ]);
-        $admin->subscriptions()->create([
+        // Subscription is on the empresa
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_clinic_active',
             'stripe_status' => 'active',
@@ -126,12 +132,15 @@ class SubscriptionMiddlewareTest extends TestCase
 
     public function test_user_in_clinic_without_active_subscription_is_redirected(): void
     {
-        $clinic = Clinica::factory()->create();
+        $empresa = Empresa::factory()->create();
+        $clinic = Clinica::factory()->create(['empresa_id' => $empresa->id]);
         $admin = User::factory()->create([
+            'empresa_id' => $empresa->id,
             'clinica_id' => $clinic->id,
             'role' => 'administrador',
         ]);
-        $admin->subscriptions()->create([
+        // Expired subscription on the empresa
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_clinic_expired',
             'stripe_status' => 'active',
@@ -139,6 +148,7 @@ class SubscriptionMiddlewareTest extends TestCase
             'ends_at' => now()->subDays(1),
         ]);
         $member = User::factory()->create([
+            'empresa_id' => $empresa->id,
             'clinica_id' => $clinic->id,
             'role' => 'usuario',
         ]);
@@ -148,9 +158,10 @@ class SubscriptionMiddlewareTest extends TestCase
         $response->assertRedirect('/billing');
     }
 
-    public function test_user_without_clinica_and_without_own_subscription_is_redirected(): void
+    public function test_user_with_empresa_but_no_subscription_is_redirected(): void
     {
-        $user = User::factory()->create(['clinica_id' => null, 'role' => 'usuario']);
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['empresa_id' => $empresa->id, 'clinica_id' => null, 'role' => 'usuario']);
 
         $response = $this->actingAs($user)->get('/dashboard');
 

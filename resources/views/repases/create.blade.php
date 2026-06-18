@@ -270,24 +270,16 @@
                                                    placeholder="Monto"
                                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                         </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Honorarios Laudos EGG</label>
-                                            <input type="number" step="0.01" min="0" x-model.number="gastos.honorarios_laudos_egg" 
-                                                   @input="calcularTotalGastos" name="gastos[honorarios_laudos_egg]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Honorarios Laudos Potencial</label>
-                                            <input type="number" step="0.01" min="0" x-model.number="gastos.honorarios_laudos_potencial" 
-                                                   @input="calcularTotalGastos" name="gastos[honorarios_laudos_potencial]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Honorarios Laudo Electromiografía</label>
-                                            <input type="number" step="0.01" min="0" x-model.number="gastos.honorarios_laudo_electromiografia" 
-                                                   @input="calcularTotalGastos" name="gastos[honorarios_laudo_electromiografia]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        </div>
+                                        <template x-for="examen in examenesDisponibles" :key="'laudo_' + examen.id">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1" x-text="'Honorarios Laudos ' + examen.nombre"></label>
+                                                <input type="number" step="0.01" min="0" 
+                                                       :value="gastos['honorarios_laudo_examen_' + examen.id] || 0"
+                                                       @input="gastos['honorarios_laudo_examen_' + examen.id] = parseFloat($event.target.value) || 0; calcularTotalGastos()"
+                                                       :name="'gastos[honorarios_laudo_examen_' + examen.id + ']'"
+                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            </div>
+                                        </template>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Honorarios Motorista</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.honorarios_motorista" 
@@ -548,9 +540,7 @@
                     honorarios_medicos: parseFloat('{{ old('gastos.honorarios_medicos', '0') }}'),
                     honorarios_tecnico_1: parseFloat('{{ old('gastos.honorarios_tecnico_1', '0') }}'),
                     honorarios_tecnico_2: parseFloat('{{ old('gastos.honorarios_tecnico_2', '0') }}'),
-                    honorarios_laudos_egg: parseFloat('{{ old('gastos.honorarios_laudos_egg', '0') }}'),
-                    honorarios_laudos_potencial: parseFloat('{{ old('gastos.honorarios_laudos_potencial', '0') }}'),
-                    honorarios_laudo_electromiografia: parseFloat('{{ old('gastos.honorarios_laudo_electromiografia', '0') }}'),
+                    // Los laudos dinámicos se inicializan en init()
                     honorarios_motorista: parseFloat('{{ old('gastos.honorarios_motorista', '0') }}'),
                     gasolina_equipo: parseFloat('{{ old('gastos.gasolina_equipo', '0') }}'),
                     gasolina_medico: parseFloat('{{ old('gastos.gasolina_medico', '0') }}'),
@@ -613,11 +603,24 @@
                         this.examenes[examen.id] = 0;
                     });
                     
+                    // Inicializar gastos de laudos dinámicos con 0 para cada examen activo
+                    this.examenesDisponibles.forEach(examen => {
+                        this.gastos['honorarios_laudo_examen_' + examen.id] = 0;
+                    });
+                    
                     // Restaurar datos de old() si hay errores de validación
                     @if(old('examenes'))
                         @foreach(old('examenes') as $examenId => $examen)
                             @if(isset($examen['cantidad']))
                                 this.examenes[{{ $examenId }}] = {{ $examen['cantidad'] }};
+                            @endif
+                        @endforeach
+                    @endif
+                    
+                    @if(old('gastos'))
+                        @foreach(old('gastos') as $key => $value)
+                            @if(str_starts_with($key, 'honorarios_laudo'))
+                                this.gastos['{{ $key }}'] = parseFloat({{ $value }});
                             @endif
                         @endforeach
                     @endif

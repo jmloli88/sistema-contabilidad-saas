@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
@@ -35,7 +36,7 @@ class StripeWebhookTest extends TestCase
         return $this->postJson('/stripe/webhook', $payload, $headers);
     }
 
-    protected function validPaymentIntentPayload(int $userId, string $intentId = 'pi_test_123'): array
+    protected function validPaymentIntentPayload(int $empresaId, string $intentId = 'pi_test_123'): array
     {
         return [
             'id' => 'evt_test_123',
@@ -47,39 +48,40 @@ class StripeWebhookTest extends TestCase
                     'currency' => 'brl',
                     'status' => 'succeeded',
                     'metadata' => [
-                        'user_id' => (string) $userId,
+                        'empresa_id' => (string) $empresaId,
+                        'user_id' => (string) $empresaId,
                     ],
                 ],
             ],
         ];
     }
 
-    public function test_payment_intent_succeeded_creates_subscription_for_new_user(): void
+    public function test_payment_intent_succeeded_creates_subscription_for_new_empresa(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
+        $empresa = Empresa::factory()->create();
 
-        $payload = $this->validPaymentIntentPayload($user->id);
+        $payload = $this->validPaymentIntentPayload($empresa->id);
 
         $response = $this->postWebhook($payload);
 
         $response->assertStatus(200);
 
         $this->assertDatabaseHas('subscriptions', [
-            'user_id' => $user->id,
+            'empresa_id' => $empresa->id,
             'stripe_status' => 'active',
         ]);
 
-        $subscription = $user->subscription('default');
+        $subscription = $empresa->subscription('default');
         $this->assertNotNull($subscription);
         $this->assertTrue($subscription->ends_at->isFuture());
     }
 
     public function test_payment_intent_succeeded_extends_existing_subscription_by_30_days(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
+        $empresa = Empresa::factory()->create();
         $originalEndsAt = now()->addDays(10);
 
-        $user->subscriptions()->create([
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_existing',
             'stripe_status' => 'active',
@@ -87,13 +89,13 @@ class StripeWebhookTest extends TestCase
             'ends_at' => $originalEndsAt,
         ]);
 
-        $payload = $this->validPaymentIntentPayload($user->id, 'pi_test_456');
+        $payload = $this->validPaymentIntentPayload($empresa->id, 'pi_test_456');
 
         $response = $this->postWebhook($payload);
 
         $response->assertStatus(200);
 
-        $subscription = $user->fresh()->subscription('default');
+        $subscription = $empresa->fresh()->subscription('default');
         $this->assertNotNull($subscription);
         // Should be original + 30 = 40 days from original
         $this->assertTrue($subscription->ends_at->gt(now()->addDays(35)));
@@ -130,14 +132,14 @@ class StripeWebhookTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_payment_intent_succeeded_without_user_id_still_returns_200(): void
+    public function test_payment_intent_succeeded_without_empresa_id_still_returns_200(): void
     {
         $payload = [
-            'id' => 'evt_test_no_user',
+            'id' => 'evt_test_no_empresa',
             'type' => 'payment_intent.succeeded',
             'data' => [
                 'object' => [
-                    'id' => 'pi_test_no_user',
+                    'id' => 'pi_test_no_empresa',
                     'amount' => 5000,
                     'currency' => 'brl',
                     'metadata' => [],
@@ -150,7 +152,7 @@ class StripeWebhookTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_payment_intent_succeeded_for_nonexistent_user_still_returns_200(): void
+    public function test_payment_intent_succeeded_for_nonexistent_empresa_still_returns_200(): void
     {
         $payload = $this->validPaymentIntentPayload(99999);
 

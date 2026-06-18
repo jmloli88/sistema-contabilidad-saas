@@ -23,8 +23,8 @@ class ExamenPrecioClinicaTest extends TestCase
             'empresa_id' => $this->empresa->id,
             'role' => 'administrador',
         ]);
-        // Give admin a subscription so subscription middleware passes
-        $this->admin->subscriptions()->create([
+        // Give the empresa a subscription so subscription middleware passes
+        $this->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_admin_test',
             'stripe_status' => 'active',
@@ -77,6 +77,7 @@ class ExamenPrecioClinicaTest extends TestCase
         // WHEN saving per-clinic overrides via update
         $response = $this->actingAs($this->admin)
             ->put(route('examenes.update', $examen), [
+                'nombre' => $examen->nombre,
                 'precio_sin_nota' => 100.00,
                 'precio_con_nota' => 200.00,
                 'precios_clinicas' => [
@@ -126,6 +127,7 @@ class ExamenPrecioClinicaTest extends TestCase
         // WHEN saving with empty/blank per-clinic prices
         $response = $this->actingAs($this->admin)
             ->put(route('examenes.update', $examen), [
+                'nombre' => $examen->nombre,
                 'precio_sin_nota' => 100.00,
                 'precio_con_nota' => 200.00,
                 'precios_clinicas' => [

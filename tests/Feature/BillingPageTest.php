@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,8 +13,9 @@ class BillingPageTest extends TestCase
 
     public function test_active_subscription_shows_status_and_hides_payment_button(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
-        $user->subscriptions()->create([
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
+        $user->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_active',
             'stripe_status' => 'active',
@@ -25,14 +27,15 @@ class BillingPageTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Activo');
-        $response->assertDontSee('Pagar con PIX');
+        $response->assertDontSee('Pagar con Tarjeta');
         $response->assertDontSee('Renovar');
     }
 
     public function test_expired_subscription_shows_expired_and_renovate_button(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
-        $user->subscriptions()->create([
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
+        $user->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_expired',
             'stripe_status' => 'active',
@@ -49,19 +52,21 @@ class BillingPageTest extends TestCase
 
     public function test_no_subscription_shows_no_subscription_message_and_payment_button(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
 
         $response = $this->actingAs($user)->get(route('billing.index'));
 
         $response->assertStatus(200);
         $response->assertSee('Sin suscripción activa');
-        $response->assertSee('Pagar con PIX');
+        $response->assertSee('Pagar con Tarjeta');
     }
 
     public function test_subscription_ending_soon_shows_remaining_days_and_payment_button(): void
     {
-        $user = User::factory()->create(['role' => 'usuario']);
-        $user->subscriptions()->create([
+        $empresa = Empresa::factory()->create();
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
+        $user->empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_ending',
             'stripe_status' => 'active',
@@ -73,6 +78,6 @@ class BillingPageTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Vence en');
-        $response->assertSee('Pagar con PIX');
+        $response->assertSee('Pagar con Tarjeta');
     }
 }

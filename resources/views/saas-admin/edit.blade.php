@@ -48,15 +48,15 @@
                         </div>
 
                         <div>
-                            <label for="clinica_id" class="block text-sm font-medium text-gray-700 mb-1">Clínica</label>
-                            <select name="clinica_id" id="clinica_id"
+                            <label for="empresa_id" class="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
+                            <select name="empresa_id" id="empresa_id"
                                     class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                <option value="">— Sin clínica —</option>
-                                @foreach($clinicas as $c)
-                                    <option value="{{ $c->id }}" {{ old('clinica_id', $user->clinica_id) == $c->id ? 'selected' : '' }}>{{ $c->nombre }}</option>
+                                <option value="">— Sin empresa —</option>
+                                @foreach($empresas as $e)
+                                    <option value="{{ $e->id }}" {{ old('empresa_id', $user->empresa_id) == $e->id ? 'selected' : '' }}>{{ $e->nombre }}</option>
                                 @endforeach
                             </select>
-                            @error('clinica_id')
+                            @error('empresa_id')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>

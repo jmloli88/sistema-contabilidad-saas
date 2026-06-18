@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'empresa.scope' => \App\Http\Middleware\ScopeByEmpresa::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'stripe/webhook',
+        ]);
+
         $middleware->redirectGuestsTo(function (Request $request) {
             if ($request->is('saas/*')) {
                 return route('saas.login');

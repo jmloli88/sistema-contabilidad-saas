@@ -31,7 +31,7 @@ class TenantIsolationTest extends TestCase
             'empresa_id' => $this->empresaA->id,
             'role' => 'administrador',
         ]);
-        $this->userA->subscriptions()->create([
+        $this->empresaA->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_user_a',
             'stripe_status' => 'active',
@@ -43,7 +43,7 @@ class TenantIsolationTest extends TestCase
             'empresa_id' => $this->empresaB->id,
             'role' => 'administrador',
         ]);
-        $this->userB->subscriptions()->create([
+        $this->empresaB->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_user_b',
             'stripe_status' => 'active',

@@ -21,8 +21,9 @@ class ProductividadReportTest extends TestCase
 
     private function createAdminWithSubscription(): User
     {
-        $user = User::factory()->create(['role' => 'administrador']);
-        $user->subscriptions()->create([
+        $empresa = \App\Models\Empresa::factory()->create(['nombre' => 'Admin ' . uniqid()]);
+        $user = User::factory()->create(['role' => 'administrador', 'empresa_id' => $empresa->id]);
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_admin_' . uniqid(),
             'stripe_status' => 'active',
@@ -34,8 +35,9 @@ class ProductividadReportTest extends TestCase
 
     private function createUserWithSubscription(): User
     {
-        $user = User::factory()->create(['role' => 'usuario']);
-        $user->subscriptions()->create([
+        $empresa = \App\Models\Empresa::factory()->create(['nombre' => 'User ' . uniqid()]);
+        $user = User::factory()->create(['role' => 'usuario', 'empresa_id' => $empresa->id]);
+        $empresa->subscriptions()->create([
             'type' => 'default',
             'stripe_id' => 'sub_user_' . uniqid(),
             'stripe_status' => 'active',

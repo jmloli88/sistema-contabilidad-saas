@@ -77,13 +77,14 @@ class RepaseController extends Controller
     public function create(): View
     {
         $clinicas = Clinica::orderBy('nombre')->get();
-        $examenes = Examen::select('id', 'nombre', 'precio_sin_nota', 'precio_con_nota')
+        $examenes = Examen::active()
+            ->select('id', 'nombre', 'precio_sin_nota', 'precio_con_nota')
             ->orderBy('nombre')
             ->get();
         
         // Cargar precios por clínica como mapa para el frontend
         $preciosPorClinica = [];
-        $examenesConClinicas = Examen::with('clinicas')->get();
+        $examenesConClinicas = Examen::active()->with('clinicas')->get();
         foreach ($examenesConClinicas as $examen) {
             foreach ($examen->clinicas as $clinica) {
                 $preciosPorClinica[$examen->id][$clinica->id] = [
@@ -181,13 +182,14 @@ class RepaseController extends Controller
 
         // Obtener clínicas y exámenes para los selectores
         $clinicas = Clinica::orderBy('nombre')->get();
-        $examenes = Examen::select('id', 'nombre', 'precio_sin_nota', 'precio_con_nota')
+        $examenes = Examen::active()
+            ->select('id', 'nombre', 'precio_sin_nota', 'precio_con_nota')
             ->orderBy('nombre')
             ->get();
         
         // Cargar precios por clínica como mapa para el frontend
         $preciosPorClinica = [];
-        $examenesConClinicas = Examen::with('clinicas')->get();
+        $examenesConClinicas = Examen::active()->with('clinicas')->get();
         foreach ($examenesConClinicas as $examen) {
             foreach ($examen->clinicas as $clinica) {
                 $preciosPorClinica[$examen->id][$clinica->id] = [
