@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-6 text-gray-900">
                     <form action="{{ route('repases.update', $repase) }}" method="POST" 
                           x-data="repaseForm({{ json_encode($examenes) }}, {{ json_encode($repase) }}, {{ json_encode($preciosPorClinica) }})"
@@ -20,7 +20,10 @@
 
                         <!-- Información Básica -->
                         <div class="mb-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Información Básica</h3>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Información Básica
+                            </h3>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <!-- Clínica -->
@@ -28,7 +31,7 @@
                                     <x-input-label for="clinica_id" value="Clínica *" />
                                     <select id="clinica_id" name="clinica_id" required
                                             @change="actualizarPreciosPorClinica($el.value)"
-                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            class="mt-1 block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         <option value="">Seleccione una clínica</option>
                                         @foreach($clinicas as $clinica)
                                             <option value="{{ $clinica->id }}" {{ old('clinica_id', $repase->clinica_id) == $clinica->id ? 'selected' : '' }}>
@@ -50,7 +53,7 @@
                                 <div>
                                     <x-input-label for="tipo_precio" value="Tipo de Precio *" />
                                     <select id="tipo_precio" name="tipo_precio" required x-model="tipoPrecio" @change="recalcularExamenes"
-                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            class="mt-1 block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         <option value="">Seleccione tipo</option>
                                         <option value="sin_nota" {{ old('tipo_precio', $repase->tipo_precio) == 'sin_nota' ? 'selected' : '' }}>Sin Nota</option>
                                         <option value="con_nota" {{ old('tipo_precio', $repase->tipo_precio) == 'con_nota' ? 'selected' : '' }}>Con Nota</option>
@@ -62,7 +65,7 @@
                                 <div>
                                     <x-input-label for="estado" value="Estado *" />
                                     <select id="estado" name="estado" required
-                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            class="mt-1 block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         <option value="pendiente" {{ old('estado', $repase->estado) == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                                         <option value="pagado" {{ old('estado', $repase->estado) == 'pagado' ? 'selected' : '' }}>Pagado</option>
                                     </select>
@@ -101,16 +104,16 @@
                             <div class="mt-4">
                                 <x-input-label for="observaciones" value="Observaciones" />
                                 <textarea id="observaciones" name="observaciones" rows="3" 
-                                          class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">{{ old('observaciones', $repase->observaciones) }}</textarea>
+                                          class="border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 rounded-xl shadow-sm block mt-1 w-full">{{ old('observaciones', $repase->observaciones) }}</textarea>
                                 <x-input-error :messages="$errors->get('observaciones')" class="mt-2" />
                             </div>
                         </div>
 
                         <!-- Exámenes -->
                         <div class="mb-6 border-t pt-6">
-                            <div class="mb-4 border border-gray-300 rounded-lg overflow-hidden">
+                            <div class="mb-4 border border-gray-200 rounded-xl overflow-hidden">
                                 <button type="button" @click="toggleSection('examenes')"
-                                        class="w-full bg-green-200 hover:bg-green-300 px-4 py-3 flex justify-between items-center">
+                                        class="w-full bg-green-100 hover:bg-green-200 px-4 py-3 flex justify-between items-center">
                                     <span class="font-semibold text-gray-800">EXÁMENES *</span>
                                     <svg class="w-5 h-5 transform transition-transform" :class="{'rotate-180': sectionsOpen.examenes}" 
                                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +135,7 @@
                                                                @input="calcularTotalExamenes"
                                                                :name="'examenes[' + examen.id + '][cantidad]'"
                                                                placeholder="Cantidad"
-                                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                                               class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
                                                         <input type="hidden" :name="'examenes[' + examen.id + '][examen_id]'" :value="examen.id">
                                                     </div>
                                                     <div class="text-right min-w-[80px]">
@@ -151,12 +154,15 @@
 
                         <!-- Gastos -->
                         <div class="mb-6 border-t pt-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Gastos</h3>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                Gastos
+                            </h3>
 
                             <!-- GASTOS OPERATIVOS -->
-                            <div class="mb-4 border border-gray-300 rounded-lg overflow-hidden">
+                            <div class="mb-4 border border-gray-200 rounded-xl overflow-hidden">
                                 <button type="button" @click="toggleSection('operativos')"
-                                        class="w-full bg-blue-200 hover:bg-blue-300 px-4 py-3 flex justify-between items-center">
+                                        class="w-full bg-blue-100 hover:bg-blue-200 px-4 py-3 flex justify-between items-center">
                                     <span class="font-semibold text-gray-800">GASTOS OPERATIVOS</span>
                                     <svg class="w-5 h-5 transform transition-transform" :class="{'rotate-180': sectionsOpen.operativos}" 
                                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,7 +173,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Comentarios</label>
                                         <textarea name="comentarios[operativos]" rows="2" 
-                                                  class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full text-sm"
+                                                  class="border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 rounded-xl shadow-sm block w-full text-sm"
                                                   placeholder="Comentarios adicionales sobre gastos operativos...">{{ old('comentarios.operativos', $repase->comentarios_operativos ?? '') }}</textarea>
                                     </div>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -175,25 +181,25 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Honorarios Médicos</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.honorarios_medicos" 
                                                    @input="calcularTotalGastos" name="gastos[honorarios_medicos]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <input type="text" name="nombres_tecnicos[1]" x-model="nombresTecnicos[1]"
                                                    placeholder="Nombre Técnico Enfermero 1"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm mb-1">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm mb-1">
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.honorarios_tecnico_1" 
                                                    @input="calcularTotalGastos" name="gastos[honorarios_tecnico_1]"
                                                    placeholder="Monto"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <input type="text" name="nombres_tecnicos[2]" x-model="nombresTecnicos[2]"
                                                    placeholder="Nombre Técnico Enfermero 2"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm mb-1">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm mb-1">
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.honorarios_tecnico_2" 
                                                    @input="calcularTotalGastos" name="gastos[honorarios_tecnico_2]"
                                                    placeholder="Monto"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <template x-for="examen in examenesDisponibles" :key="'laudo_' + examen.id">
                                             <div>
@@ -202,35 +208,35 @@
                                                        :value="gastos['honorarios_laudo_examen_' + examen.id] || 0"
                                                        @input="gastos['honorarios_laudo_examen_' + examen.id] = parseFloat($event.target.value) || 0; calcularTotalGastos()"
                                                        :name="'gastos[honorarios_laudo_examen_' + examen.id + ']'"
-                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                       class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                             </div>
                                         </template>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Honorarios Motorista</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.honorarios_motorista" 
                                                    @input="calcularTotalGastos" name="gastos[honorarios_motorista]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Gasolina Equipo</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.gasolina_equipo" 
                                                    @input="calcularTotalGastos" name="gastos[gasolina_equipo]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Gasolina Médico</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.gasolina_medico" 
                                                    @input="calcularTotalGastos" name="gastos[gasolina_medico]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- GASTOS ADMINISTRATIVOS -->
-                            <div class="mb-4 border border-gray-300 rounded-lg overflow-hidden">
+                            <div class="mb-4 border border-gray-200 rounded-xl overflow-hidden">
                                 <button type="button" @click="toggleSection('administrativos')"
-                                        class="w-full bg-blue-200 hover:bg-blue-300 px-4 py-3 flex justify-between items-center">
+                                        class="w-full bg-blue-100 hover:bg-blue-200 px-4 py-3 flex justify-between items-center">
                                     <span class="font-semibold text-gray-800">GASTOS ADMINISTRATIVOS</span>
                                     <svg class="w-5 h-5 transform transition-transform" :class="{'rotate-180': sectionsOpen.administrativos}" 
                                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,7 +247,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Comentarios</label>
                                         <textarea name="comentarios[administrativos]" rows="2" 
-                                                  class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full text-sm"
+                                                  class="border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 rounded-xl shadow-sm block w-full text-sm"
                                                   placeholder="Comentarios adicionales sobre gastos administrativos...">{{ old('comentarios.administrativos', $repase->comentarios_administrativos ?? '') }}</textarea>
                                     </div>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -249,28 +255,28 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Software Médico</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.software_medico" 
                                                    @input="calcularTotalGastos" name="gastos[software_medico]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Alquiler Movilidad</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.alquiler_movilidad" 
                                                    @input="calcularTotalGastos" name="gastos[alquiler_movilidad]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Mantenimiento Equipos</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.mantenimiento_equipos" 
                                                    @input="calcularTotalGastos" name="gastos[mantenimiento_equipos]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- CAJA CHICA -->
-                            <div class="mb-4 border border-gray-300 rounded-lg overflow-hidden">
+                            <div class="mb-4 border border-gray-200 rounded-xl overflow-hidden">
                                 <button type="button" @click="toggleSection('cajaChica')"
-                                        class="w-full bg-blue-200 hover:bg-blue-300 px-4 py-3 flex justify-between items-center">
+                                        class="w-full bg-blue-100 hover:bg-blue-200 px-4 py-3 flex justify-between items-center">
                                     <span class="font-semibold text-gray-800">CAJA CHICA</span>
                                     <svg class="w-5 h-5 transform transition-transform" :class="{'rotate-180': sectionsOpen.cajaChica}" 
                                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,7 +287,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Comentarios</label>
                                         <textarea name="comentarios[caja_chica]" rows="2" 
-                                                  class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full text-sm"
+                                                  class="border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 rounded-xl shadow-sm block w-full text-sm"
                                                   placeholder="Comentarios adicionales sobre caja chica...">{{ old('comentarios.caja_chica', $repase->comentarios_caja_chica ?? '') }}</textarea>
                                     </div>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -289,58 +295,58 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Alimentación Médico</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.alimentacion_medico" 
                                                    @input="calcularTotalGastos" name="gastos[alimentacion_medico]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Alimentación Personal</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.alimentacion_personal" 
                                                    @input="calcularTotalGastos" name="gastos[alimentacion_personal]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Hospedajes</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.hospedajes" 
                                                    @input="calcularTotalGastos" name="gastos[hospedajes]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Estacionamiento</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.estacionamiento" 
                                                    @input="calcularTotalGastos" name="gastos[estacionamiento]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Papelería</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.papeleria" 
                                                    @input="calcularTotalGastos" name="gastos[papeleria]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Pedagio Médico</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.pedagio_medico" 
                                                    @input="calcularTotalGastos" name="gastos[pedagio_medico]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Pedagios Personal</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.pedagios_personal" 
                                                    @input="calcularTotalGastos" name="gastos[pedagios_personal]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Otros</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.otros_caja_chica" 
                                                    @input="calcularTotalGastos" name="gastos[otros_caja_chica]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- INSUMIOS MÉDICOS -->
-                            <div class="mb-4 border border-gray-300 rounded-lg overflow-hidden">
+                            <div class="mb-4 border border-gray-200 rounded-xl overflow-hidden">
                                 <button type="button" @click="toggleSection('insumiosMedicos')"
-                                        class="w-full bg-blue-200 hover:bg-blue-300 px-4 py-3 flex justify-between items-center">
+                                        class="w-full bg-blue-100 hover:bg-blue-200 px-4 py-3 flex justify-between items-center">
                                     <span class="font-semibold text-gray-800">INSUMIOS MÉDICOS</span>
                                     <svg class="w-5 h-5 transform transition-transform" :class="{'rotate-180': sectionsOpen.insumiosMedicos}" 
                                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -351,7 +357,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Comentarios</label>
                                         <textarea name="comentarios[insumios_medicos]" rows="2" 
-                                                  class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full text-sm"
+                                                  class="border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 rounded-xl shadow-sm block w-full text-sm"
                                                   placeholder="Comentarios adicionales sobre insumos médicos...">{{ old('comentarios.insumios_medicos', $repase->comentarios_insumios_medicos ?? '') }}</textarea>
                                     </div>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -359,25 +365,25 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Electrodos</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.electrodos" 
                                                    @input="calcularTotalGastos" name="gastos[electrodos]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Agujas Médicas</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.agujas_medicas" 
                                                    @input="calcularTotalGastos" name="gastos[agujas_medicas]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Gel</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.gel" 
                                                    @input="calcularTotalGastos" name="gastos[gel]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">Guantes Latex</label>
                                             <input type="number" step="0.01" min="0" x-model.number="gastos.guantes_latex" 
                                                    @input="calcularTotalGastos" name="gastos[guantes_latex]"
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                   class="block w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200">
                                         </div>
                                     </div>
                                 </div>
@@ -388,7 +394,10 @@
 
                         <!-- Resumen de Totales -->
                         <div class="mb-6 border-t pt-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Resumen de Totales</h3>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                                Resumen de Totales
+                            </h3>
                             
                             <div class="bg-blue-50 p-6 rounded-lg">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -414,7 +423,7 @@
 
                         <!-- Botones de Acción -->
                         <div class="flex items-center justify-end mt-6 space-x-4">
-                            <a href="{{ route('repases.show', $repase) }}" class="text-gray-600 hover:text-gray-900">
+                            <a href="{{ route('repases.show', $repase) }}" class="text-gray-600 hover:text-gray-900 touch-manipulation min-h-[44px] inline-flex items-center">
                                 Cancelar
                             </a>
                             <x-primary-button x-bind:disabled="isSubmitting">

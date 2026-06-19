@@ -13,7 +13,7 @@
                 </a>
             </div>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-6">
                     @if($subscriptions->isEmpty())
                         <p class="text-sm" style="color: #727784;">Este usuario no tiene registros de suscripción.</p>

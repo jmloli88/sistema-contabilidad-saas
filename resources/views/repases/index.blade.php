@@ -120,25 +120,16 @@
                 </div>
 
                 @if($repases->isEmpty())
-                    <!-- Estado vacío -->
                     <div class="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl mx-4 sm:mx-0">
-                        <div class="p-12 text-center">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">No hay repases</h3>
-                            <p class="mt-1 text-sm text-gray-500">Comienza creando un nuevo repase médico.</p>
+                        <x-empty-state
+                            icon="description"
+                            title="No hay repases"
+                            description="Comienza creando un nuevo repase médico."
                             @if(Auth::user()->isAdmin())
-                                <div class="mt-6">
-                                    <a href="{{ route('repases.create') }}" class="inline-flex items-center text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-3 focus:outline-none transition-all duration-200 shadow-lg hover:shadow-xl">
-                                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
-                                        </svg>
-                                        Nuevo Repase
-                                    </a>
-                                </div>
+                            action="{{ route('repases.create') }}"
+                            actionLabel="Nuevo Repase"
                             @endif
-                        </div>
+                        />
                     </div>
                 @else
                     <!-- Vista de Tabla (Desktop) -->
@@ -189,7 +180,7 @@
                                         @php
                                             $rowId = 'repase-' . $repase->id;
                                         @endphp
-                                        <tr class="bg-white/50 border-b border-gray-100 hover:bg-white/80 transition-all duration-200">
+                                        <tr class="bg-white/50 border-b border-gray-100 hover:bg-indigo-50/50 transition-colors">
                                             <td class="px-3 py-4 text-center">
                                                 <input type="checkbox" name="repase_ids[]" value="{{ $repase->id }}" class="repase-checkbox rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
                                             </td>
@@ -211,14 +202,14 @@
                                             </td>
                                             <td class="px-6 py-4">
                                                 @if($repase->estado === 'pendiente')
-                                                    <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full">
+                                                    <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-3 py-1 rounded-full">
                                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                                                         </svg>
                                                         Pendiente
                                                     </span>
                                                 @else
-                                                    <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
+                                                    <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">
                                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                                         </svg>
@@ -329,7 +320,7 @@
                     <!-- Vista de Tarjetas (Mobile) -->
                     <div class="md:hidden space-y-4 px-4">
                         @foreach($repases as $repase)
-                            <div class="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
+                            <div class="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-2xl">
                                 <div class="p-4">
                                     <!-- Header de la tarjeta -->
                                     <div class="flex justify-between items-start mb-3">
@@ -338,9 +329,9 @@
                                             <p class="text-sm text-gray-500">{{ $repase->fecha->format('d/m/Y') }}</p>
                                         </div>
                                         @if($repase->estado === 'pendiente')
-                                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Pendiente</span>
+                                            <span class="bg-red-100 text-red-800 text-xs font-medium px-3 py-1 rounded-full">Pendiente</span>
                                         @else
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Pagado</span>
+                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">Pagado</span>
                                         @endif
                                     </div>
 

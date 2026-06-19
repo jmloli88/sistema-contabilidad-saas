@@ -8,7 +8,7 @@
                 <p class="text-sm text-gray-600 mt-1">Gestiona las clínicas del sistema</p>
             </div>
             @if(Auth::user()->isAdmin())
-                <a href="{{ route('clinicas.create') }}" class="inline-flex items-center justify-center text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-5 py-2.5 focus:outline-none transition-all duration-200 shadow-lg hover:shadow-xl sm:transform sm:hover:-translate-y-0.5 whitespace-nowrap">
+                <a href="{{ route('clinicas.create') }}" class="inline-flex items-center justify-center text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-5 py-2.5 min-h-[44px] focus:outline-none transition-all duration-200 shadow-lg hover:shadow-xl sm:transform sm:hover:-translate-y-0.5 whitespace-nowrap touch-manipulation">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
                     </svg>
@@ -58,7 +58,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($clinicas as $clinica)
-                                        <tr class="bg-white/50 border-b border-gray-100 hover:bg-white/80 transition-all duration-200">
+                                        <tr class="bg-white/50 border-b border-gray-200 hover:bg-indigo-50/50 transition-colors">
                                             <td class="px-6 py-4">
                                                 <div class="flex items-center">
                                                     <svg class="w-4 h-4 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +87,7 @@
                                                 <div class="flex items-center gap-2">
                                                     <!-- Botón Ver -->
                                                     <a href="{{ route('clinicas.show', $clinica) }}" 
-                                                       class="inline-flex items-center justify-center w-9 h-9 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-all duration-200 hover:scale-110"
+                                                       class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 touch-manipulation text-blue-600"
                                                        title="Ver detalles">
                                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
@@ -97,7 +97,7 @@
                                                     @if(Auth::user()->isAdmin())
                                                         <!-- Botón Editar -->
                                                         <a href="{{ route('clinicas.edit', $clinica) }}" 
-                                                           class="inline-flex items-center justify-center w-9 h-9 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-all duration-200 hover:scale-110"
+                                                           class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 touch-manipulation text-indigo-600"
                                                            title="Editar">
                                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
@@ -108,7 +108,7 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" 
-                                                                    class="inline-flex items-center justify-center w-9 h-9 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200 hover:scale-110"
+                                                                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 touch-manipulation text-red-600"
                                                                     title="Eliminar"
                                                                     onclick="return confirm('¿Está seguro de eliminar esta clínica?')">
                                                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

@@ -5,10 +5,10 @@
                 {{ __('Calendario de Agendas') }}
             </h2>
             <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                <button onclick="openExportModal()" class="flex-1 sm:flex-none bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">
+                <button onclick="openExportModal()" class="flex-1 sm:flex-none bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl text-sm">
                     Exportar
                 </button>
-                <button onclick="openCreateModal()" class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">
+                <button onclick="openCreateModal()" class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl text-sm">
                     Nueva Agenda
                 </button>
             </div>
@@ -17,14 +17,14 @@
 
     <div class="py-6 sm:py-12">
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-3 sm:p-6">
                     <!-- Filtro de clínica -->
                     <div class="mb-4">
                         <label for="filtro-clinica" class="block text-sm font-medium text-gray-700 mb-2">
                             Filtrar por clínica:
                         </label>
-                        <select id="filtro-clinica" class="mt-1 block w-full sm:w-64 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                        <select id="filtro-clinica" class="mt-1 block w-full sm:w-64 rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
                             <option value="">Todas las clínicas</option>
                             @foreach($clinicas as $clinica)
                                 <option value="{{ $clinica->id }}">{{ $clinica->nombre }}</option>
@@ -192,7 +192,7 @@
 
     <!-- Modal Crear/Editar Agenda -->
     <div id="agendaModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 p-4">
-        <div class="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+        <div class="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md shadow-lg rounded-xl bg-white">
             <div class="mt-3">
                 <h3 id="modalTitle" class="text-base sm:text-lg font-medium leading-6 text-gray-900 mb-4">Nueva Agenda</h3>
                 <form id="agendaForm">
@@ -200,7 +200,7 @@
                     
                     <div class="mb-3 sm:mb-4">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Clínica *</label>
-                        <select id="clinica_id" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                        <select id="clinica_id" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
                             <option value="">Seleccione una clínica</option>
                             @foreach($clinicas as $clinica)
                                 <option value="{{ $clinica->id }}">{{ $clinica->nombre }}</option>
@@ -210,28 +210,28 @@
 
                     <div class="mb-3 sm:mb-4">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Fecha *</label>
-                        <input type="date" id="fecha" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                        <input type="date" id="fecha" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
                     </div>
 
                     <div class="mb-3 sm:mb-4">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Doctor *</label>
-                        <input type="text" id="doctor" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm" placeholder="Nombre del doctor">
+                        <input type="text" id="doctor" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm" placeholder="Nombre del doctor">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-4">
                         <div>
                             <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Hora Inicio *</label>
-                            <input type="time" id="hora_inicio" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                            <input type="time" id="hora_inicio" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
                         </div>
                         <div>
                             <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Hora Fin *</label>
-                            <input type="time" id="hora_fin" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                            <input type="time" id="hora_fin" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
                         </div>
                     </div>
 
                     <div id="tipoRepeticionContainer" class="mb-3 sm:mb-4">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Tipo de Agenda *</label>
-                        <select id="tipo_repeticion" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm">
+                        <select id="tipo_repeticion" class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
                             <option value="unica">Única</option>
                             <option value="repetitiva">Repetitiva</option>
                         </select>
@@ -239,7 +239,7 @@
 
                     <div id="diasRepeticionContainer" class="mb-3 sm:mb-4 hidden">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Frecuencia de Repetición *</label>
-                        <select id="frecuencia_repeticion" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm mb-3">
+                        <select id="frecuencia_repeticion" class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm mb-3">
                             <option value="7">Semanal (cada 7 días)</option>
                             <option value="14">Quincenal (cada 14 días)</option>
                             <option value="mensual">Mensual (mismo día de la semana)</option>
@@ -281,7 +281,7 @@
 
     <!-- Modal Eliminar -->
     <div id="deleteModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 p-4">
-        <div class="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+        <div class="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md shadow-lg rounded-xl bg-white">
             <div class="mt-3">
                 <h3 class="text-base sm:text-lg font-medium leading-6 text-gray-900 mb-4">Eliminar Agenda</h3>
                 <p class="text-xs sm:text-sm text-gray-500 mb-4">¿Está seguro que desea eliminar esta agenda?</p>
@@ -307,7 +307,7 @@
 
     <!-- Modal Exportar -->
     <div id="exportModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 p-4">
-        <div class="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+        <div class="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md shadow-lg rounded-xl bg-white">
             <div class="mt-3">
                 <h3 class="text-base sm:text-lg font-medium leading-6 text-gray-900 mb-4">Exportar Calendario</h3>
                 

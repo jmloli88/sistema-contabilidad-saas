@@ -20,7 +20,7 @@
             <!-- Nuevo Examen Button -->
             <div class="mb-4 flex justify-end">
                 <button @click="openCreate = true" 
-                   class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-xl font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 min-h-[44px] touch-manipulation">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -28,6 +28,17 @@
                 </button>
             </div>
 
+            @if($examenes->isEmpty())
+                <div class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg shadow-xl">
+                    <x-empty-state
+                        icon="checklist"
+                        title="No hay exámenes"
+                        description="Crea un nuevo examen para comenzar."
+                        action="{{ route('examenes.index') }}"
+                        actionLabel="Nuevo Examen"
+                    />
+                </div>
+            @else
             <!-- Vista de Tabla (Desktop) -->
             <div class="hidden md:block bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 overflow-hidden">
                 <div class="overflow-x-auto">
@@ -65,11 +76,11 @@
                         </thead>
                         <tbody>
                             @foreach($examenes as $examen)
-                                <tr class="bg-white/50 border-b border-gray-200 hover:bg-white/80 transition-colors duration-200">
+                                <tr class="bg-white/50 border-b border-gray-200 hover:bg-indigo-50/50 transition-colors">
                                     <td class="px-6 py-4 font-medium text-gray-900">
                                         {{ $examen->nombre }}
                                         @if(($examen->overrides_count ?? 0) > 0)
-                                            <span class="inline-flex items-center ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-amber-100 text-amber-800">
                                                 {{ $examen->overrides_count }} {{ $examen->overrides_count === 1 ? 'clínica' : 'clínicas' }}
                                             </span>
                                         @endif
@@ -82,11 +93,11 @@
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         @if($examen->is_active)
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-green-100 text-green-800">
                                                 Activo
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-red-100 text-red-800">
                                                 Inactivo
                                             </span>
                                         @endif
@@ -94,7 +105,7 @@
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-2 justify-start">
                                             <a href="{{ route('examenes.edit', $examen) }}" 
-                                               class="inline-flex items-center justify-center w-9 h-9 text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 hover:scale-110 transition-all duration-200"
+                                               class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 touch-manipulation"
                                                title="Editar">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
@@ -105,8 +116,8 @@
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" 
-                                                   class="inline-flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 hover:scale-110
-                                                   {{ $examen->is_active ? 'text-amber-600 bg-amber-50 hover:bg-amber-100' : 'text-green-600 bg-green-50 hover:bg-green-100' }}"
+                                                   class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 touch-manipulation
+                                                    {{ $examen->is_active ? 'text-amber-600' : 'text-green-600' }}"
                                                    title="{{ $examen->is_active ? 'Desactivar' : 'Activar' }}">
                                                     @if($examen->is_active)
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,7 +138,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" 
-                                                       class="inline-flex items-center justify-center w-9 h-9 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 hover:scale-110 transition-all duration-200"
+                                                       class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 touch-manipulation text-red-600"
                                                        title="Eliminar">
                                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                             <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
@@ -136,7 +147,7 @@
                                                 </form>
                                             @else
                                                 <button type="button" disabled
-                                                   class="inline-flex items-center justify-center w-9 h-9 text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed"
+                                                   class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 touch-manipulation text-gray-400 cursor-not-allowed"
                                                    title="No se puede eliminar: tiene repases asociados">
                                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
@@ -146,7 +157,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
+                             @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -163,17 +174,17 @@
                                     <h3 class="text-base font-semibold text-gray-900">
                                         {{ $examen->nombre }}
                                         @if(($examen->overrides_count ?? 0) > 0)
-                                            <span class="inline-flex items-center ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-amber-100 text-amber-800">
                                                 {{ $examen->overrides_count }} {{ $examen->overrides_count === 1 ? 'clínica' : 'clínicas' }}
                                             </span>
                                         @endif
                                     </h3>
                                     @if($examen->is_active)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-green-100 text-green-800">
                                             Activo
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-red-100 text-red-800">
                                             Inactivo
                                         </span>
                                     @endif
@@ -238,6 +249,7 @@
                     </div>
                 @endforeach
             </div>
+            @endif
         </div>
 
         {{-- Create Modal --}}
@@ -274,8 +286,8 @@
                     </div>
                     <p class="text-xs text-gray-500">El precio con nota debe ser mayor que el precio sin nota.</p>
                     <div class="flex justify-end gap-2 pt-2">
-                        <button type="button" @click="openCreate = false" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">Cancelar</button>
-                        <button type="submit" class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700">Guardar Examen</button>
+                        <button type="button" @click="openCreate = false" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 touch-manipulation min-h-[44px]">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700 touch-manipulation min-h-[44px]">Guardar Examen</button>
                     </div>
                 </form>
             </div>

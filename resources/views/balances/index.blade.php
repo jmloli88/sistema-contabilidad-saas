@@ -19,7 +19,7 @@
     <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
         <div class="py-8 sm:py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <nav class="flex mb-8 mx-4 sm:mx-0" aria-label="Breadcrumb">
+                <nav class="flex mb-8 mx-4 sm:mx-0 text-sm text-gray-500" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-3">
                         <li class="inline-flex items-center">
                             <a href="{{ route('dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200">
@@ -42,11 +42,11 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mx-4 sm:mx-0 mb-10">
-                    <a href="{{ route('balances.mensual') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('balances.mensual') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-cyan-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">calendar_month</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -60,11 +60,11 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('balances.trimestral') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('balances.trimestral') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-green-500 to-emerald-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">view_week</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -78,11 +78,11 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('balances.semestral') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('balances.semestral') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">date_range</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -96,11 +96,11 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('balances.anual') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('balances.anual') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-orange-500 to-red-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"></path></svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-orange-500 to-red-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">calendar_today</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -118,19 +118,19 @@
                 <div class="mx-4 sm:mx-0">
                     <h3 class="text-xl font-bold text-gray-900 mb-4">Resumen Global</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+                        <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                             <p class="text-sm font-medium text-gray-500 mb-1">Ingresos</p>
                             <p class="text-2xl font-bold text-green-600">R$ {{ number_format($resumen['total_ingresos'], 2) }}</p>
                         </div>
-                        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+                        <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                             <p class="text-sm font-medium text-gray-500 mb-1">Gastos</p>
                             <p class="text-2xl font-bold text-red-600">R$ {{ number_format($resumen['total_gastos'], 2) }}</p>
                         </div>
-                        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+                        <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                             <p class="text-sm font-medium text-gray-500 mb-1">Neto</p>
                             <p class="text-2xl font-bold text-gray-900">R$ {{ number_format($resumen['total_neto'], 2) }}</p>
                         </div>
-                        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+                        <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
                             <p class="text-sm font-medium text-gray-500 mb-1">Margen</p>
                             <p class="text-2xl font-bold {{ $resumen['margen_ganancia'] !== null && $resumen['margen_ganancia'] >= 0 ? 'text-green-600' : 'text-red-600' }}">
                                 {{ $resumen['margen_ganancia'] !== null ? number_format($resumen['margen_ganancia'], 1) . '%' : 'N/A' }}
@@ -142,7 +142,8 @@
                 @if($balancesMensuales->isNotEmpty())
                 <div class="mx-4 sm:mx-0">
                     <h3 class="text-xl font-bold text-gray-900 mb-4">Evolución Mensual (último año)</h3>
-                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+                    <div class="bg-white rounded-xl shadow-md border border-gray-100">
+                        <div class="p-6">
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-sm text-left text-gray-700">
                                 <thead class="text-xs text-gray-700 uppercase bg-gradient-to-r from-gray-100 to-gray-50">
@@ -171,7 +172,16 @@
                                 </tbody>
                             </table>
                         </div>
+                        </div>
                     </div>
+                </div>
+                @else
+                <div class="mx-4 sm:mx-0">
+                    <x-empty-state
+                        icon="bar_chart"
+                        title="No hay balances"
+                        description="Aún no hay datos financieros para mostrar."
+                    />
                 </div>
                 @endif
             </div>

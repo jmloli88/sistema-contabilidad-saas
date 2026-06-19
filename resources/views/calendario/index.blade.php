@@ -15,7 +15,7 @@
         <div class="py-8 sm:py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <!-- Filtro por Clínica con diseño moderno -->
-                <div class="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl mb-8 mx-4 sm:mx-0 transition-all duration-300 hover:shadow-2xl">
+                <div class="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-2xl shadow-md mb-8 mx-4 sm:mx-0 transition-all duration-300 hover:shadow-2xl">
                     <div class="p-6 sm:p-8">
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center space-x-3">
@@ -50,14 +50,14 @@
                 </div>
 
                 <!-- Contenedor del Calendario con diseño moderno -->
-                <div class="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl mx-4 sm:mx-0">
+                <div class="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-2xl mx-4 sm:mx-0">
                     <div class="p-6">
                         <div id="calendar"></div>
                     </div>
                 </div>
 
                 <!-- Leyenda de Colores con diseño moderno -->
-                <div class="bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl mt-6 mx-4 sm:mx-0 transition-all duration-300 hover:shadow-2xl">
+                <div class="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-2xl shadow-md mt-6 mx-4 sm:mx-0 transition-all duration-300 hover:shadow-2xl">
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center space-x-3">

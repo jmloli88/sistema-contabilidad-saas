@@ -58,8 +58,8 @@ class BillingPageTest extends TestCase
         $response = $this->actingAs($user)->get(route('billing.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('Sin suscripción activa');
-        $response->assertSee('Pagar con Tarjeta');
+        $response->assertSee('Sin suscripción');
+        $response->assertSee('Activar suscripción');
     }
 
     public function test_subscription_ending_soon_shows_remaining_days_and_payment_button(): void
@@ -77,7 +77,7 @@ class BillingPageTest extends TestCase
         $response = $this->actingAs($user)->get(route('billing.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('Vence en');
+        $response->assertSee('Quedan');
         $response->assertSee('Pagar con Tarjeta');
     }
 }

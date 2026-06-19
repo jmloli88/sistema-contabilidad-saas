@@ -37,30 +37,34 @@
                             </thead>
                             <tbody>
                                 @foreach($users as $u)
-                                    <tr class="bg-white/50 border-b border-gray-200 hover:bg-white/80 transition-colors duration-200">
+                                    <tr class="bg-white/50 border-b border-gray-200 hover:bg-indigo-50/50 transition-colors">
                                         <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ $u->name }}</td>
                                         <td class="px-6 py-4 text-gray-700">{{ $u->email }}</td>
                                         <td class="px-6 py-4">
                                             @if($u->role === 'administrador')
-                                                <span class="inline-flex items-center gap-1 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">Administrador</span>
+                                                <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800">
+                                                    <span class="material-symbols-outlined text-sm">shield</span>
+                                                    Administrador
+                                                </span>
                                             @else
-                                                <span class="inline-flex items-center gap-1 bg-gray-100 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full">Usuario</span>
+                                                <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium bg-gray-100 text-gray-800">
+                                                    <span class="material-symbols-outlined text-sm">person</span>
+                                                    Usuario
+                                                </span>
                                             @endif
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-2">
                                                 <button @click="openEdit(@js($u->id), @js($u->name), @js(strstr($u->email, '@', true)), @js($u->role))"
-                                                        class="inline-flex items-center justify-center w-9 h-9 text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 hover:scale-110 transition-all duration-200" title="Editar">
+                                                         class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-indigo-600 transition-colors duration-200" title="Editar">
                                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
                                                 </button>
                                                 @if($u->id !== auth()->id())
-                                                    <form action="{{ route('users.destroy', $u) }}" method="POST" class="inline">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit" class="inline-flex items-center justify-center w-9 h-9 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 hover:scale-110 transition-all duration-200" title="Eliminar"
-                                                                onclick="return confirm('¿Está seguro de eliminar este usuario?')">
+                                                    <x-confirm-modal message="¿Está seguro de eliminar este usuario?" action="{{ route('users.destroy', $u) }}" method="DELETE">
+                                                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-red-600 transition-colors duration-200" title="Eliminar">
                                                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
                                                         </button>
-                                                    </form>
+                                                    </x-confirm-modal>
                                                 @endif
                                             </div>
                                         </td>
@@ -74,7 +78,7 @@
                 <!-- Mobile cards -->
                 <div class="md:hidden space-y-4 px-4">
                     @foreach($users as $u)
-                        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+                        <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-4">
                             <h3 class="text-lg font-semibold text-gray-900">{{ $u->name }}</h3>
                             <p class="text-sm text-gray-500">{{ $u->email }}</p>
                             <span class="text-xs font-medium px-2 py-0.5 rounded mt-1 inline-block {{ $u->role === 'administrador' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">{{ ucfirst($u->role) }}</span>
@@ -82,10 +86,9 @@
                                 <button @click="openEdit(@js($u->id), @js($u->name), @js(strstr($u->email, '@', true)), @js($u->role))"
                                         class="flex-1 text-center text-white bg-indigo-700 hover:bg-indigo-800 rounded-lg text-sm px-4 py-2">Editar</button>
                                 @if($u->id !== auth()->id())
-                                    <form action="{{ route('users.destroy', $u) }}" method="POST" class="flex-1">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="w-full text-white bg-red-700 hover:bg-red-800 rounded-lg text-sm px-4 py-2" onclick="return confirm('¿Está seguro de eliminar este usuario?')">Eliminar</button>
-                                    </form>
+                                    <x-confirm-modal message="¿Está seguro de eliminar este usuario?" action="{{ route('users.destroy', $u) }}" method="DELETE">
+                                        <button type="button" class="w-full text-white bg-red-700 hover:bg-red-800 rounded-lg text-sm px-4 py-2">Eliminar</button>
+                                    </x-confirm-modal>
                                 @endif
                             </div>
                         </div>
@@ -99,7 +102,7 @@
         {{-- Create Modal --}}
         <div x-show="openCreate" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center" style="display:none;">
             <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="openCreate = false"></div>
-            <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 p-6">
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-900">Nuevo Usuario</h3>
                     <button @click="openCreate = false" class="p-1 rounded hover:bg-gray-100 text-gray-400"><span class="material-symbols-outlined">close</span></button>
@@ -150,7 +153,7 @@
         {{-- Edit Modal --}}
         <div x-show="openEditModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center" style="display:none;">
             <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="openEditModal = false"></div>
-            <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 p-6">
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-900">Editar Usuario</h3>
                     <button @click="openEditModal = false" class="p-1 rounded hover:bg-gray-100 text-gray-400"><span class="material-symbols-outlined">close</span></button>

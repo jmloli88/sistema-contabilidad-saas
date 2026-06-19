@@ -24,8 +24,6 @@
         "@fullcalendar/daygrid": "^6.1.20",
         "@fullcalendar/interaction": "^6.1.20",
         "chart.js": "^4.5.1",
-        "flowbite": "^4.0.1",
-        "flowbite-datepicker": "^2.0.0",
         "html2canvas": "^1.4.1"
     }
 }

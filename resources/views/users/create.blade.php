@@ -5,7 +5,7 @@
 
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-6 text-gray-900">
                     <form action="{{ route('users.store') }}" method="POST">
                         @csrf

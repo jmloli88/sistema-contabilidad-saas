@@ -15,7 +15,7 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-6">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
@@ -46,12 +46,12 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             <div class="flex items-center gap-1">
                                                 <a href="{{ route('saas.admin.empresas.show', $emp->id) }}"
-                                                   class="p-1.5 rounded hover:bg-indigo-50 text-indigo-500 transition-colors"
+                                                   class="p-1.5 rounded-xl hover:bg-indigo-50 text-indigo-500 transition-colors"
                                                    title="Ver detalle">
                                                     <span class="material-symbols-outlined text-lg">visibility</span>
                                                 </a>
                                                 <a href="{{ route('saas.admin.empresas.edit', $emp->id) }}"
-                                                   class="p-1.5 rounded hover:bg-blue-50 text-blue-600 transition-colors"
+                                                   class="p-1.5 rounded-xl hover:bg-blue-50 text-blue-600 transition-colors"
                                                    title="Editar">
                                                     <span class="material-symbols-outlined text-lg">edit</span>
                                                 </a>
@@ -61,7 +61,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" title="Eliminar"
-                                                            class="p-1.5 rounded hover:bg-red-50 text-red-500 transition-colors">
+                                                            class="p-1.5 rounded-xl hover:bg-red-50 text-red-500 transition-colors">
                                                         <span class="material-symbols-outlined text-lg">delete</span>
                                                     </button>
                                                 </form>

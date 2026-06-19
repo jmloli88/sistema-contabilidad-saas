@@ -9,19 +9,19 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
             <!-- Botones de acción (ahora dentro del contenido para que se desplacen) -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-4 sm:p-6">
                     <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
-                        <button id="btn-generar-imagen" type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-flex items-center justify-center text-sm sm:text-base">
+                        <button id="btn-generar-imagen" type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl inline-flex items-center justify-center text-sm sm:text-base">
                             <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                             </svg>
                             Descargar Imagen
                         </button>
-                        <a href="{{ route('repases.edit', $repase) }}" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
+                        <a href="{{ route('repases.edit', $repase) }}" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-xl text-center text-sm sm:text-base">
                             Editar
                         </a>
-                        <a href="{{ route('repases.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-center text-sm sm:text-base">
+                        <a href="{{ route('repases.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-xl text-center text-sm sm:text-base">
                             Volver al Listado
                         </a>
                     </div>
@@ -98,7 +98,7 @@
             </div>
 
             <!-- Información General -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Información General</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -148,7 +148,7 @@
             </div>
 
             <!-- Exámenes Realizados -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Exámenes Realizados</h3>
                     @if($repase->repaseExamenes->isEmpty())
@@ -187,7 +187,7 @@
                         </div>
 
                         <!-- Vista desktop: Tabla -->
-                        <div class="hidden sm:block overflow-x-auto">
+                        <div class="hidden sm:block overflow-x-auto rounded-xl">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
@@ -238,7 +238,7 @@
             </div>
 
             <!-- Consultas -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Información Adicional</h3>
                     <div class="space-y-2">
@@ -255,7 +255,7 @@
             </div>
 
             <!-- Gastos -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Gastos Detallados</h3>
                     @if($repase->gastos->isEmpty())
@@ -302,7 +302,7 @@
                         <div class="space-y-4">
                             <!-- Gastos Operativos -->
                             @if($gastosOperativos->isNotEmpty() || $repase->comentarios_operativos)
-                                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                <div class="border border-gray-200 rounded-xl overflow-hidden">
                                     <div class="bg-blue-100 px-4 py-3">
                                         <h4 class="font-semibold text-gray-800">Gastos Operativos</h4>
                                     </div>
@@ -336,7 +336,7 @@
 
                             <!-- Gastos Administrativos -->
                             @if($gastosAdministrativos->isNotEmpty() || $repase->comentarios_administrativos)
-                                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                <div class="border border-gray-200 rounded-xl overflow-hidden">
                                     <div class="bg-purple-100 px-4 py-3">
                                         <h4 class="font-semibold text-gray-800">Gastos Administrativos</h4>
                                     </div>
@@ -370,7 +370,7 @@
 
                             <!-- Caja Chica -->
                             @if($cajaChica->isNotEmpty() || $repase->comentarios_caja_chica)
-                                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                <div class="border border-gray-200 rounded-xl overflow-hidden">
                                     <div class="bg-yellow-100 px-4 py-3">
                                         <h4 class="font-semibold text-gray-800">Caja Chica</h4>
                                     </div>
@@ -404,7 +404,7 @@
 
                             <!-- Insumios Médicos -->
                             @if($insumiosMedicos->isNotEmpty() || $repase->comentarios_insumios_medicos)
-                                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                <div class="border border-gray-200 rounded-xl overflow-hidden">
                                     <div class="bg-green-100 px-4 py-3">
                                         <h4 class="font-semibold text-gray-800">Insumios Médicos</h4>
                                     </div>
@@ -438,7 +438,7 @@
 
                             <!-- Otros Gastos -->
                             @if($otrosGastos->isNotEmpty())
-                                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                                <div class="border border-gray-200 rounded-xl overflow-hidden">
                                     <div class="bg-gray-100 px-4 py-3">
                                         <h4 class="font-semibold text-gray-800">Otros Gastos</h4>
                                     </div>
@@ -463,7 +463,7 @@
                             @endif
 
                             <!-- Total General de Gastos -->
-                            <div class="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+                            <div class="bg-red-50 border-2 border-red-200 rounded-xl p-4">
                                 <div class="flex justify-between items-center">
                                     <span class="text-lg font-bold text-gray-900">Total Gastos:</span>
                                     <span class="text-2xl font-bold text-red-600">R${{ number_format($repase->total_gastos, 2) }}</span>
@@ -475,7 +475,7 @@
             </div>
 
             <!-- Resumen Financiero -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 {{ $repase->estado === 'pendiente' ? 'border-red-300' : 'border-green-300' }}">
+            <div class="bg-white rounded-2xl shadow-md border-2 {{ $repase->estado === 'pendiente' ? 'border-red-300' : 'border-green-300' }}">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Resumen Financiero</h3>
                     <div class="space-y-3">
@@ -499,12 +499,12 @@
 
             <!-- Acciones -->
             @if($repase->estado === 'pendiente')
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                     <div class="p-6">
                         <form action="{{ route('repases.destroy', $repase) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar este repase? Esta acción no se puede deshacer.')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl">
                                 Eliminar Repase
                             </button>
                         </form>

@@ -58,32 +58,26 @@
                             </header>
                         @endisset
 
-                        <!-- Flash Messages -->
-                        <div class="flex-shrink-0">
-                            @if (session('success'))
-                                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                                        <span class="block sm:inline">{{ session('success') }}</span>
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if (session('error'))
-                                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                                        <span class="block sm:inline">{{ session('error') }}</span>
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if (session('warning'))
-                                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                                    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
-                                        <span class="block sm:inline">{{ session('warning') }}</span>
-                                    </div>
-                                </div>
-                            @endif
+                        <!-- Toast Notifications -->
+                        @if(session('success') || session('error') || session('warning'))
+                        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+                             x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2"
+                             x-transition:leave="transition ease-in duration-200" x-transition:leave-end="opacity-0 translate-y-2"
+                             class="fixed top-4 right-4 z-50 max-w-sm">
+                            <div class="flex items-center p-4 rounded-2xl shadow-lg border
+                                {{ session('success') ? 'bg-green-50 border-green-200 text-green-800' : '' }}
+                                {{ session('error') ? 'bg-red-50 border-red-200 text-red-800' : '' }}
+                                {{ session('warning') ? 'bg-amber-50 border-amber-200 text-amber-800' : '' }}">
+                                <span class="material-symbols-outlined mr-3 text-lg">
+                                    {{ session('success') ? 'check_circle' : (session('error') ? 'error' : 'warning') }}
+                                </span>
+                                <p class="text-sm font-medium flex-1">{{ session('success') ?? session('error') ?? session('warning') }}</p>
+                                <button @click="show = false" class="ml-3 text-current opacity-50 hover:opacity-100">
+                                    <span class="material-symbols-outlined text-base">close</span>
+                                </button>
+                            </div>
                         </div>
+                        @endif
 
                         {{ $slot }}
                     </main>

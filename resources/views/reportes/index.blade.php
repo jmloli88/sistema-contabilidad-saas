@@ -21,7 +21,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 
                 {{-- Breadcrumbs --}}
-                <nav class="flex mb-8 mx-4 sm:mx-0" aria-label="Breadcrumb">
+                <nav class="flex mb-8 mx-4 sm:mx-0 text-sm text-gray-500" aria-label="Breadcrumb">
                     <ol class="inline-flex items-center space-x-1 md:space-x-3">
                         <li class="inline-flex items-center">
                             <a href="{{ route('dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200">
@@ -52,13 +52,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mx-4 sm:mx-0">
                     
                     {{-- Card: Rentabilidad por Clínica --}}
-                    <a href="{{ route('reportes.rentabilidad-clinica') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('reportes.rentabilidad-clinica') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"></path>
-                                    </svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-blue-500 to-cyan-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">business</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -79,14 +77,11 @@
                     </a>
 
                     {{-- Card: Rentabilidad por Examen --}}
-                    <a href="{{ route('reportes.rentabilidad-examen') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('reportes.rentabilidad-examen') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-                                    </svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-green-500 to-emerald-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">monitor_heart</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -107,13 +102,11 @@
                     </a>
 
                     {{-- Card: Productividad --}}
-                    <a href="{{ route('reportes.productividad') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('reportes.productividad') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
-                                    </svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">bar_chart</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -134,13 +127,11 @@
                     </a>
 
                     {{-- Card: Comparativo --}}
-                    <a href="{{ route('reportes.comparativo') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('reportes.comparativo') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-orange-500 to-red-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                    </svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-orange-500 to-red-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">compare_arrows</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -161,13 +152,11 @@
                     </a>
 
                     {{-- Card: Comparación de Clínicas --}}
-                    <a href="{{ route('reportes.comparacion-clinicas') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('reportes.comparacion-clinicas') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
-                                    </svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">compare</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -188,13 +177,11 @@
                     </a>
 
                     {{-- Card: Análisis de Consultas --}}
-                    <a href="{{ route('reportes.analisis-consultas') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('reportes.analisis-consultas') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"></path>
-                                    </svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-teal-500 to-cyan-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">chat</span>
                                 </div>
                             </div>
                             <div class="flex-1">
@@ -215,13 +202,11 @@
                     </a>
 
                     {{-- Card: Detalle de Repases --}}
-                    <a href="{{ route('repases.index') }}" class="group bg-white/80 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2 hover:scale-105">
+                    <a href="{{ route('repases.index') }}" class="group bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl p-4 group-hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"></path>
-                                    </svg>
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-cyan-500 to-blue-600 text-white">
+                                    <span class="material-symbols-outlined text-2xl">receipt_long</span>
                                 </div>
                             </div>
                             <div class="flex-1">

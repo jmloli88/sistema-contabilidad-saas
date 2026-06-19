@@ -12,7 +12,7 @@
 
     <div class="py-6">
         <div class="max-w-lg mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                 <div class="p-6">
                     <form action="{{ route('saas.admin.update', $user) }}" method="POST" class="space-y-5">
                         @csrf
@@ -63,11 +63,11 @@
 
                         <div class="flex justify-end gap-3 pt-2">
                             <a href="{{ route('saas.admin.index') }}"
-                               class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                               class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200">
                                 Cancelar
                             </a>
                             <button type="submit"
-                                    class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
+                                    class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-xl hover:bg-indigo-700">
                                 Guardar cambios
                             </button>
                         </div>
