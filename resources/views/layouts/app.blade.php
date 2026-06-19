@@ -48,7 +48,7 @@
                 <!-- Main Content Area -->
                 <div class="flex-1 flex flex-col overflow-hidden pt-16 lg:pt-0">
                     <!-- Page Content -->
-                    <main class="flex-1 overflow-y-auto">
+                    <main class="flex-1 overflow-y-auto bg-gray-50">
                         <!-- Page Heading -->
                         @isset($header)
                             <header class="bg-white shadow z-10">

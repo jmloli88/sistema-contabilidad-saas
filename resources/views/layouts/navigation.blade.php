@@ -1,4 +1,4 @@
-<!-- Sidebar Navigation - Clinical Architect Design -->
+<!-- Sidebar Navigation -->
 <aside x-data="{ open: false }" class="relative">
     <!-- Mobile Overlay -->
     <div x-show="open" 
@@ -9,35 +9,33 @@
          x-transition:leave="transition-opacity ease-linear duration-300"
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
-         class="fixed inset-0 bg-black/40 z-20 lg:hidden"
-         style="display: none;">
+         class="fixed inset-0 bg-black/40 z-20 lg:hidden">
     </div>
 
     <!-- Mobile Menu Button -->
-    <div class="lg:hidden fixed top-0 left-0 right-0 z-30 px-4 py-3 flex items-center justify-between" style="background-color: #f9f9ff; border-bottom: 1px solid rgba(193, 198, 213, 0.15);">
-        <button @click="open = !open" class="p-2 rounded-lg transition-colors" style="color: #414753;" onmouseover="this.style.backgroundColor='rgba(0,90,182,0.05)'; this.style.color='#005ab6'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#414753'">
+    <div class="lg:hidden fixed top-0 left-0 right-0 z-30 px-4 py-3 flex items-center justify-between bg-white border-b border-gray-100">
+        <button @click="open = !open" class="p-2 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
         </button>
-        <span class="text-lg font-bold" style="color: #191c22;">Contabilidad</span>
+        <span class="text-lg font-bold text-gray-900">Contabilidad</span>
         <div class="w-10"></div>
     </div>
 
     <!-- Sidebar -->
     <nav :class="{'translate-x-0': open, '-translate-x-full': !open}"
-         class="fixed top-0 left-0 z-30 h-full w-64 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static flex flex-col"
-         style="background-color: #f9f9ff; border-right: 1px solid rgba(193, 198, 213, 0.15);">
+         class="fixed top-0 left-0 z-30 h-full w-64 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static flex flex-col bg-white border-r border-gray-100">
         
         <!-- Logo Section -->
-        <div class="px-5 py-5 flex items-center gap-3" style="border-bottom: 1px solid rgba(193, 198, 213, 0.15);">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg" style="background: linear-gradient(135deg, #005ab6 0%, #1d73dc 100%);">
-                <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+        <div class="px-5 py-5 flex items-center gap-3 border-b border-gray-100">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-[#005ab6] to-[#1d73dc]">
+                <span class="material-symbols-outlined fill text-xl">account_balance</span>
             </div>
             <div class="flex-1 min-w-0">
-                <h1 class="text-base font-bold tracking-tight" style="color: #191c22; line-height: 1.2;">Contabilidad</h1>
+                <h1 class="text-base font-bold tracking-tight text-gray-900 leading-tight">Contabilidad</h1>
                 @if(Auth::user()->empresa_id)
-                    <p class="text-[11px] font-medium truncate" style="color: #005ab6;">{{ Auth::user()->empresa->nombre }}</p>
+                    <p class="text-[11px] font-medium truncate text-[#005ab6]">{{ Auth::user()->empresa->nombre }}</p>
                 @endif
             </div>
         </div>
@@ -45,192 +43,140 @@
         <!-- Navigation Links -->
         <div class="flex-1 overflow-y-auto py-5 px-3">
             <!-- Principal Section -->
-            <div class="px-3 mb-2 text-[11px] font-bold uppercase tracking-widest" style="color: #727784;">Principal</div>
+            <div class="px-3 mb-2 text-[11px] font-bold uppercase tracking-widest text-gray-400">Principal</div>
             
             <div class="space-y-1">
                 <!-- Dashboard -->
                 <a href="{{ route('dashboard') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                   style="{{ request()->routeIs('dashboard') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                   onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                   onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('dashboard') ? 1 : 0 }};">dashboard</span>
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('dashboard') ? 'fill' : '' }}">dashboard</span>
                     <span class="font-medium text-sm">{{ __('Dashboard') }}</span>
                     @if(request()->routeIs('dashboard'))
-                        <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                     @endif
                 </a>
 
                 <!-- Clínicas -->
                 <a href="{{ route('clinicas.index') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                   style="{{ request()->routeIs('clinicas.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                   onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                   onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('clinicas.*') ? 1 : 0 }};">account_balance</span>
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('clinicas.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('clinicas.*') ? 'fill' : '' }}">account_balance</span>
                     <span class="font-medium text-sm">{{ __('Clínicas') }}</span>
                     @if(request()->routeIs('clinicas.*'))
-                        <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                     @endif
                 </a>
 
                 <!-- Repases -->
                 <a href="{{ route('repases.index') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                   style="{{ request()->routeIs('repases.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                   onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                   onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('repases.*') ? 1 : 0 }};">payments</span>
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('repases.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('repases.*') ? 'fill' : '' }}">payments</span>
                     <span class="font-medium text-sm">{{ __('Repases') }}</span>
                     @if(request()->routeIs('repases.*'))
-                        <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                     @endif
                 </a>
 
                 <!-- Calendario Repases -->
                 <a href="{{ route('calendario.index') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                   style="{{ request()->routeIs('calendario.*') && !request()->routeIs('calendario.agendas.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                   onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                   onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('calendario.*') && !request()->routeIs('calendario.agendas.*') ? 1 : 0 }};">calendar_month</span>
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('calendario.*') && !request()->routeIs('calendario.agendas.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('calendario.*') && !request()->routeIs('calendario.agendas.*') ? 'fill' : '' }}">calendar_month</span>
                     <span class="font-medium text-sm">{{ __('Calendario Repases') }}</span>
                     @if(request()->routeIs('calendario.*') && !request()->routeIs('calendario.agendas.*'))
-                        <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                     @endif
                 </a>
 
                 <!-- Agendas -->
                 <a href="{{ route('agendas.index') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                   style="{{ request()->routeIs('agendas.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                   onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                   onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('agendas.*') ? 1 : 0 }};">event_note</span>
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('agendas.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('agendas.*') ? 'fill' : '' }}">event_note</span>
                     <span class="font-medium text-sm">{{ __('Agendas') }}</span>
                     @if(request()->routeIs('agendas.*'))
-                        <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                     @endif
                 </a>
 
                 <!-- Facturación -->
                 <a href="{{ route('billing.index') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                   style="{{ request()->routeIs('billing.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                   onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                   onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('billing.*') ? 1 : 0 }};">credit_card</span>
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('billing.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('billing.*') ? 'fill' : '' }}">credit_card</span>
                     <span class="font-medium text-sm">{{ __('Facturación') }}</span>
                     @if(request()->routeIs('billing.*'))
-                        <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                     @endif
                 </a>
             </div>
 
             <!-- Admin Section -->
             @if(Auth::user()->isAdmin())
-                <div class="mt-6 mb-2 px-3 text-[11px] font-bold uppercase tracking-widest" style="color: #727784;">Administración</div>
+                <div class="mt-6 mb-2 px-3 text-[11px] font-bold uppercase tracking-widest text-gray-400">Administración</div>
                 
                 <div class="space-y-1">
                     <!-- Reportes -->
                     <a href="{{ route('reportes.index') }}" 
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                       style="{{ request()->routeIs('reportes.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                       onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                       onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('reportes.*') ? 1 : 0 }};">analytics</span>
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('reportes.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('reportes.*') ? 'fill' : '' }}">analytics</span>
                         <span class="font-medium text-sm">{{ __('Reportes') }}</span>
                         @if(request()->routeIs('reportes.*'))
-                            <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                            <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                         @endif
                     </a>
 
                     <!-- Balances -->
                     <a href="{{ route('balances.index') }}" 
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                       style="{{ request()->routeIs('balances.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                       onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                       onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('balances.*') ? 1 : 0 }};">account_balance_wallet</span>
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('balances.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('balances.*') ? 'fill' : '' }}">account_balance_wallet</span>
                         <span class="font-medium text-sm">{{ __('Balances') }}</span>
                         @if(request()->routeIs('balances.*'))
-                            <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                            <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                         @endif
                     </a>
-
-                    <!-- Predictivo -->
-                     <!--
-                    <a href="{{ route('predictivo.dashboard') }}" 
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                       style="{{ request()->routeIs('predictivo.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                       onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                       onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('predictivo.*') ? 1 : 0 }};">insights</span>
-                        <span class="font-medium text-sm">{{ __('Predictivo') }}</span>
-                        @if(request()->routeIs('predictivo.*'))
-                            <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
-                        @endif
-                    </a>
-                    -->
 
                     <!-- Precios -->
                     <a href="{{ route('examenes.index') }}" 
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                       style="{{ request()->routeIs('examenes.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                       onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                       onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('examenes.*') ? 1 : 0 }};">sell</span>
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('examenes.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('examenes.*') ? 'fill' : '' }}">sell</span>
                         <span class="font-medium text-sm">{{ __('Precios') }}</span>
                         @if(request()->routeIs('examenes.*'))
-                            <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                            <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                         @endif
                     </a>
 
                     <!-- Usuarios -->
                     <a href="{{ route('users.index') }}" 
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
-                       style="{{ request()->routeIs('users.*') ? 'background: linear-gradient(135deg, rgba(0, 90, 182, 0.08) 0%, rgba(29, 115, 220, 0.08) 100%); color: #005ab6;' : 'color: #414753;' }}"
-                       onmouseover="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22'; }"
-                       onmouseout="if(!this.style.background.includes('gradient')) { this.style.backgroundColor='transparent'; this.style.color='#414753'; }">
-                        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' {{ request()->routeIs('users.*') ? 1 : 0 }};">group</span>
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('users.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                        <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('users.*') ? 'fill' : '' }}">group</span>
                         <span class="font-medium text-sm">{{ __('Usuarios') }}</span>
                         @if(request()->routeIs('users.*'))
-                            <span class="ml-auto w-1.5 h-1.5 rounded-full" style="background-color: #005ab6;"></span>
+                            <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
                         @endif
                     </a>
                 </div>
             @endif
-
         </div>
 
         <!-- User Profile Section -->
-        <div class="p-4" style="border-top: 1px solid rgba(193, 198, 213, 0.15);">
-            <div class="flex items-center gap-3 p-2.5 rounded-xl" style="background-color: #ffffff; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.04); border: 1px solid rgba(193, 198, 213, 0.15);">
-                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background: linear-gradient(135deg, #005ab6 0%, #1d73dc 100%);">
+        <div class="p-4 border-t border-gray-100">
+            <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-gray-100 shadow-sm">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0 bg-gradient-to-br from-[#005ab6] to-[#1d73dc]">
                     {{ substr(Auth::user()->name, 0, 1) }}
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs font-bold truncate" style="color: #191c22;">{{ Auth::user()->name }}</p>
-                    <p class="text-[10px] truncate" style="color: #727784;">{{ Auth::user()->email }}</p>
+                    <p class="text-xs font-bold truncate text-gray-900">{{ Auth::user()->name }}</p>
+                    <p class="text-[10px] truncate text-gray-400">{{ Auth::user()->email }}</p>
                 </div>
             </div>
             
             <div class="mt-3 space-y-1">
                 <a href="{{ route('profile.edit') }}" 
-                   class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200"
-                   style="color: #414753;"
-                   onmouseover="this.style.backgroundColor='rgba(0, 90, 182, 0.04)'; this.style.color='#191c22';"
-                   onmouseout="this.style.backgroundColor='transparent'; this.style.color='#414753';">
+                   class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900">
                     <span class="material-symbols-outlined text-[18px]">person</span>
                     {{ __('Perfil') }}
                 </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" 
-                            class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200"
-                            style="color: #414753;"
-                            onmouseover="this.style.backgroundColor='rgba(186, 26, 26, 0.04)'; this.style.color='#ba1a1a';"
-                            onmouseout="this.style.backgroundColor='transparent'; this.style.color='#414753';">
+                            class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-gray-600 hover:bg-red-50 hover:text-red-600">
                         <span class="material-symbols-outlined text-[18px]">logout</span>
                         {{ __('Salir') }}
                     </button>

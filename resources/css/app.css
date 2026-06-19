@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --color-primary: #005ab6;
+    --color-primary-light: #1d73dc;
+    --color-bg: #f9f9ff;
+    --color-surface: #ffffff;
+    --color-text: #191c22;
+    --color-text-secondary: #414753;
+    --color-text-muted: #727784;
+    --color-border: #e5e7eb;
+    --color-success: #22c55e;
+    --color-warning: #eab308;
+    --color-danger: #ef4444;
+    --radius-card: 1rem;
+    --radius-btn: 0.75rem;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-modal: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+/* Material Symbols fill utility (replaces inline font-variation-settings) */
+.material-symbols-outlined.fill {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+}
+
 /* Estilos personalizados para el calendario */
 @layer components {
     /* Día actual en el calendario */
