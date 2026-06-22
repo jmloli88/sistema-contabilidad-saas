@@ -514,16 +514,17 @@
                     syncEl.querySelector('span').textContent = props.google_synced ? '✅' : '⏳';
                     syncEl.lastChild.textContent = props.google_synced ? 'Sincronizado con Google Calendar' : 'Pendiente de sincronizar';
 
-                    // Position tooltip near the event element
-                    const rect = info.el.getBoundingClientRect();
+                    // Position tooltip near the mouse cursor
                     const calendarRect = document.getElementById('calendario').getBoundingClientRect();
+                    const mouseX = info.jsEvent.clientX - calendarRect.left;
+                    const mouseY = info.jsEvent.clientY - calendarRect.top;
                     
-                    let left = rect.right - calendarRect.left + 10;
-                    let top = rect.top - calendarRect.top;
+                    let left = mouseX + 16;
+                    let top = mouseY - 10;
                     
                     // Flip left if it would overflow
-                    if (left + 220 > calendarRect.width) {
-                        left = rect.left - calendarRect.left - 230;
+                    if (left + 230 > calendarRect.width) {
+                        left = mouseX - 246;
                     }
                     // Clamp top
                     top = Math.max(0, Math.min(top, calendarRect.height - 150));
