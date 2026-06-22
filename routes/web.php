@@ -81,6 +81,7 @@ Route::middleware(['auth', 'verified', 'subscription', 'admin', 'empresa.scope']
         Route::get('/redirect', [App\Http\Controllers\GoogleCalendarController::class, 'redirect'])->name('redirect');
         Route::get('/status', [App\Http\Controllers\GoogleCalendarController::class, 'status'])->name('status');
         Route::post('/disconnect', [App\Http\Controllers\GoogleCalendarController::class, 'disconnect'])->name('disconnect');
+        Route::post('/sync', [App\Http\Controllers\GoogleCalendarController::class, 'sync'])->name('sync');
     });
     
     // Clínicas - crear, editar, eliminar (y ver detalle)

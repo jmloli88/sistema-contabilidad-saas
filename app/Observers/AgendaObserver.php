@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Agenda;
 use App\Services\GoogleCalendarService;
+use Illuminate\Support\Facades\Log;
 
 class AgendaObserver
 {
@@ -11,27 +12,21 @@ class AgendaObserver
         private readonly GoogleCalendarService $googleCalendar,
     ) {}
 
-    /**
-     * When an agenda is created, push it to Google Calendar.
-     */
     public function created(Agenda $agenda): void
     {
+        Log::info('Google Calendar: agenda created, syncing...', ['agenda_id' => $agenda->id]);
         $this->googleCalendar->syncAgenda($agenda);
     }
 
-    /**
-     * When an agenda is updated, sync the changes to Google Calendar.
-     */
     public function updated(Agenda $agenda): void
     {
+        Log::info('Google Calendar: agenda updated, syncing...', ['agenda_id' => $agenda->id]);
         $this->googleCalendar->syncAgenda($agenda);
     }
 
-    /**
-     * When an agenda is deleted, remove the matching Google Calendar event.
-     */
     public function deleted(Agenda $agenda): void
     {
+        Log::info('Google Calendar: agenda deleted, removing...', ['agenda_id' => $agenda->id]);
         $this->googleCalendar->deleteAgendaEvent($agenda);
     }
 }

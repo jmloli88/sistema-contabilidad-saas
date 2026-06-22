@@ -99,6 +99,9 @@ class GoogleCalendarService
 
         Log::info("Google Calendar connected for empresa {$empresaId}" . ($googleEmail ? " ({$googleEmail})" : ''));
 
+        // Bulk-sync all existing agendas so the calendar isn't empty on first connect.
+        $this->syncAllForEmpresa($empresaId);
+
         return $empresaId;
     }
 
@@ -243,11 +246,11 @@ class GoogleCalendarService
         $clinicaNombre = $agenda->clinica?->nombre ?? 'Agenda';
 
         $start = new EventDateTime;
-        $start->setDateTime($agenda->fecha->format('Y-m-d') . 'T' . $agenda->hora_inicio . ':00');
+        $start->setDateTime($agenda->fecha->format('Y-m-d') . 'T' . $agenda->hora_inicio);
         $start->setTimeZone($timezone);
 
         $end = new EventDateTime;
-        $end->setDateTime($agenda->fecha->format('Y-m-d') . 'T' . $agenda->hora_fin . ':00');
+        $end->setDateTime($agenda->fecha->format('Y-m-d') . 'T' . $agenda->hora_fin);
         $end->setTimeZone($timezone);
 
         $event = new Event;
@@ -256,5 +259,46 @@ class GoogleCalendarService
         $event->setEnd($end);
 
         return $event;
+    }
+
+    /**
+     * Push all existing agendas for an empresa to Google Calendar.
+     * Called after the initial OAuth connection so the calendar isn't empty.
+     */
+    public function syncAllForEmpresa(int $empresaId): void
+    {
+        $calendar = $this->getCalendarService($empresaId);
+        if (!$calendar) {
+            return;
+        }
+
+        $agendas = Agenda::where('empresa_id', $empresaId)
+            ->whereDoesntHave('googleCalendarEvent')
+            ->get();
+
+        if ($agendas->isEmpty()) {
+            return;
+        }
+
+        $synced = 0;
+        foreach ($agendas as $agenda) {
+            try {
+                $event = $this->buildEvent($agenda);
+                $created = $calendar->events->insert('primary', $event);
+
+                GoogleCalendarEvent::create([
+                    'agenda_id' => $agenda->id,
+                    'empresa_id' => $empresaId,
+                    'google_event_id' => $created->getId(),
+                    'synced_at' => now(),
+                ]);
+
+                $synced++;
+            } catch (\Throwable $e) {
+                Log::error('Google Calendar bulk sync failed for agenda ' . $agenda->id . ': ' . $e->getMessage());
+            }
+        }
+
+        Log::info("Google Calendar: bulk-synced {$synced} agendas for empresa {$empresaId}");
     }
 }

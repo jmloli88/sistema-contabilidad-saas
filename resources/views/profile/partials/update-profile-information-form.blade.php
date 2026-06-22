@@ -108,7 +108,11 @@
                             <span class="material-symbols-outlined text-base">check_circle</span>
                             Conectado — <span x-text="email"></span>
                         </span>
-                        <form method="POST" action="{{ route('google-calendar.disconnect') }}">
+                        <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline">
+                            @csrf
+                            <x-secondary-button type="submit" title="Sincronizar todas las agendas ahora">{{ __('Sincronizar ahora') }}</x-secondary-button>
+                        </form>
+                        <form method="POST" action="{{ route('google-calendar.disconnect') }}" class="inline">
                             @csrf
                             <x-secondary-button type="submit">{{ __('Desconectar') }}</x-secondary-button>
                         </form>

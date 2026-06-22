@@ -70,8 +70,7 @@ class GoogleCalendarController extends Controller
     }
 
     /**
-     * Return the current connection status for the admin's empresa
-     * so the front-end can show the appropriate button.
+     * Return the current connection status for the admin's empresa.
      */
     public function status(Request $request): \Illuminate\Http\JsonResponse
     {
@@ -85,5 +84,21 @@ class GoogleCalendarController extends Controller
             'connected' => $token !== null,
             'google_email' => $token?->google_email,
         ]);
+    }
+
+    /**
+     * Force-sync all existing agendas to Google Calendar.
+     */
+    public function sync(Request $request): RedirectResponse
+    {
+        $empresaId = (int) ($request->user()->empresa_id ?? 0);
+
+        if ($empresaId === 0) {
+            return redirect()->back()->with('error', 'No se pudo identificar tu empresa.');
+        }
+
+        $this->googleCalendar->syncAllForEmpresa($empresaId);
+
+        return redirect()->back()->with('success', 'Sincronización completada. Revisá Google Calendar.');
     }
 }
