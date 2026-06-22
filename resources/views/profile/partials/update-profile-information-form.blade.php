@@ -110,7 +110,7 @@
                         </span>
                         <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline" x-data="{ syncing: false }" @submit="syncing = true">
                             @csrf
-                            <x-secondary-button type="submit" :disabled="syncing" title="Sincronizar todas las agendas ahora">
+                            <x-secondary-button type="submit" x-bind:disabled="syncing" title="Sincronizar todas las agendas ahora">
                                 <span x-show="!syncing">{{ __('Sincronizar ahora') }}</span>
                                 <span x-show="syncing" class="inline-flex items-center gap-1">
                                     <span class="material-symbols-outlined text-base animate-spin">sync</span>
