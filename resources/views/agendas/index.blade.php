@@ -397,6 +397,10 @@
                 moreLinkText: function(num) {
                     return '+' + num + ' más';
                 },
+                dateClick: function(info) {
+                    // Click en un día vacío — abre el modal con la fecha pre-llenada
+                    openCreateModal(info.dateStr);
+                },
                 events: function(info, successCallback, failureCallback) {
                     const clinicaId = document.getElementById('filtro-clinica').value;
                     const url = new URL('{{ route("agendas.events") }}');
@@ -435,38 +439,62 @@
                     openEditModal(info.event);
                 },
                 eventContent: function(arg) {
+                    const props = arg.event.extendedProps;
                     const isMobile = window.innerWidth < 640;
+                    
+                    // Google Calendar sync indicator
+                    const syncIcon = props.google_synced
+                        ? '<span class="inline-flex items-center" title="Sincronizado con Google Calendar">🔄</span>'
+                        : '';
+                    
+                    // Repetición badge
+                    const repBadge = props.repetitiva
+                        ? '<span class="inline-flex items-center text-[10px] opacity-70" title="Agenda repetitiva">🔁</span>'
+                        : '';
+                    
                     if (isMobile) {
-                        // En móvil, mostrar badge numerado
+                        // En móvil, mostrar badge numerado con color de clínica
                         const eventIndex = arg.event.extendedProps.dayIndex || 1;
-                        const badgeStyles = [
-                            { bg: '#fee2e2', color: '#dc2626', border: '#fecaca' },  // Rojo pastel
-                            { bg: '#fef3c7', color: '#d97706', border: '#fde68a' },  // Amarillo pastel
-                            { bg: '#d1fae5', color: '#059669', border: '#a7f3d0' },  // Verde pastel
-                            { bg: '#dbeafe', color: '#2563eb', border: '#bfdbfe' },  // Azul pastel
-                            { bg: '#e9d5ff', color: '#9333ea', border: '#d8b4fe' },  // Púrpura pastel
-                            { bg: '#fce7f3', color: '#db2777', border: '#fbcfe8' }   // Rosa pastel
-                        ];
-                        const style = badgeStyles[(eventIndex - 1) % badgeStyles.length];
-                        
                         return {
                             html: `<span class="agenda-badge" style="
-                                background-color: ${style.bg};
-                                color: ${style.color};
-                                border: 1px solid ${style.border};
+                                background-color: ${props.color}20;
+                                color: ${props.color};
+                                border: 1px solid ${props.color}40;
                                 padding: 2px 8px;
                                 border-radius: 12px;
                                 font-size: 9px;
                                 font-weight: 600;
                                 display: inline-block;
                                 white-space: nowrap;
-                            ">Agenda ${eventIndex}</span>`
+                            ">Agenda ${eventIndex} ${syncIcon}${repBadge}</span>`
                         };
                     } else {
+                        // Desktop: mostrar línea por línea con sync + repetición
+                        const titleHtml = arg.event.title.replace(/\n/g, '<br>');
                         return {
-                            html: '<div class="p-1 text-xs">' + arg.event.title.replace(/\n/g, '<br>') + '</div>'
+                            html: `<div class="p-1 text-xs leading-tight">
+                                ${titleHtml}
+                                <div class="flex items-center gap-1 mt-0.5">${syncIcon}${repBadge}</div>
+                            </div>`
                         };
                     }
+                },
+                eventDidMount: function(info) {
+                    // Rich tooltip on hover
+                    const props = info.event.extendedProps;
+                    const repLabel = props.repetitiva ? 'Repetitiva' : 'Única';
+                    const syncLabel = props.google_synced ? '✅ Sincronizado con Google Calendar' : '⏳ No sincronizado';
+                    
+                    info.el.title = [
+                        `🏥 ${props.clinica}`,
+                        `🕐 ${props.hora_inicio} → ${props.hora_fin}`,
+                        `👨‍⚕️ Dr. ${props.doctor}`,
+                        `🔁 ${repLabel}`,
+                        syncLabel,
+                    ].join('\n');
+                    
+                    // Make the native tooltip slightly richer by adding data to the element
+                    info.el.style.cursor = 'pointer';
                 },
                 windowResize: function(view) {
                     // Ajustar cuando cambia el tamaño de la ventana
@@ -520,7 +548,7 @@
             });
         });
 
-        function openCreateModal() {
+        function openCreateModal(dateStr = null) {
             document.getElementById('modalTitle').textContent = 'Nueva Agenda';
             document.getElementById('agendaForm').reset();
             document.getElementById('agendaId').value = '';
@@ -528,6 +556,12 @@
             document.getElementById('diasRepeticionContainer').classList.add('hidden');
             document.getElementById('aplicarTodasContainer').classList.add('hidden');
             document.getElementById('deleteBtn').classList.add('hidden');
+            
+            // Pre-fill date if a day was clicked
+            if (dateStr) {
+                document.getElementById('fecha').value = dateStr;
+            }
+            
             document.getElementById('agendaModal').classList.remove('hidden');
         }
 

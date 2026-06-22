@@ -10,6 +10,25 @@ use Illuminate\View\View;
 
 class AgendaController extends Controller
 {
+    /** Fixed color palette — one colour per clinic so you recognize it at a glance. */
+    private const CLINIC_COLORS = [
+        '#4f46e5', // indigo
+        '#0891b2', // cyan
+        '#059669', // emerald
+        '#d97706', // amber
+        '#dc2626', // red
+        '#7c3aed', // violet
+        '#0d9488', // teal
+        '#c026d3', // fuchsia
+    ];
+
+    /** Resolve a stable background colour for a clinic (cycles if > 8 clinics). */
+    private static function clinicColor(int $clinicaId): string
+    {
+        $idx = ($clinicaId - 1) % count(self::CLINIC_COLORS);
+
+        return self::CLINIC_COLORS[$idx];
+    }
     public function index(): View
     {
         $clinicas = Clinica::orderBy('nombre')->get();
@@ -195,17 +214,20 @@ class AgendaController extends Controller
                   ->whereDate('fecha', '<=', $request->end);
         }
 
-        $agendas = $query->get();
+        $agendas = $query->with('googleCalendarEvent')->get();
 
         $events = $agendas->map(function ($agenda) {
+            $color = self::clinicColor($agenda->clinica_id);
+            $esRepetitiva = $agenda->tipo_repeticion === 'repetitiva';
+
             return [
                 'id' => $agenda->id,
                 'title' => $agenda->clinica->nombre . "\n" . 
                           $agenda->hora_inicio . ' - ' . $agenda->hora_fin . "\n" . 
                           'Dr. ' . $agenda->doctor,
                 'start' => $agenda->fecha->format('Y-m-d'),
-                'backgroundColor' => '#3b82f6',
-                'borderColor' => '#2563eb',
+                'backgroundColor' => $color,
+                'borderColor' => $color,
                 'textColor' => '#ffffff',
                 'extendedProps' => [
                     'clinica_id' => $agenda->clinica_id,
@@ -215,6 +237,9 @@ class AgendaController extends Controller
                     'doctor' => $agenda->doctor,
                     'tipo_repeticion' => $agenda->tipo_repeticion,
                     'grupo_repeticion' => $agenda->grupo_repeticion,
+                    'google_synced' => $agenda->googleCalendarEvent !== null,
+                    'color' => $color,
+                    'repetitiva' => $esRepetitiva,
                 ],
             ];
         });
