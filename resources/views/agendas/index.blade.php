@@ -6,13 +6,13 @@
             </h2>
             <div class="flex flex-wrap gap-2 w-full sm:w-auto" x-data="googleCalendarSync">
                 <template x-if="connected">
-                    <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline">
+                    <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline" x-data="{ syncing: false }" @submit="syncing = true">
                         @csrf
-                        <button type="submit"
-                                class="flex-1 sm:flex-none bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-xl text-sm inline-flex items-center gap-1"
+                        <button type="submit" :disabled="syncing"
+                                class="flex-1 sm:flex-none bg-indigo-500 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-wait text-white font-bold py-2 px-4 rounded-xl text-sm inline-flex items-center gap-1"
                                 title="Sincronizar agendas con Google Calendar">
-                            <span class="material-symbols-outlined text-base">sync</span>
-                            Sincronizar
+                            <span class="material-symbols-outlined text-base" x-text="syncing ? 'hourglass_top' : 'sync'"></span>
+                            <span x-text="syncing ? 'Sincronizando...' : 'Sincronizar'"></span>
                         </button>
                     </form>
                 </template>

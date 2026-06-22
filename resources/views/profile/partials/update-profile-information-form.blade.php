@@ -108,9 +108,15 @@
                             <span class="material-symbols-outlined text-base">check_circle</span>
                             Conectado — <span x-text="email"></span>
                         </span>
-                        <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline">
+                        <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline" x-data="{ syncing: false }" @submit="syncing = true">
                             @csrf
-                            <x-secondary-button type="submit" title="Sincronizar todas las agendas ahora">{{ __('Sincronizar ahora') }}</x-secondary-button>
+                            <x-secondary-button type="submit" :disabled="syncing" title="Sincronizar todas las agendas ahora">
+                                <span x-show="!syncing">{{ __('Sincronizar ahora') }}</span>
+                                <span x-show="syncing" class="inline-flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-base animate-spin">sync</span>
+                                    {{ __('Sincronizando...') }}
+                                </span>
+                            </x-secondary-button>
                         </form>
                         <form method="POST" action="{{ route('google-calendar.disconnect') }}" class="inline">
                             @csrf
