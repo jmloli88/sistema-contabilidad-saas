@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Log;
 
 class GoogleCalendarService
 {
+    /** Name of the secondary calendar where agendas are synced. */
+    private const CALENDAR_NAME = 'Agendas (VictCorp Repases)';
+
     /**
      * Build a Google API client with the standard OAuth config.
      */
@@ -99,15 +102,81 @@ class GoogleCalendarService
 
         Log::info("Google Calendar connected for empresa {$empresaId}" . ($googleEmail ? " ({$googleEmail})" : ''));
 
-        // Bulk-sync all existing agendas so the calendar isn't empty on first connect.
-        $this->syncAllForEmpresa($empresaId);
+        // Ensure the secondary calendar exists for this empresa.
+        $calendarId = $this->getOrCreateCalendar($empresaId);
+
+        if ($calendarId) {
+            // Bulk-sync all existing agendas so the calendar isn't empty on first connect.
+            $this->syncAllForEmpresa($empresaId);
+        }
 
         return $empresaId;
     }
 
     /**
-     * Disconnect Google Calendar for the given empresa.
+     * Resolve the Google Calendar ID for an empresa. Returns the secondary
+     * calendar ID if set up, or falls back to 'primary'. This lets the sync
+     * still work for empresas connected before the secondary calendar feature.
      */
+    private function getCalendarId(int $empresaId): string
+    {
+        $token = GoogleCalendarToken::where('empresa_id', $empresaId)
+            ->where('is_active', true)
+            ->first();
+
+        return $token?->calendar_id ?: 'primary';
+    }
+
+    /**
+     * Create (or retrieve) a secondary Google Calendar for the empresa.
+     * Returns the calendar ID on success, null on failure.
+     *
+     * Google Calendar allows creating secondary calendars via the API.
+     * A dedicated calendar lets the user toggle the entire layer on/off
+     * without mixing agendas into their personal calendar.
+     */
+    public function getOrCreateCalendar(int $empresaId): ?string
+    {
+        $token = GoogleCalendarToken::where('empresa_id', $empresaId)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$token) {
+            return null;
+        }
+
+        // Already has a calendar.
+        if ($token->calendar_id) {
+            return $token->calendar_id;
+        }
+
+        $calendar = $this->getCalendarService($empresaId);
+        if (!$calendar) {
+            return null;
+        }
+
+        try {
+            $gCalendar = new \Google\Service\Calendar\Calendar;
+            $gCalendar->setSummary(self::CALENDAR_NAME);
+            $gCalendar->setTimeZone(config('google-calendar.timezone', 'America/Sao_Paulo'));
+
+            $created = $calendar->calendars->insert($gCalendar);
+
+            $token->update([
+                'calendar_id' => $created->getId(),
+                'calendar_name' => self::CALENDAR_NAME,
+            ]);
+
+            Log::info("Google Calendar: created secondary calendar '{$created->getSummary()}' for empresa {$empresaId}");
+
+            return $created->getId();
+        } catch (\Throwable $e) {
+            Log::error('Google Calendar: failed to create secondary calendar for empresa ' . $empresaId . ': ' . $e->getMessage());
+
+            return null;
+        }
+    }
+
     public function disconnect(int $empresaId): void
     {
         GoogleCalendarToken::where('empresa_id', $empresaId)->update(['is_active' => false]);
@@ -198,7 +267,7 @@ class GoogleCalendarService
         }
 
         try {
-            $calendar->events->delete('primary', $existing->google_event_id);
+            $calendar->events->delete($this->getCalendarId($agenda->empresa_id), $existing->google_event_id);
             $existing->delete();
         } catch (\Throwable $e) {
             // 410 Gone means the event was already deleted from Google.
@@ -214,7 +283,7 @@ class GoogleCalendarService
     {
         $event = $this->buildEvent($agenda);
 
-        $created = $calendar->events->insert('primary', $event);
+                $created = $calendar->events->insert($this->getCalendarId($empresaId), $event);
 
         GoogleCalendarEvent::create([
             'agenda_id' => $agenda->id,
@@ -228,7 +297,7 @@ class GoogleCalendarService
     {
         $event = $this->buildEvent($agenda);
 
-        $calendar->events->update('primary', $existing->google_event_id, $event);
+        $calendar->events->update($this->getCalendarId($agenda->empresa_id), $existing->google_event_id, $event);
 
         $existing->update(['synced_at' => now()]);
     }
@@ -284,7 +353,7 @@ class GoogleCalendarService
         foreach ($agendas as $agenda) {
             try {
                 $event = $this->buildEvent($agenda);
-                $created = $calendar->events->insert('primary', $event);
+        $created = $calendar->events->insert($this->getCalendarId($agenda->empresa_id), $event);
 
                 GoogleCalendarEvent::create([
                     'agenda_id' => $agenda->id,

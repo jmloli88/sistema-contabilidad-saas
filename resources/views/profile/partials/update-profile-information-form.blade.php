@@ -107,6 +107,9 @@
                         <span class="inline-flex items-center gap-1 text-sm text-green-700 bg-green-50 px-3 py-1 rounded-full">
                             <span class="material-symbols-outlined text-base">check_circle</span>
                             Conectado — <span x-text="email"></span>
+                            <template x-if="calendarName">
+                                <span class="text-green-600">| <span x-text="calendarName"></span></span>
+                            </template>
                         </span>
                         <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline" x-data="{ syncing: false }" @submit="syncing = true">
                             @csrf
@@ -146,6 +149,7 @@
         Alpine.data('googleCalendar', () => ({
             status: 'loading',
             email: '',
+            calendarName: '',
 
             async init() {
                 try {
@@ -156,6 +160,7 @@
                         const data = await res.json();
                         this.status = data.connected ? 'connected' : 'disconnected';
                         this.email = data.google_email ?? '';
+                        this.calendarName = data.calendar_name ?? '';
                     } else {
                         this.status = 'disconnected';
                     }

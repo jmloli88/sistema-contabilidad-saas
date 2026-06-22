@@ -13,6 +13,8 @@ class GoogleCalendarToken extends Model
         'refresh_token',
         'expires_at',
         'google_email',
+        'calendar_id',
+        'calendar_name',
         'is_active',
     ];
 

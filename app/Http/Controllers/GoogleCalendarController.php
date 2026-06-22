@@ -83,6 +83,7 @@ class GoogleCalendarController extends Controller
         return response()->json([
             'connected' => $token !== null,
             'google_email' => $token?->google_email,
+            'calendar_name' => $token?->calendar_name,
         ]);
     }
 
