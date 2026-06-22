@@ -44,7 +44,21 @@
                     </div>
 
                     <!-- Calendario -->
-                    <div id="calendario" class="agenda-calendar"></div>
+                    <div id="calendario" class="agenda-calendar relative"></div>
+
+                    <!-- Custom tooltip (replaces native title) -->
+                    <div id="agenda-tooltip" class="hidden absolute z-[9999] pointer-events-none transition-opacity duration-150 ease-out opacity-0"
+                         style="left: 0; top: 0;">
+                        <div class="bg-gray-900 text-white text-xs rounded-xl shadow-2xl shadow-gray-900/20 ring-1 ring-white/10">
+                            <div class="px-3.5 py-2.5 space-y-1.5">
+                                <div class="flex items-center gap-2 text-sm font-semibold text-indigo-300" id="tt-clinica"></div>
+                                <div class="flex items-center gap-2" id="tt-horario"><span class="text-gray-400 w-4 text-center">🕐</span><span></span></div>
+                                <div class="flex items-center gap-2" id="tt-doctor"><span class="text-gray-400 w-4 text-center">👨‍⚕️</span><span></span></div>
+                                <div class="flex items-center gap-2" id="tt-repeticion"><span class="text-gray-400 w-4 text-center">🔁</span><span></span></div>
+                                <div class="flex items-center gap-2" id="tt-sync"><span class="text-gray-400 w-4 text-center"></span><span></span></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -480,21 +494,50 @@
                     }
                 },
                 eventDidMount: function(info) {
-                    // Rich tooltip on hover
-                    const props = info.event.extendedProps;
-                    const repLabel = props.repetitiva ? 'Repetitiva' : 'Única';
-                    const syncLabel = props.google_synced ? '✅ Sincronizado con Google Calendar' : '⏳ No sincronizado';
-                    
-                    info.el.title = [
-                        `🏥 ${props.clinica}`,
-                        `🕐 ${props.hora_inicio} → ${props.hora_fin}`,
-                        `👨‍⚕️ Dr. ${props.doctor}`,
-                        `🔁 ${repLabel}`,
-                        syncLabel,
-                    ].join('\n');
-                    
-                    // Make the native tooltip slightly richer by adding data to the element
                     info.el.style.cursor = 'pointer';
+                },
+                eventMouseEnter: function(info) {
+                    const props = info.event.extendedProps;
+                    const tooltip = document.getElementById('agenda-tooltip');
+                    if (!tooltip) return;
+
+                    // Fill tooltip content
+                    document.getElementById('tt-clinica').innerHTML = `<span class="inline-block w-2.5 h-2.5 rounded-full" style="background-color:${props.color}"></span> ${props.clinica}`;
+                    document.getElementById('tt-horario').lastChild.textContent = `${props.hora_inicio} → ${props.hora_fin}`;
+                    document.getElementById('tt-doctor').lastChild.textContent = `Dr. ${props.doctor}`;
+                    
+                    const repEl = document.getElementById('tt-repeticion');
+                    repEl.querySelector('span').textContent = props.repetitiva ? '🔄' : '📌';
+                    repEl.lastChild.textContent = props.repetitiva ? 'Agenda repetitiva' : 'Agenda única';
+                    
+                    const syncEl = document.getElementById('tt-sync');
+                    syncEl.querySelector('span').textContent = props.google_synced ? '✅' : '⏳';
+                    syncEl.lastChild.textContent = props.google_synced ? 'Sincronizado con Google Calendar' : 'Pendiente de sincronizar';
+
+                    // Position tooltip near the event element
+                    const rect = info.el.getBoundingClientRect();
+                    const calendarRect = document.getElementById('calendario').getBoundingClientRect();
+                    
+                    let left = rect.right - calendarRect.left + 10;
+                    let top = rect.top - calendarRect.top;
+                    
+                    // Flip left if it would overflow
+                    if (left + 220 > calendarRect.width) {
+                        left = rect.left - calendarRect.left - 230;
+                    }
+                    // Clamp top
+                    top = Math.max(0, Math.min(top, calendarRect.height - 150));
+
+                    tooltip.style.left = left + 'px';
+                    tooltip.style.top = top + 'px';
+                    tooltip.classList.remove('hidden');
+                    requestAnimationFrame(() => tooltip.classList.add('opacity-100'));
+                },
+                eventMouseLeave: function() {
+                    const tooltip = document.getElementById('agenda-tooltip');
+                    if (!tooltip) return;
+                    tooltip.classList.remove('opacity-100');
+                    setTimeout(() => tooltip.classList.add('hidden'), 150);
                 },
                 windowResize: function(view) {
                     // Ajustar cuando cambia el tamaño de la ventana
