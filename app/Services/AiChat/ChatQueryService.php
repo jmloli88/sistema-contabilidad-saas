@@ -78,7 +78,7 @@ class ChatQueryService
 
         $validation = $this->sqlValidator->validate($sql);
         if (!$validation['valid']) {
-            yield ['delta' => 'La consulta generada no pasó la validación de seguridad. Por favor, reformula tu pregunta.', 'done' => true];
+            yield ['delta' => '⚠️ La consulta generada no pasó la validación de seguridad. Reformulá tu pregunta, por favor.', 'done' => true];
             return;
         }
 
@@ -91,7 +91,7 @@ class ChatQueryService
             $results = DB::select($scopedSql);
         } catch (\Throwable $e) {
             \Log::error('ChatQueryService DB error: ' . $e->getMessage(), ['sql' => $scopedSql]);
-            yield ['delta' => 'Ocurrió un error al consultar la base de datos. Por favor, intentá de nuevo más tarde.', 'done' => true];
+            yield ['delta' => '❌ Ocurrió un error al consultar la base de datos. Intentá de nuevo más tarde.', 'done' => true];
             return;
         }
 
@@ -124,7 +124,7 @@ class ChatQueryService
             $validation = $this->sqlValidator->validate($sql);
             if (!$validation['valid']) {
                 return [
-                    'answer' => 'La consulta generada no pasó la validación de seguridad. Por favor, reformula tu pregunta.',
+                    'answer' => '⚠️ La consulta generada no pasó la validación de seguridad. Reformulá tu pregunta, por favor.',
                     'tokens' => 0,
                 ];
             }
@@ -143,7 +143,7 @@ class ChatQueryService
                 'trace' => $e->getTraceAsString(),
             ]);
             return [
-                'answer' => 'Ocurrió un error al procesar tu consulta. Por favor, intentá de nuevo más tarde.',
+                'answer' => '❌ Ocurrió un error al procesar tu consulta. Intentá de nuevo más tarde.',
                 'tokens' => 0,
             ];
         }
@@ -281,6 +281,7 @@ Reglas para SQL:
 - Si la pregunta es un saludo o conversacional (no requiere datos), responde type="conversational"
 - Si la pregunta requiere datos, responde type="sql" con la consulta SELECT en content
 - NO incluyas el filtro empresa_id en el SQL; el sistema lo inyecta automáticamente. Solo generá el SELECT con las condiciones de negocio.
+- Cuando respondas type="conversational", usá emojis para hacer la respuesta más visual: 👋 saludos, ❓ preguntas, 👍 confirmaciones
 
 Relaciones entre tablas (USA JOINs cuando la pregunta necesite datos de tablas relacionadas):
 - repases.clinica_id → clinicas.id  (para obtener el nombre/dirección/teléfono de la clínica)
@@ -322,6 +323,11 @@ Reglas:
 - Si los resultados incluyen clinica_nombre, menciona el nombre de la clínica
 - Si los resultados incluyen examen_nombre, menciona los nombres de los exámenes
 - Considera el historial de la conversación para responder coherentemente
+- Usá emojis para ilustrar los datos clave:
+  📅 para fechas, 💰 para montos, ✅ para "pagado", ⏳ para "pendiente",
+  🏥 para clínicas, 👨‍⚕️ para doctores, 🔬 para exámenes,
+  💸 para gastos, 📊 para totales, 📈 para tendencias,
+  🆔 para IDs, 📝 para observaciones
 PROMPT;
     }
 

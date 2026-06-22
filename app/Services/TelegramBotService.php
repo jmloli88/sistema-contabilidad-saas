@@ -101,12 +101,14 @@ class TelegramBotService
         return match ($command) {
             '/start' => '👋 ¡Bienvenido! Podés consultar datos financieros escribiendo preguntas en lenguaje natural.',
             '/help' => '🤖 *Comandos disponibles:*' . "\n"
-                . '/start - Iniciar el bot' . "\n"
-                . '/help - Mostrar esta ayuda' . "\n\n"
-                . 'También podés escribir preguntas como:' . "\n"
-                . '• "¿Cuántos repases hay en marzo?"' . "\n"
-                . '• "¿Cuál fue el ingreso total del mes pasado?"' . "\n"
-                . '• "Mostrame los gastos por categoría"',
+                . '🔄 /start - Iniciar el bot' . "\n"
+                . '❓ /help - Mostrar esta ayuda' . "\n\n"
+                . '📝 *Ejemplos de preguntas:*' . "\n"
+                . '📊 "¿Cuántos repases hay en marzo?"' . "\n"
+                . '💰 "¿Cuál fue el ingreso total del mes pasado?"' . "\n"
+                . '💸 "Mostrame los gastos por categoría"' . "\n"
+                . '🏥 "¿Cuál es mi último repase?"' . "\n"
+                . '📅 "¿Qué repases tengo de la semana pasada?"',
             default => "❌ Comando desconocido. Usá /help para ver los comandos disponibles.",
         };
     }
