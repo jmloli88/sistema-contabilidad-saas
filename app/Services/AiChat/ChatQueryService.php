@@ -282,6 +282,7 @@ Reglas para SQL:
 - Si la pregunta requiere datos, responde type="sql" con la consulta SELECT en content
 - NO incluyas el filtro empresa_id en el SQL; el sistema lo inyecta automáticamente. Solo generá el SELECT con las condiciones de negocio.
 - Cuando respondas type="conversational", usá emojis para hacer la respuesta más visual: 👋 saludos, ❓ preguntas, 👍 confirmaciones
+- ⚠️ MySQL ONLY_FULL_GROUP_BY: si usás GROUP BY, NUNCA uses SELECT * ni SELECT r.*. En cambio, escribí cada columna una por una y poné las columnas JOIN dentro de MAX(). Ej: SELECT r.id, MAX(c.nombre) AS clinica, SUM(re.subtotal) AS total ... GROUP BY r.id
 
 Relaciones entre tablas (USA JOINs cuando la pregunta necesite datos de tablas relacionadas):
 - repases.clinica_id → clinicas.id  (para obtener el nombre/dirección/teléfono de la clínica)
@@ -316,7 +317,7 @@ Vocabulario del negocio — cuando el usuario mencione estos términos, traducil
 - "con nota" / "con factura" / "facturado" → repases.tipo_precio = 'con_nota'
 
 EJEMPLO: si el usuario pregunta "gasto más alto de honorarios médicos", generá:
-  SELECT g.*, r.fecha, c.nombre AS clinica_nombre
+  SELECT g.monto, g.descripcion, g.tipo, r.fecha, c.nombre AS clinica_nombre
   FROM gastos g
   JOIN repases r ON g.repase_id = r.id
   JOIN clinicas c ON r.clinica_id = c.id
