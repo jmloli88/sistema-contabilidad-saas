@@ -47,16 +47,18 @@
                     <div id="calendario" class="agenda-calendar relative"></div>
 
                     <!-- Custom tooltip (replaces native title) -->
-                    <div id="agenda-tooltip" class="hidden absolute z-[9999] pointer-events-none transition-opacity duration-150 ease-out opacity-0"
+                    <div id="agenda-tooltip" class="hidden fixed z-[9999] pointer-events-none transition-opacity duration-150 ease-out opacity-0"
                          style="left: 0; top: 0;">
                         <div class="bg-gray-900 text-white text-xs rounded-xl shadow-2xl shadow-gray-900/20 ring-1 ring-white/10">
                             <div class="px-3.5 py-2.5 space-y-1.5">
                                 <div class="flex items-center gap-2 text-sm font-semibold text-indigo-300" id="tt-clinica"></div>
-                                <div class="flex items-center gap-2" id="tt-horario"><span class="text-gray-400 w-4 text-center">🕐</span><span></span></div>
-                                <div class="flex items-center gap-2" id="tt-doctor"><span class="text-gray-400 w-4 text-center">👨‍⚕️</span><span></span></div>
-                                <div class="flex items-center gap-2" id="tt-repeticion"><span class="text-gray-400 w-4 text-center">🔁</span><span></span></div>
-                                <div class="flex items-center gap-2" id="tt-sync"><span class="text-gray-400 w-4 text-center"></span><span></span></div>
+                                <div class="flex items-center gap-2" id="tt-horario"><span class="text-gray-400">🕐</span><span></span></div>
+                                <div class="flex items-center gap-2" id="tt-doctor"><span class="text-gray-400">👨‍⚕️</span><span></span></div>
+                                <div class="flex items-center gap-2" id="tt-repeticion"><span class="text-gray-400">🔁</span><span></span></div>
+                                <div class="flex items-center gap-2" id="tt-sync"><span class="text-gray-400"></span><span></span></div>
                             </div>
+                        </div>
+                    </div>
                         </div>
                     </div>
                 </div>
@@ -514,20 +516,16 @@
                     syncEl.querySelector('span').textContent = props.google_synced ? '✅' : '⏳';
                     syncEl.lastChild.textContent = props.google_synced ? 'Sincronizado con Google Calendar' : 'Pendiente de sincronizar';
 
-                    // Position tooltip near the mouse cursor
-                    const calendarRect = document.getElementById('calendario').getBoundingClientRect();
-                    const mouseX = info.jsEvent.clientX - calendarRect.left;
-                    const mouseY = info.jsEvent.clientY - calendarRect.top;
+                    // Position tooltip near the mouse cursor (viewport-relative via fixed positioning)
+                    let left = info.jsEvent.clientX + 16;
+                    let top = info.jsEvent.clientY - 10;
                     
-                    let left = mouseX + 16;
-                    let top = mouseY - 10;
-                    
-                    // Flip left if it would overflow
-                    if (left + 230 > calendarRect.width) {
-                        left = mouseX - 246;
+                    // Flip left if it would overflow the window
+                    if (left + 230 > window.innerWidth) {
+                        left = info.jsEvent.clientX - 246;
                     }
                     // Clamp top
-                    top = Math.max(0, Math.min(top, calendarRect.height - 150));
+                    top = Math.max(0, Math.min(top, window.innerHeight - 160));
 
                     tooltip.style.left = left + 'px';
                     tooltip.style.top = top + 'px';
