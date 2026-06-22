@@ -56,17 +56,18 @@ Route::middleware(['auth', 'verified', 'subscription', 'empresa.scope'])->group(
     Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
     Route::post('/billing/pay', [BillingController::class, 'pay'])->name('billing.pay');
 
-    // AI Chat Assistant
-    Route::post('/api/chat/ask', [AiChatController::class, 'ask'])->name('chat.ask');
-    Route::post('/api/chat/stream', [AiChatController::class, 'stream'])->name('chat.stream');
-    Route::get('/api/chat/history', [AiChatController::class, 'history'])->name('chat.history');
-    Route::delete('/api/chat/history', [AiChatController::class, 'clearHistory'])->name('chat.clear');
+    // AI Chat Assistant (PREMIUM only)
+    Route::post('/api/chat/ask', [AiChatController::class, 'ask'])->middleware('premium')->name('chat.ask');
+    Route::post('/api/chat/stream', [AiChatController::class, 'stream'])->middleware('premium')->name('chat.stream');
+    Route::get('/api/chat/history', [AiChatController::class, 'history'])->middleware('premium')->name('chat.history');
+    Route::delete('/api/chat/history', [AiChatController::class, 'clearHistory'])->middleware('premium')->name('chat.clear');
 
     // Profile routes - accesible para todos
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/profile/link-telegram', [ProfileController::class, 'linkTelegram'])->name('profile.link-telegram');
+    // Telegram linking (PREMIUM only)
+    Route::post('/profile/link-telegram', [ProfileController::class, 'linkTelegram'])->middleware('premium')->name('profile.link-telegram');
 });
 
 // Rutas solo para administradores (subscription gated + administrador role, tenant-scoped)
@@ -76,8 +77,8 @@ Route::middleware(['auth', 'verified', 'subscription', 'admin', 'empresa.scope']
         return 'Admin access works! User: ' . auth()->user()->name . ' Role: ' . auth()->user()->role;
     });
 
-    // Google Calendar integration
-    Route::prefix('google-calendar')->name('google-calendar.')->group(function () {
+    // Google Calendar integration (PREMIUM only)
+    Route::prefix('google-calendar')->middleware('premium')->name('google-calendar.')->group(function () {
         Route::get('/redirect', [App\Http\Controllers\GoogleCalendarController::class, 'redirect'])->name('redirect');
         Route::get('/status', [App\Http\Controllers\GoogleCalendarController::class, 'status'])->name('status');
         Route::post('/disconnect', [App\Http\Controllers\GoogleCalendarController::class, 'disconnect'])->name('disconnect');

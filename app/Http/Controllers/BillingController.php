@@ -9,7 +9,7 @@ use Stripe\Stripe;
 class BillingController extends Controller
 {
     /**
-     * Display the billing page with subscription status, PIX payment, and history.
+     * Display the billing page.
      */
     public function index()
     {
@@ -17,7 +17,7 @@ class BillingController extends Controller
 
         if (! $user->empresa) {
             return view('billing.index', [
-                'subscription' => null,
+                'subscriptionType' => null,
                 'isActive' => false,
                 'isExpired' => true,
                 'daysRemaining' => 0,
@@ -26,7 +26,9 @@ class BillingController extends Controller
             ]);
         }
 
-        $subscription = $user->empresa->subscription('default');
+        $empresa = $user->empresa;
+        $subscriptionType = $empresa->activeSubscriptionType();
+        $subscription = $empresa->activeSubscription();
 
         $isActive = false;
         $isExpired = false;
@@ -47,12 +49,10 @@ class BillingController extends Controller
             $isExpired = true;
         }
 
-        // Payment history from empresa's subscription records
-        $paymentHistory = $user->empresa
-            ? $user->empresa->subscriptions()->orderByDesc('created_at')->get()
-            : collect();
+        $paymentHistory = $empresa->subscriptions()->orderByDesc('created_at')->get();
 
         return view('billing.index', compact(
+            'subscriptionType',
             'subscription',
             'isActive',
             'isExpired',
@@ -63,7 +63,7 @@ class BillingController extends Controller
     }
 
     /**
-     * Create a Stripe PaymentIntent for PIX payment (R$50).
+     * Create a Stripe PaymentIntent for the chosen plan.
      */
     public function pay(Request $request)
     {
@@ -75,14 +75,22 @@ class BillingController extends Controller
 
         $empresa = $user->empresa;
 
-        // Create subscription immediately (webhook will also fire, use updateOrCreate to avoid double-add)
+        $plan = $request->input('plan', 'standard');
+        if (!in_array($plan, ['standard', 'premium'], true)) {
+            return response()->json(['error' => 'Plan inválido.'], 400);
+        }
+
+        $amount = $plan === 'premium' ? 9000 : 5000;
+        $type = $plan;
+
+        // Confirm payment — activate subscription
         if ($request->header('X-Confirm-Payment')) {
             $empresa->subscriptions()->updateOrCreate(
-                ['type' => 'default'],
+                ['type' => $type],
                 [
                     'stripe_id' => $request->header('X-Confirm-Payment'),
                     'stripe_status' => 'active',
-                    'stripe_price' => 'price_manual',
+                    'stripe_price' => $plan === 'premium' ? 'price_premium' : 'price_standard',
                     'ends_at' => now()->addDays(30),
                 ]
             );
@@ -93,16 +101,16 @@ class BillingController extends Controller
 
         try {
             $intent = PaymentIntent::create([
-                'amount' => 5000,
+                'amount' => $amount,
                 'currency' => 'brl',
                 'payment_method_types' => ['card'],
                 'metadata' => [
                     'empresa_id' => $empresa->id,
                     'user_id' => $user->id,
+                    'plan' => $plan,
                 ],
             ]);
 
-            // Store the PaymentIntent ID temporarily on the empresa
             $empresa->update(['stripe_id' => $intent->id]);
 
             return response()->json([

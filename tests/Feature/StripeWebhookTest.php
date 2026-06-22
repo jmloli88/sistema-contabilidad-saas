@@ -71,7 +71,7 @@ class StripeWebhookTest extends TestCase
             'stripe_status' => 'active',
         ]);
 
-        $subscription = $empresa->subscription('default');
+        $subscription = $empresa->subscription('standard');
         $this->assertNotNull($subscription);
         $this->assertTrue($subscription->ends_at->isFuture());
     }
@@ -82,7 +82,7 @@ class StripeWebhookTest extends TestCase
         $originalEndsAt = now()->addDays(10);
 
         $empresa->subscriptions()->create([
-            'type' => 'default',
+            'type' => 'standard',
             'stripe_id' => 'sub_existing',
             'stripe_status' => 'active',
             'stripe_price' => 'price_test',

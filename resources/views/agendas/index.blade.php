@@ -5,6 +5,7 @@
                 {{ __('Calendario de Agendas') }}
             </h2>
             <div class="flex flex-wrap gap-2 w-full sm:w-auto" x-data="googleCalendarSync">
+                @if (auth()->user()?->empresa?->hasPremium())
                 <template x-if="connected">
                     <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline" x-data="{ syncing: false }" @submit="syncing = true">
                         @csrf
@@ -16,6 +17,7 @@
                         </button>
                     </form>
                 </template>
+                @endif
                 <button onclick="openExportModal()" class="flex-1 sm:flex-none bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl text-sm">
                     Exportar
                 </button>

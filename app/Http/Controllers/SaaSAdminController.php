@@ -133,7 +133,7 @@ class SaaSAdminController extends Controller
             return back()->with('error', 'El usuario no pertenece a ninguna empresa.');
         }
 
-        $sub = $empresa->subscription('default');
+        $sub = $empresa->subscription('standard');
 
         if ($sub) {
             $sub->update([
@@ -142,7 +142,7 @@ class SaaSAdminController extends Controller
             ]);
         } else {
             $empresa->subscriptions()->create([
-                'type' => 'default',
+                'type' => 'standard',
                 'stripe_id' => 'manual_' . now()->timestamp,
                 'stripe_status' => 'active',
                 'stripe_price' => 'price_manual',
@@ -170,7 +170,7 @@ class SaaSAdminController extends Controller
             return back()->with('error', 'El usuario no pertenece a ninguna empresa.');
         }
 
-        $sub = $empresa->subscription('default');
+        $sub = $empresa->subscription('standard');
 
         if ($sub) {
             $sub->update([
@@ -197,7 +197,7 @@ class SaaSAdminController extends Controller
             return back()->with('error', 'El usuario no pertenece a ninguna empresa.');
         }
 
-        $sub = $empresa->subscription('default');
+        $sub = $empresa->subscription('standard');
 
         if ($sub) {
             $sub->update([

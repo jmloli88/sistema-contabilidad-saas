@@ -122,7 +122,9 @@
             </div>
         </div>
         
+        @if (auth()->check() && auth()->user()?->empresa?->hasPremium())
         <x-ai-chat-widget />
+        @endif
         
         <!-- Scripts Stack -->
         @stack('scripts')

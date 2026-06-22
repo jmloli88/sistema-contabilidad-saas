@@ -37,12 +37,12 @@ class Empresa extends Model
     }
 
     /**
-     * Check if the empresa has an active subscription.
-     * Now powered by Cashier's Billable trait: $this->subscription('default').
+     * Check if the empresa has an active subscription (any tier).
      */
     public function hasActiveSubscription(): bool
     {
-        $sub = $this->subscription('default');
+        $sub = $this->subscription('standard')
+            ?? $this->subscription('premium');
 
         if (! $sub) {
             return false;
@@ -52,16 +52,42 @@ class Empresa extends Model
     }
 
     /**
+     * Check if the empresa has an active PREMIUM subscription.
+     */
+    public function hasPremium(): bool
+    {
+        $sub = $this->subscription('premium');
+
+        if (! $sub) {
+            return false;
+        }
+
+        return $sub->ends_at && $sub->ends_at->startOfDay()->isFuture() && $sub->stripe_status === 'active';
+    }
+
+    /**
+     * Get the active subscription type for this empresa ('standard', 'premium', or null).
+     */
+    public function activeSubscriptionType(): ?string
+    {
+        if ($this->hasPremium()) {
+            return 'premium';
+        }
+
+        $sub = $this->subscription('standard');
+
+        if ($sub && $sub->ends_at && $sub->ends_at->startOfDay()->isFuture() && $sub->stripe_status === 'active') {
+            return 'standard';
+        }
+
+        return null;
+    }
+
+    /**
      * Get the active subscription for this empresa (shortcut).
      */
     public function activeSubscription()
     {
-        $sub = $this->subscription('default');
-
-        if ($sub && $sub->ends_at && $sub->ends_at->isFuture() && $sub->stripe_status === 'active') {
-            return $sub;
-        }
-
-        return null;
+        return $this->subscription('premium') ?? $this->subscription('standard');
     }
 }

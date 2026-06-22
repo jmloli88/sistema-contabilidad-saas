@@ -80,7 +80,7 @@ class User extends Authenticatable
             return false;
         }
 
-        $endsAt = $this->empresa->subscription('default')?->ends_at;
+        $endsAt = $this->empresa->activeSubscription()?->ends_at;
 
         if ($endsAt === null) {
             return false;

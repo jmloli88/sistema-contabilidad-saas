@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Services\AiChat\ChatQueryService;
+use App\Http\Middleware\EnsurePremiumSubscription;
 use App\Http\Middleware\EnsureSubscriptionIsActive;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -15,8 +16,7 @@ class AiChatEndpointTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // Skip subscription check — endpoint testing is about chat behavior, not billing
-        $this->withoutMiddleware(EnsureSubscriptionIsActive::class);
+        $this->withoutMiddleware([EnsureSubscriptionIsActive::class, EnsurePremiumSubscription::class]);
     }
 
     public function test_authenticated_user_can_ask_question(): void
@@ -26,7 +26,7 @@ class AiChatEndpointTest extends TestCase
         $this->mock(ChatQueryService::class, function ($mock) use ($user) {
             $mock->shouldReceive('ask')
                 ->once()
-                ->with('¿Cuántos repases hay?', $user->empresa_id)
+                ->with('¿Cuántos repases hay?', $user->empresa_id, \Mockery::type('array'))
                 ->andReturn([
                     'answer' => 'Hay 15 repases en total.',
                     'tokens' => 42,
@@ -60,6 +60,7 @@ class AiChatEndpointTest extends TestCase
         $this->mock(ChatQueryService::class, function ($mock) {
             $mock->shouldReceive('ask')
                 ->zeroOrMoreTimes()
+                ->with(\Mockery::type('string'), \Mockery::type('int'), \Mockery::type('array'))
                 ->andReturn([
                     'answer' => 'Respuesta de prueba.',
                     'tokens' => 10,

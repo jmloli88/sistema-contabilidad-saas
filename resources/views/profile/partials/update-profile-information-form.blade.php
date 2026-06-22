@@ -62,7 +62,8 @@
         </div>
     </form>
 
-    <!-- Telegram Link Section -->
+    <!-- Telegram Link Section (PREMIUM only) -->
+    @if (auth()->user()?->empresa?->hasPremium())
     <div class="mt-6 pt-6 border-t border-gray-200">
         <h3 class="text-lg font-medium text-gray-900">{{ __('Vincular Telegram') }}</h3>
         <p class="mt-1 text-sm text-gray-600">{{ __('Vinculá tu cuenta de Telegram para usar el bot de consultas.') }}</p>
@@ -93,8 +94,9 @@
             <x-primary-button>{{ __('Vincular') }}</x-primary-button>
         </form>
     </div>
+    @endif
 
-    @if (auth()->user()?->role === 'administrador')
+    @if (auth()->user()?->role === 'administrador' && auth()->user()?->empresa?->hasPremium())
     <!-- Google Calendar Integration Section -->
     <div class="mt-6 pt-6 border-t border-gray-200">
         <h3 class="text-lg font-medium text-gray-900">{{ __('Google Calendar') }}</h3>

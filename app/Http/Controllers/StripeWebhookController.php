@@ -35,16 +35,19 @@ class StripeWebhookController extends CashierWebhookController
             return $this->successMethod();
         }
 
-        $subscription = $empresa->subscription('default');
+        $subscription = $empresa->activeSubscription();
+        $plan = $intent['metadata']['plan'] ?? 'standard';
+        $type = in_array($plan, ['premium', 'standard'], true) ? $plan : 'standard';
+        $stripePrice = $type === 'premium' ? 'price_premium' : 'price_standard';
 
         if (!$subscription || $subscription->stripe_status === 'incomplete') {
             // First payment or incomplete: create subscription
             $empresa->subscriptions()->updateOrCreate(
-                ['type' => 'default'],
+                ['type' => $type],
                 [
                     'stripe_id' => $intent['id'],
                     'stripe_status' => 'active',
-                    'stripe_price' => 'price_placeholder',
+                    'stripe_price' => $stripePrice,
                     'ends_at' => now()->addDays(30),
                     'quantity' => 1,
                 ]
