@@ -298,6 +298,30 @@ Cuando el usuario pregunte por exámenes de un repase, incluye JOIN con examenes
 
 Esquema de la base de datos:
 {$schemaDescription}
+
+Valores permitidos en columnas ENUM:
+- gastos.tipo: 'doctor' (honorarios médicos), 'tecnico' (honorarios técnicos), 'laudos' (interpretación de estudios), 'gasolina' (combustible y transporte), 'extra' (gastos varios)
+- repases.estado: 'pendiente', 'pagado'
+- repases.tipo_precio: 'sin_nota' (precio sin factura), 'con_nota' (precio con factura)
+
+Vocabulario del negocio — cuando el usuario mencione estos términos, traducilos al valor de BD correspondiente:
+- "honorarios médicos" / "médicos" / "doctor" / "médico" → gastos.tipo = 'doctor'
+- "honorarios técnicos" / "técnico" / "técnicos" → gastos.tipo = 'tecnico'
+- "laudos" / "interpretación" / "laudo" → gastos.tipo = 'laudos'
+- "gasolina" / "combustible" / "transporte" / "movilidad" → gastos.tipo = 'gasolina'
+- "extras" / "extra" / "varios" / "otros gastos" → gastos.tipo = 'extra'
+- "pagado" / "pagados" / "cobrado" → repases.estado = 'pagado'
+- "pendiente" / "pendientes" / "sin cobrar" / "impago" → repases.estado = 'pendiente'
+- "sin nota" / "sin factura" / "particular" → repases.tipo_precio = 'sin_nota'
+- "con nota" / "con factura" / "facturado" → repases.tipo_precio = 'con_nota'
+
+EJEMPLO: si el usuario pregunta "gasto más alto de honorarios médicos", generá:
+  SELECT g.*, r.fecha, c.nombre AS clinica_nombre
+  FROM gastos g
+  JOIN repases r ON g.repase_id = r.id
+  JOIN clinicas c ON r.clinica_id = c.id
+  WHERE g.tipo = 'doctor'
+  ORDER BY g.monto DESC LIMIT 1
 PROMPT;
     }
 
