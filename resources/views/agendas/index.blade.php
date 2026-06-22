@@ -4,7 +4,18 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Calendario de Agendas') }}
             </h2>
-            <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+            <div class="flex flex-wrap gap-2 w-full sm:w-auto" x-data="googleCalendarSync">
+                <template x-if="connected">
+                    <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline">
+                        @csrf
+                        <button type="submit"
+                                class="flex-1 sm:flex-none bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-xl text-sm inline-flex items-center gap-1"
+                                title="Sincronizar agendas con Google Calendar">
+                            <span class="material-symbols-outlined text-base">sync</span>
+                            Sincronizar
+                        </button>
+                    </form>
+                </template>
                 <button onclick="openExportModal()" class="flex-1 sm:flex-none bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl text-sm">
                     Exportar
                 </button>
@@ -329,6 +340,26 @@
     </div>
 
     @push('scripts')
+    <script>
+        // Google Calendar sync button — only shown when connected
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('googleCalendarSync', () => ({
+                connected: false,
+
+                async init() {
+                    try {
+                        const res = await fetch('{{ route('google-calendar.status') }}', {
+                            headers: { 'Accept': 'application/json' },
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            this.connected = data.connected;
+                        }
+                    } catch (e) { /* offline or unreachable — hide button */ }
+                },
+            }));
+        });
+    </script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/locales/es.global.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
