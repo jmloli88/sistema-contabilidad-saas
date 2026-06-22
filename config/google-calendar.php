@@ -19,7 +19,7 @@ return [
     | Default timezone for Google Calendar events.
     |--------------------------------------------------------------------------
     */
-    'timezone' => env('GOOGLE_CALENDAR_TIMEZONE', 'America/Argentina/Buenos_Aires'),
+    'timezone' => env('GOOGLE_CALENDAR_TIMEZONE', 'America/Sao_Paulo'),
 
     /*
     |--------------------------------------------------------------------------
