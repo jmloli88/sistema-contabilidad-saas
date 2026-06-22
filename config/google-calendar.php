@@ -27,7 +27,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'scopes' => [
-        \Google\Service\Calendar::CALENDAR_EVENTS,
+        \Google\Service\Calendar::CALENDAR,
     ],
 
     /*
