@@ -336,6 +336,9 @@ class GoogleCalendarService
      */
     public function syncAllForEmpresa(int $empresaId): void
     {
+        // Ensure the secondary calendar exists before syncing.
+        $this->getOrCreateCalendar($empresaId);
+
         $calendar = $this->getCalendarService($empresaId);
         if (!$calendar) {
             return;
@@ -353,7 +356,7 @@ class GoogleCalendarService
         foreach ($agendas as $agenda) {
             try {
                 $event = $this->buildEvent($agenda);
-        $created = $calendar->events->insert($this->getCalendarId($agenda->empresa_id), $event);
+                $created = $calendar->events->insert($this->getCalendarId($empresaId), $event);
 
                 GoogleCalendarEvent::create([
                     'agenda_id' => $agenda->id,
