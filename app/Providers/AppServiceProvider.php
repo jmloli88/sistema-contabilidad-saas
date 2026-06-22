@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Agenda;
 use App\Models\Empresa;
 use App\Models\Examen;
+use App\Observers\AgendaObserver;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
 
@@ -34,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
                 }
             }
         });
+
+        // Sync agendas to Google Calendar
+        Agenda::observe(AgendaObserver::class);
     }
 
     /**

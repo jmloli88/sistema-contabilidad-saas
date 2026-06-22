@@ -75,6 +75,13 @@ Route::middleware(['auth', 'verified', 'subscription', 'admin', 'empresa.scope']
     Route::get('/test-admin', function() {
         return 'Admin access works! User: ' . auth()->user()->name . ' Role: ' . auth()->user()->role;
     });
+
+    // Google Calendar integration
+    Route::prefix('google-calendar')->name('google-calendar.')->group(function () {
+        Route::get('/redirect', [App\Http\Controllers\GoogleCalendarController::class, 'redirect'])->name('redirect');
+        Route::get('/status', [App\Http\Controllers\GoogleCalendarController::class, 'status'])->name('status');
+        Route::post('/disconnect', [App\Http\Controllers\GoogleCalendarController::class, 'disconnect'])->name('disconnect');
+    });
     
     // Clínicas - crear, editar, eliminar (y ver detalle)
     Route::get('/clinicas/create', [ClinicaController::class, 'create'])->name('clinicas.create');
@@ -175,6 +182,9 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']
 // Telegram webhook — sin autenticación, sin CSRF
 Route::post('/telegram/webhook', TelegramWebhookController::class)
     ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+// Google Calendar OAuth callback — Google redirects here without auth session
+Route::get('/google-calendar/callback', [\App\Http\Controllers\GoogleCalendarController::class, 'callback']);
 
 // Rutas de autenticación de Breeze
 require __DIR__.'/auth.php';

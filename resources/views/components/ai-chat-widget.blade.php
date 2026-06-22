@@ -16,7 +16,7 @@
         <div class="bg-indigo-600 text-white px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined">smart_toy</span>
-                <span class="font-semibold text-sm">Asistente ContaMed</span>
+                <span class="font-semibold text-sm">VictCorp IA</span>
             </div>
             <button x-show="messages.length" @click="clearHistory" class="text-indigo-200 hover:text-white" aria-label="Limpiar historial" title="Limpiar historial">
                 <span class="material-symbols-outlined text-lg">delete_sweep</span>
