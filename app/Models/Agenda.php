@@ -6,6 +6,7 @@ use App\Models\Traits\ScopedByEmpresa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Carbon\Carbon;
 
 class Agenda extends Model
@@ -45,6 +46,11 @@ class Agenda extends Model
     public function clinica(): BelongsTo
     {
         return $this->belongsTo(Clinica::class);
+    }
+
+    public function googleCalendarEvent(): HasOne
+    {
+        return $this->hasOne(GoogleCalendarEvent::class);
     }
 
     /**
