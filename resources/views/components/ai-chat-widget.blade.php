@@ -77,6 +77,35 @@
             question: '',
             messages: [],
             loading: false,
+            historyLoaded: false,
+
+            init() {
+                // Load chat history from the database when the widget is first opened.
+                // After that the conversation lives in-memory until the page is refreshed.
+                this.$watch('open', async (value) => {
+                    if (value && !this.historyLoaded) {
+                        this.historyLoaded = true;
+                        try {
+                            const res = await fetch('/api/chat/history', {
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
+                                    'Accept': 'application/json',
+                                },
+                            });
+                            if (res.ok) {
+                                const data = await res.json();
+                                this.messages = (data.messages || []).map(m => ({
+                                    id: m.id,
+                                    role: m.role,
+                                    content: m.content,
+                                }));
+                                await this.$nextTick();
+                                this.scrollToBottom();
+                            }
+                        } catch (e) { /* noop — start fresh if history endpoint is unreachable */ }
+                    }
+                });
+            },
 
             async sendMessage() {
                 if (!this.question.trim()) return;

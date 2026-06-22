@@ -103,9 +103,11 @@ class AiChatController extends Controller
     public function history(Request $request): JsonResponse
     {
         $messages = ChatMessage::where('user_id', $request->user()->id)
-            ->where('session_id', ChatMessage::getSessionId($request->user()->id))
-            ->orderBy('created_at')
-            ->get(['id', 'role', 'content', 'created_at']);
+            ->orderBy('created_at', 'desc')
+            ->limit(50)
+            ->get(['id', 'role', 'content', 'created_at'])
+            ->reverse()
+            ->values();
 
         return response()->json(['messages' => $messages]);
     }
