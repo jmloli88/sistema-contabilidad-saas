@@ -18,6 +18,17 @@ class SqlValidator
         'password', 'remember_token', 'stripe_id',
     ];
 
+    /**
+     * Expose the whitelisted tables so other services (e.g. ChatQueryService
+     * schema loader) can iterate them without duplicating the list.
+     *
+     * @return list<string>
+     */
+    public function allowedTables(): array
+    {
+        return self::ALLOWED_TABLES;
+    }
+
     public function validate(string $sql): array
     {
         $cleaned = $this->stripComments($sql);
@@ -87,37 +98,81 @@ class SqlValidator
 
     public function injectEmpresaScope(string $sql, int $empresaId): string
     {
-        $condition = "empresa_id = {$empresaId}";
+        $empresaId = (int) $empresaId;
 
-        // If there's already a WHERE clause, prepend our condition
+        // Resolve the FROM table alias to avoid "ambiguous column" on JOINs.
+        $alias = $this->resolveFromAlias($sql);
+        $qualifiedCol = ($alias ? $alias . '.' : '') . 'empresa_id';
+        $scopedCondition = "{$qualifiedCol} = {$empresaId}";
+
+        // SECURITY: strip/replace any empresa_id condition the LLM may have added.
+        // We never trust the LLM's empresa_id value — always enforce the
+        // authenticated user's empresa. Replace any existing empresa_id = X
+        // (with any value, quoted or not, with or without table prefix) with
+        // the correct one.
+        $sql = preg_replace(
+            '/\b\w*\.?empresa_id\s*=\s*[\'"]?\d+[\'"]?/i',
+            $scopedCondition,
+            $sql
+        );
+
+        // After replacement, check if empresa_id is now present.
+        if (preg_match('/\bempresa_id\s*=\s*' . $empresaId . '/i', $sql)) {
+            return $sql; // Replacement handled it — done.
+        }
+
+        // No empresa_id in the SQL at all — inject one.
+        // If there's already a WHERE clause, AND our condition in.
         if (preg_match('/\bWHERE\b/i', $sql)) {
             return preg_replace(
                 '/\bWHERE\b/i',
-                "WHERE {$condition} AND",
+                "WHERE {$scopedCondition} AND",
                 $sql,
                 1
             );
         }
 
-        // Find the end of the FROM/JOIN clause block by locating the last JOIN ... ON pattern
-        // or fall back to the first table after FROM
-        $joinPattern = '/\bJOIN\s+\S+\s+(?:AS\s+\S+\s+)?ON\s+/i';
-        $fromPattern = '/\bFROM\s+(\S+)/i';
-
-        if (preg_match_all($joinPattern, $sql, $joinMatches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
-            // Insert after the last JOIN ... ON clause
-            $lastJoin = end($joinMatches);
-            $insertPos = $lastJoin[0][1] + strlen($lastJoin[0][0]);
-            return substr($sql, 0, $insertPos) . " WHERE {$condition} " . substr($sql, $insertPos);
+        // No WHERE: insert one before the first GROUP BY / HAVING / ORDER BY / LIMIT
+        // clause, or at the end of the statement if none of those are present.
+        $clausePattern = '/\b(GROUP\s+BY|HAVING|ORDER\s+BY|LIMIT)\b/i';
+        if (preg_match($clausePattern, $sql, $match, PREG_OFFSET_CAPTURE)) {
+            $insertPos = $match[0][1];
+            return substr($sql, 0, $insertPos) . "WHERE {$scopedCondition} " . substr($sql, $insertPos);
         }
 
-        // No JOIN — insert after FROM and its table reference
-        if (preg_match($fromPattern, $sql, $fromMatch, PREG_OFFSET_CAPTURE)) {
-            $tableEnd = $fromMatch[1][1] + strlen($fromMatch[1][0]);
-            return substr($sql, 0, $tableEnd) . " WHERE {$condition} " . substr($sql, $tableEnd);
+        // No WHERE, no GROUP BY/HAVING/ORDER BY/LIMIT — append at the end.
+        return rtrim($sql) . " WHERE {$scopedCondition}";
+    }
+
+    /**
+     * Extract the alias (or table name) of the first FROM clause, so the
+     * injected empresa_id condition is qualified and avoids "ambiguous column"
+     * errors when multiple joined tables share the empresa_id column.
+     */
+    private function resolveFromAlias(string $sql): ?string
+    {
+        // FROM table OR FROM table alias OR FROM table AS alias.
+        // The second word after FROM could be an alias OR a SQL keyword
+        // (ORDER, GROUP, WHERE, LIMIT, JOIN, ...) — must distinguish them.
+        $sqlKeywords = [
+            'ORDER', 'GROUP', 'WHERE', 'HAVING', 'LIMIT', 'OFFSET',
+            'JOIN', 'LEFT', 'RIGHT', 'INNER', 'OUTER', 'FULL', 'CROSS',
+            'UNION', 'EXCEPT', 'INTERSECT', 'WINDOW', 'FETCH', 'FOR',
+        ];
+
+        if (preg_match('/\bFROM\s+(\w+)(?:\s+(?:AS\s+)?(\w+))?/i', $sql, $m)) {
+            $table = $m[1] ?? null;
+            $alias = $m[2] ?? null;
+
+            if ($alias !== null && in_array(strtoupper($alias), $sqlKeywords, true)) {
+                // The "alias" is actually a SQL keyword — no alias present.
+                return $table;
+            }
+
+            return $alias ?? $table;
         }
 
-        return $sql;
+        return null;
     }
 
     private function stripComments(string $sql): string

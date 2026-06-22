@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\ScopedByEmpresa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,9 +10,10 @@ use Carbon\Carbon;
 
 class Agenda extends Model
 {
-    use HasFactory;
+    use HasFactory, ScopedByEmpresa;
 
     protected $fillable = [
+        'empresa_id',
         'clinica_id',
         'fecha',
         'hora_inicio',
@@ -25,6 +27,20 @@ class Agenda extends Model
     protected $casts = [
         'fecha' => 'date',
     ];
+
+    /**
+     * Auto-derive empresa_id from the related clinica when not set explicitly.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (self $agenda) {
+            if ($agenda->empresa_id === null && $agenda->clinica_id !== null) {
+                $agenda->empresa_id = \App\Models\Clinica::withoutGlobalScope('empresa')
+                    ->whereKey($agenda->clinica_id)
+                    ->value('empresa_id');
+            }
+        });
+    }
 
     public function clinica(): BelongsTo
     {
@@ -99,6 +115,7 @@ class Agenda extends Model
                     ];
                 } else {
                     $agenda = self::create([
+                        'empresa_id' => $datos['empresa_id'] ?? null,
                         'clinica_id' => $datos['clinica_id'],
                         'fecha' => $fechaActual->format('Y-m-d'),
                         'hora_inicio' => $datos['hora_inicio'],
@@ -154,6 +171,7 @@ class Agenda extends Model
                     ];
                 } else {
                     $agenda = self::create([
+                        'empresa_id' => $datos['empresa_id'] ?? null,
                         'clinica_id' => $datos['clinica_id'],
                         'fecha' => $fechaActual->format('Y-m-d'),
                         'hora_inicio' => $datos['hora_inicio'],

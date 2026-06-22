@@ -6,6 +6,7 @@ use App\Models\Clinica;
 use App\Models\Examen;
 use App\Models\Repase;
 use App\Models\User;
+use App\Support\EmpresaContext;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
@@ -22,8 +23,13 @@ class PreventDuplicateSubmissionsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        EmpresaContext::clear();
 
         $this->empresa = \App\Models\Empresa::factory()->create(['nombre' => 'Test Empresa Duplicate']);
+
+        // Set the empresa context early so global-scoped models (Repase, Examen, etc.)
+        // filter consistently for both factory-created records and the HTTP request.
+        EmpresaContext::set($this->empresa->id);
 
         // Crear usuario admin bajo la misma empresa
         $this->admin = User::factory()->create([

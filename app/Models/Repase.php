@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\ScopedByEmpresa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Repase extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ScopedByEmpresa;
 
     /**
      * Los atributos que son asignables en masa.
@@ -18,6 +19,7 @@ class Repase extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'empresa_id',
         'clinica_id',
         'fecha',
         'fecha_pago',
@@ -48,6 +50,21 @@ class Repase extends Model
         'total_gastos' => 'decimal:2',
         'total_neto' => 'decimal:2',
     ];
+
+    /**
+     * Auto-derive empresa_id from the related clinica when not set explicitly.
+     * Prevents tenant drift if a caller forgets to pass empresa_id.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (self $repase) {
+            if ($repase->empresa_id === null && $repase->clinica_id !== null) {
+                $repase->empresa_id = \App\Models\Clinica::withoutGlobalScope('empresa')
+                    ->whereKey($repase->clinica_id)
+                    ->value('empresa_id');
+            }
+        });
+    }
 
     /**
      * Relación: Un repase pertenece a una clínica.

@@ -9,43 +9,46 @@ use Illuminate\Database\Seeder;
 class ClinicaSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed clinicas, distributed across the existing empresas.
+     *
+     * Idempotent: keyed by (empresa_id, nombre) so re-running is safe.
      */
     public function run(): void
     {
-        $empresa = Empresa::firstOrCreate(['nombre' => 'Default Seed Empresa']);
+        $zumed = Empresa::where('nombre', 'Zumed Medicina Diagnóstica')->first();
+        $rcmed = Empresa::where('nombre', 'RCMed')->first();
+
+        if (! $zumed) {
+            $this->command->error('Empresa "Zumed Medicina Diagnóstica" no encontrada. Ejecutá EmpresaSeeder primero.');
+
+            return;
+        }
 
         $clinicas = [
-            [
-                'nombre' => 'Clínica San José',
-                'direccion' => 'Av. Principal 123, Lima',
-                'telefono' => '01-234-5678',
-            ],
-            [
-                'nombre' => 'Centro Médico Santa Rosa',
-                'direccion' => 'Jr. Los Olivos 456, Lima',
-                'telefono' => '01-345-6789',
-            ],
-            [
-                'nombre' => 'Hospital Regional',
-                'direccion' => 'Av. Salud 789, Lima',
-                'telefono' => '01-456-7890',
-            ],
-            [
-                'nombre' => 'Clínica del Norte',
-                'direccion' => 'Calle Norte 321, Lima',
-                'telefono' => '01-567-8901',
-            ],
-            [
-                'nombre' => 'Centro de Diagnóstico Integral',
-                'direccion' => 'Av. Diagnóstico 654, Lima',
-                'telefono' => '01-678-9012',
-            ],
+            // Zumed — 4 clínicas
+            ['empresa_id' => $zumed->id, 'nombre' => 'Clínica San José',          'direccion' => 'Av. Principal 123', 'telefono' => '555-0001'],
+            ['empresa_id' => $zumed->id, 'nombre' => 'Centro Médico Santa Rosa',  'direccion' => 'Jr. Los Olivos 456', 'telefono' => '555-0002'],
+            ['empresa_id' => $zumed->id, 'nombre' => 'Clínica del Norte',         'direccion' => 'Calle Norte 321',   'telefono' => '555-0003'],
+            ['empresa_id' => $zumed->id, 'nombre' => 'Centro de Diagnóstico Integral', 'direccion' => 'Av. Diagnóstico 654', 'telefono' => '555-0004'],
+            // RCMed — 2 clínicas (solo si la empresa existe)
         ];
 
-        foreach ($clinicas as $clinica) {
-            $clinica['empresa_id'] = $empresa->id;
-            Clinica::create($clinica);
+        if ($rcmed) {
+            $clinicas[] = ['empresa_id' => $rcmed->id, 'nombre' => 'RCMed Central',  'direccion' => 'Av. Corrientes 1000', 'telefono' => '555-0101'];
+            $clinicas[] = ['empresa_id' => $rcmed->id, 'nombre' => 'RCMed Sucursal', 'direccion' => 'Av. Belgrano 2000',  'telefono' => '555-0102'];
         }
+
+        $created = 0;
+        foreach ($clinicas as $data) {
+            $clinica = Clinica::firstOrCreate(
+                ['empresa_id' => $data['empresa_id'], 'nombre' => $data['nombre']],
+                $data,
+            );
+            if ($clinica->wasRecentlyCreated) {
+                $created++;
+            }
+        }
+
+        $this->command->info("{$created} clínicas nuevas creadas (total: " . Clinica::count() . ').');
     }
 }

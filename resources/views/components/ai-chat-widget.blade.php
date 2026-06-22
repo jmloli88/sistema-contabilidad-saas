@@ -89,8 +89,12 @@
                 await this.$nextTick();
                 this.scrollToBottom();
 
+                // Create an empty assistant message that we'll fill token-by-token.
+                const assistantId = Date.now() + 1;
+                this.messages.push({ id: assistantId, role: 'assistant', content: '' });
+
                 try {
-                    const res = await fetch('/api/chat/ask', {
+                    const res = await fetch('/api/chat/stream', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -99,42 +103,67 @@
                         body: JSON.stringify({ question: q }),
                     });
 
-                    const data = await res.json();
-
                     if (!res.ok) {
+                        const msg = this.messages.find(m => m.id === assistantId);
                         if (res.status === 429) {
-                            this.messages.push({
-                                id: Date.now(),
-                                role: 'assistant',
-                                content: 'Alcanzaste el límite de consultas. Esperá un momento antes de preguntar de nuevo.',
-                            });
+                            msg.content = 'Alcanzaste el límite de consultas. Esperá un momento antes de preguntar de nuevo.';
                         } else if (res.status === 422) {
-                            this.messages.push({
-                                id: Date.now(),
-                                role: 'assistant',
-                                content: 'Por favor, escribí una pregunta válida.',
-                            });
+                            msg.content = 'Por favor, escribí una pregunta válida.';
                         } else {
-                            this.messages.push({
-                                id: Date.now(),
-                                role: 'assistant',
-                                content: data.error || 'Ocurrió un error al procesar tu consulta. Intentá de nuevo.',
-                            });
+                            const data = await res.json().catch(() => ({}));
+                            msg.content = data.answer || 'Ocurrió un error al procesar tu consulta. Intentá de nuevo.';
                         }
                         return;
                     }
 
-                    this.messages.push({
-                        id: Date.now(),
-                        role: 'assistant',
-                        content: data.answer || 'No pude generar una respuesta.',
-                    });
+                    const reader = res.body.getReader();
+                    const decoder = new TextDecoder();
+                    let buffer = '';
+                    let currentStatus = null;
+
+                    const statusLabels = {
+                        thinking: 'Pensando...',
+                        querying: 'Consultando la base de datos...',
+                        responding: '',
+                    };
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split('\n');
+                        buffer = lines.pop();
+
+                        for (const line of lines) {
+                            if (!line.startsWith('data: ')) continue;
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                const msg = this.messages.find(m => m.id === assistantId);
+                                if (!msg) continue;
+
+                                if (data.status) {
+                                    currentStatus = data.status;
+                                    msg.content = statusLabels[data.status] ?? data.status;
+                                    this.scrollToBottom();
+                                    continue;
+                                }
+
+                                if (data.token) {
+                                    // Wipe the placeholder text on the first real token.
+                                    if (currentStatus !== null) {
+                                        currentStatus = null;
+                                        msg.content = '';
+                                    }
+                                    msg.content += data.token;
+                                    this.scrollToBottom();
+                                }
+                            } catch (e) { /* skip malformed chunk */ }
+                        }
+                    }
                 } catch (e) {
-                    this.messages.push({
-                        id: Date.now(),
-                        role: 'assistant',
-                        content: 'Error de conexión. Verificá tu internet e intentá de nuevo.',
-                    });
+                    const msg = this.messages.find(m => m.id === assistantId);
+                    if (msg) msg.content = 'Error de conexión. Verificá tu internet e intentá de nuevo.';
                 } finally {
                     this.loading = false;
                     await this.$nextTick();

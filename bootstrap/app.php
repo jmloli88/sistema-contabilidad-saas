@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->validateCsrfTokens(except: [
             'stripe/webhook',
+            'telegram/webhook',
         ]);
 
         $middleware->redirectGuestsTo(function (Request $request) {

@@ -122,8 +122,7 @@
             </div>
         </div>
         
-        <!-- PWA Install Button -->
-        <x-pwa-install-button />
+        <x-ai-chat-widget />
         
         <!-- Scripts Stack -->
         @stack('scripts')

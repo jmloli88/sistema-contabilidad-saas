@@ -2,169 +2,151 @@
 
 namespace Tests\Unit\Services;
 
-use Tests\TestCase;
 use App\Services\AiChat\ChatQueryService;
-use App\Services\AiChat\DeepSeekService;
 use App\Services\AiChat\SqlValidator;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Mockery;
+use Prism\Prism\Facades\Prism;
+use Prism\Prism\Structured\PendingRequest as PendingStructuredRequest;
+use Prism\Prism\Testing\PrismFake;
+use Prism\Prism\Testing\StructuredResponseFake;
+use Prism\Prism\Testing\TextResponseFake;
+use Prism\Prism\ValueObjects\Usage;
+use Tests\TestCase;
 
 class ChatQueryServiceTest extends TestCase
 {
+    use RefreshDatabase;
+
     private ChatQueryService $service;
-    private DeepSeekService|Mockery\MockInterface $deepSeekMock;
-    private SqlValidator|Mockery\MockInterface $sqlValidatorMock;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->deepSeekMock = Mockery::mock(DeepSeekService::class);
-        $this->sqlValidatorMock = Mockery::mock(SqlValidator::class);
-
-        $this->service = new ChatQueryService(
-            $this->deepSeekMock,
-            $this->sqlValidatorMock
-        );
+        $this->service = new ChatQueryService(new SqlValidator());
     }
 
-    /** @test */
-    public function full_pipeline_generates_validates_and_returns_response()
+    protected function tearDown(): void
     {
-        $question = '¿Cuántos repases hay en marzo 2026?';
-        $empresaId = 3;
-        $generatedSql = 'SELECT COUNT(*) as total FROM repases WHERE fecha >= "2026-03-01" AND fecha <= "2026-03-31"';
-        $scopedSql = 'SELECT COUNT(*) as total FROM repases WHERE empresa_id = 3 AND fecha >= "2026-03-01" AND fecha <= "2026-03-31"';
-        $queryResult = [['total' => 45]];
-        $formattedAnswer = 'En marzo 2026 se registraron 45 repases.';
-
-        Cache::shouldReceive('remember')
-            ->once()
-            ->andReturnUsing(function ($key, $ttl, $callback) {
-                return $callback();
-            });
-
-        $this->deepSeekMock->shouldReceive('generateSql')
-            ->once()
-            ->with($question, Mockery::type('array'))
-            ->andReturn($generatedSql);
-
-        $this->sqlValidatorMock->shouldReceive('validate')
-            ->once()
-            ->with($generatedSql)
-            ->andReturn(['valid' => true, 'error' => null]);
-
-        $this->sqlValidatorMock->shouldReceive('injectEmpresaScope')
-            ->once()
-            ->with($generatedSql, $empresaId)
-            ->andReturn($scopedSql);
-
-        DB::shouldReceive('connection')
-            ->once()
-            ->with('mysql_ai_readonly')
-            ->andReturnSelf();
-        DB::shouldReceive('select')
-            ->once()
-            ->with($scopedSql)
-            ->andReturn($queryResult);
-
-        $this->deepSeekMock->shouldReceive('formatResponse')
-            ->once()
-            ->with(json_encode($queryResult), $question)
-            ->andReturn($formattedAnswer);
-
-        $schema = ['tables' => ['repases' => ['id', 'fecha', 'total_neto', 'empresa_id']]];
-        Cache::shouldReceive('get')
-            ->once()
-            ->with('chat_schema')
-            ->andReturn($schema);
-
-        $result = $this->service->ask($question, $empresaId);
-
-        $this->assertArrayHasKey('answer', $result);
-        $this->assertArrayHasKey('tokens', $result);
-        $this->assertSame($formattedAnswer, $result['answer']);
+        Mockery::close();
+        parent::tearDown();
     }
 
-    /** @test */
-    public function returns_cached_response_without_calling_api()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function full_pipeline_generates_validates_and_returns_response()
     {
         $question = '¿Cuántos repases hay?';
         $empresaId = 3;
-        $cachedResult = ['answer' => 'Respuesta cacheada.', 'tokens' => 0];
 
-        Cache::shouldReceive('remember')
-            ->once()
-            ->andReturn($cachedResult);
+        $this->bypassCache();
+
+        Prism::fake([
+            StructuredResponseFake::make()
+                ->withStructured(['type' => 'sql', 'content' => 'SELECT COUNT(*) as total FROM repases'])
+                ->withUsage(new Usage(10, 5)),
+            TextResponseFake::make()
+                ->withText('En total hay 0 repases.')
+                ->withUsage(new Usage(8, 12)),
+        ]);
+
+        // DB::select runs against the RefreshDatabase SQLite (tables migrated, empresa_id present).
+        $result = $this->service->ask($question, $empresaId);
+
+        $this->assertSame('En total hay 0 repases.', $result['answer']);
+        $this->assertIsInt($result['tokens']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function conversational_response_skips_sql_pipeline()
+    {
+        $question = 'Hola, ¿cómo estás?';
+        $empresaId = 3;
+
+        $this->bypassCache();
+
+        $fake = Prism::fake([
+            StructuredResponseFake::make()
+                ->withStructured(['type' => 'conversational', 'content' => '¡Hola! ¿En qué puedo ayudarte?'])
+                ->withUsage(new Usage(10, 5)),
+        ]);
 
         $result = $this->service->ask($question, $empresaId);
 
-        $this->assertSame($cachedResult['answer'], $result['answer']);
-        $this->assertSame($cachedResult['tokens'], $result['tokens']);
+        $this->assertSame('¡Hola! ¿En qué puedo ayudarte?', $result['answer']);
+        // Only the structured call happened — no text() formatting, no DB.
+        $fake->assertCallCount(1);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function returns_cached_response_without_calling_prism()
+    {
+        $question = '¿Cuántos repases?';
+        $empresaId = 3;
+        $cached = ['answer' => 'Cacheada.', 'tokens' => 0];
+
+        Cache::shouldReceive('remember')->once()->andReturn($cached);
+
+        $result = $this->service->ask($question, $empresaId);
+
+        $this->assertSame('Cacheada.', $result['answer']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
     public function handles_validation_failure_gracefully()
     {
-        $question = 'DROP TABLE repases';
+        $question = 'borrar todo';
         $empresaId = 3;
-        $generatedSql = 'DROP TABLE repases';
 
-        Cache::shouldReceive('remember')
-            ->once()
-            ->andReturnUsing(function ($key, $ttl, $callback) {
-                return $callback();
-            });
+        $this->bypassCache();
 
-        $this->deepSeekMock->shouldReceive('generateSql')
-            ->once()
-            ->with($question, Mockery::type('array'))
-            ->andReturn($generatedSql);
-
-        $this->sqlValidatorMock->shouldReceive('validate')
-            ->once()
-            ->with($generatedSql)
-            ->andReturn(['valid' => false, 'error' => 'Only SELECT statements are allowed.']);
-
-        $schema = ['tables' => ['repases' => ['id', 'fecha', 'total_neto', 'empresa_id']]];
-        Cache::shouldReceive('get')
-            ->once()
-            ->with('chat_schema')
-            ->andReturn($schema);
+        $fake = Prism::fake([
+            StructuredResponseFake::make()
+                ->withStructured(['type' => 'sql', 'content' => 'DROP TABLE repases'])
+                ->withUsage(new Usage(10, 5)),
+        ]);
 
         $result = $this->service->ask($question, $empresaId);
 
-        $this->assertArrayHasKey('answer', $result);
         $this->assertStringContainsString('validación', strtolower($result['answer']));
+        // Validator rejected before reaching text() formatting.
+        $fake->assertCallCount(1);
     }
 
-    /** @test */
-    public function handles_generate_sql_error_gracefully()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function handles_prism_error_gracefully()
     {
         $question = '¿Cuántos repases?';
         $empresaId = 3;
 
-        Cache::shouldReceive('remember')
-            ->once()
-            ->andReturnUsing(function ($key, $ttl, $callback) {
-                return $callback();
-            });
+        $this->bypassCache();
 
-        $this->deepSeekMock->shouldReceive('generateSql')
-            ->once()
-            ->with($question, Mockery::type('array'))
+        // Mock the structured PendingRequest to throw on asStructured().
+        // Using a typed mock (PendingStructuredRequest) so the facade's return
+        // type constraint is satisfied.
+        $pending = Mockery::mock(PendingStructuredRequest::class);
+        foreach (['using', 'withSchema', 'withSystemPrompt', 'withPrompt', 'usingTemperature', 'withMaxTokens'] as $m) {
+            $pending->shouldReceive($m)->andReturnSelf();
+        }
+        $pending->shouldReceive('asStructured')
             ->andThrow(new \RuntimeException('DeepSeek API error'));
 
-        $schema = ['tables' => ['repases' => ['id', 'fecha', 'total_neto', 'empresa_id']]];
-        Cache::shouldReceive('get')
-            ->once()
-            ->with('chat_schema')
-            ->andReturn($schema);
+        Prism::shouldReceive('structured')->andReturn($pending);
 
         $result = $this->service->ask($question, $empresaId);
 
-        $this->assertArrayHasKey('answer', $result);
         $this->assertStringContainsString('error', strtolower($result['answer']));
+    }
+
+    /**
+     * Make Cache::remember invoke its callback (no real caching), and let
+     * loadSchema() recompute every time (Cache::get -> null, Cache::put -> noop).
+     */
+    private function bypassCache(): void
+    {
+        Cache::shouldReceive('remember')
+            ->andReturnUsing(fn ($key, $ttl, $callback) => $callback());
+        Cache::shouldReceive('get')->andReturn(null);
+        Cache::shouldReceive('put')->andReturn(true);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AgendaController;
+use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\ClinicaController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\RepaseController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\SaaSAdminController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\TelegramWebhookController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,10 +56,17 @@ Route::middleware(['auth', 'verified', 'subscription', 'empresa.scope'])->group(
     Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
     Route::post('/billing/pay', [BillingController::class, 'pay'])->name('billing.pay');
 
+    // AI Chat Assistant
+    Route::post('/api/chat/ask', [AiChatController::class, 'ask'])->name('chat.ask');
+    Route::post('/api/chat/stream', [AiChatController::class, 'stream'])->name('chat.stream');
+    Route::get('/api/chat/history', [AiChatController::class, 'history'])->name('chat.history');
+    Route::delete('/api/chat/history', [AiChatController::class, 'clearHistory'])->name('chat.clear');
+
     // Profile routes - accesible para todos
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/link-telegram', [ProfileController::class, 'linkTelegram'])->name('profile.link-telegram');
 });
 
 // Rutas solo para administradores (subscription gated + administrador role, tenant-scoped)
@@ -160,6 +170,10 @@ Route::post('saas/logout', [App\Http\Controllers\Auth\SaasLoginController::class
 
 // Webhook de Stripe — sin autenticación, sin CSRF
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+// Telegram webhook — sin autenticación, sin CSRF
+Route::post('/telegram/webhook', TelegramWebhookController::class)
     ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 // Rutas de autenticación de Breeze

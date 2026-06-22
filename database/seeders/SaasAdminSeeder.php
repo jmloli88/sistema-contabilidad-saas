@@ -13,10 +13,12 @@ class SaasAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        SaasAdmin::create([
-            'name' => 'Admin SaaS',
-            'email' => 'admin@saas.com',
-            'password' => Hash::make('password'),
-        ]);
+        SaasAdmin::firstOrCreate(
+            ['email' => 'admin@saas.com'],
+            [
+                'name' => 'Admin SaaS',
+                'password' => Hash::make('password'),
+            ],
+        );
     }
 }

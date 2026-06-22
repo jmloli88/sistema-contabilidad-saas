@@ -2,19 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Traits\ScopedByEmpresa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Gasto extends Model
 {
-    use HasFactory;
+    use HasFactory, ScopedByEmpresa;
     /**
      * Los atributos que son asignables en masa.
      *
      * @var array<int, string>
      */
     protected $fillable = [
+        'empresa_id',
         'repase_id',
         'tipo',
         'descripcion',
@@ -30,6 +32,20 @@ class Gasto extends Model
     protected $casts = [
         'monto' => 'decimal:2',
     ];
+
+    /**
+     * Auto-derive empresa_id from the parent repase when not set explicitly.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (self $gasto) {
+            if ($gasto->empresa_id === null && $gasto->repase_id !== null) {
+                $gasto->empresa_id = \App\Models\Repase::withoutGlobalScope('empresa')
+                    ->whereKey($gasto->repase_id)
+                    ->value('empresa_id');
+            }
+        });
+    }
 
     /**
      * Obtener el repase al que pertenece este gasto.

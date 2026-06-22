@@ -61,4 +61,36 @@
             @endif
         </div>
     </form>
+
+    <!-- Telegram Link Section -->
+    <div class="mt-6 pt-6 border-t border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">{{ __('Vincular Telegram') }}</h3>
+        <p class="mt-1 text-sm text-gray-600">{{ __('Vinculá tu cuenta de Telegram para usar el bot de consultas.') }}</p>
+
+        @if (session('status') === 'telegram-linked')
+            <p
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition
+                x-init="setTimeout(() => show = false, 3000)"
+                class="mt-2 text-sm font-medium text-green-600"
+            >{{ __('¡Cuenta de Telegram vinculada!') }}</p>
+        @endif
+
+        <form method="POST" action="{{ route('profile.link-telegram') }}" class="mt-3 flex items-end gap-3">
+            @csrf
+            <div class="flex-1">
+                <x-input-label for="telegram_auth_token" :value="__('Código del bot')" />
+                <x-text-input
+                    id="telegram_auth_token"
+                    name="telegram_auth_token"
+                    type="text"
+                    class="mt-1 block w-full"
+                    placeholder="Ingresá el código del bot"
+                />
+                <x-input-error class="mt-2" :messages="$errors->get('telegram_auth_token')" />
+            </div>
+            <x-primary-button>{{ __('Vincular') }}</x-primary-button>
+        </form>
+    </div>
 </section>
