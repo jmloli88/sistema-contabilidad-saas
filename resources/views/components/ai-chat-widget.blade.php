@@ -18,6 +18,9 @@
                 <span class="material-symbols-outlined">smart_toy</span>
                 <span class="font-semibold text-sm">Asistente ContaMed</span>
             </div>
+            <button x-show="messages.length" @click="clearHistory" class="text-indigo-200 hover:text-white" aria-label="Limpiar historial" title="Limpiar historial">
+                <span class="material-symbols-outlined text-lg">delete_sweep</span>
+            </button>
             <button @click="open = false" class="text-indigo-200 hover:text-white" aria-label="Cerrar chat">
                 <span class="material-symbols-outlined text-lg">close</span>
             </button>
@@ -204,6 +207,21 @@
                 if (this.$refs.messages) {
                     this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
                 }
+            },
+
+            async clearHistory() {
+                if (!this.messages.length) return;
+                try {
+                    await fetch('/api/chat/history', {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '',
+                            'Accept': 'application/json',
+                        },
+                    });
+                } catch (e) { /* noop */ }
+                this.messages = [];
+                this.historyLoaded = false;
             },
         }));
     });
