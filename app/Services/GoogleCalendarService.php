@@ -145,16 +145,35 @@ class GoogleCalendarService
             return null;
         }
 
-        // Already has a calendar.
-        if ($token->calendar_id) {
-            return $token->calendar_id;
-        }
-
         $calendar = $this->getCalendarService($empresaId);
         if (!$calendar) {
             return null;
         }
 
+        // Verify the stored calendar still exists on Google's side.
+        if ($token->calendar_id) {
+            try {
+                $calendar->calendars->get($token->calendar_id);
+
+                return $token->calendar_id; // Still valid.
+            } catch (\Google\Service\Exception $e) {
+                // 404 = calendar was deleted manually from Google Calendar.
+                if ($e->getCode() === 404) {
+                    Log::warning("Google Calendar: stored calendar '{$token->calendar_name}' was deleted externally, recreating...", ['empresa_id' => $empresaId]);
+
+                    $token->update(['calendar_id' => null, 'calendar_name' => null]);
+
+                    // Delete stale event mappings so agendas are re-synced to the new calendar.
+                    GoogleCalendarEvent::where('empresa_id', $empresaId)->delete();
+                } else {
+                    Log::error('Google Calendar: failed to verify calendar: ' . $e->getMessage());
+
+                    return null;
+                }
+            }
+        }
+
+        // Create a brand-new secondary calendar.
         try {
             $gCalendar = new \Google\Service\Calendar\Calendar;
             $gCalendar->setSummary(self::CALENDAR_NAME);
@@ -166,6 +185,9 @@ class GoogleCalendarService
                 'calendar_id' => $created->getId(),
                 'calendar_name' => self::CALENDAR_NAME,
             ]);
+
+            // Clean up event mappings so the next sync re-creates everything on the new calendar.
+            GoogleCalendarEvent::where('empresa_id', $empresaId)->delete();
 
             Log::info("Google Calendar: created secondary calendar '{$created->getSummary()}' for empresa {$empresaId}");
 
@@ -179,9 +201,11 @@ class GoogleCalendarService
 
     public function disconnect(int $empresaId): void
     {
-        GoogleCalendarToken::where('empresa_id', $empresaId)->update(['is_active' => false]);
-        // Optionally revoke the token via Google's API, but for simplicity we
-        // just deactivate. The user can re-authorize at any time.
+        GoogleCalendarToken::where('empresa_id', $empresaId)->update([
+            'is_active' => false,
+            'calendar_id' => null,
+            'calendar_name' => null,
+        ]);
     }
 
     /**
