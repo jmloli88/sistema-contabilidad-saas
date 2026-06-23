@@ -157,6 +157,7 @@ Route::middleware(['auth:saas'])->prefix('saas/admin')->name('saas.admin.')->gro
     Route::post('/usuarios', [SaaSAdminController::class, 'storeUser'])->name('users.store');
     Route::post('/{user}/extend', [SaaSAdminController::class, 'extend'])->name('extend');
     Route::post('/{user}/cancel', [SaaSAdminController::class, 'cancel'])->name('cancel');
+    Route::post('/{user}/plan', [SaaSAdminController::class, 'changePlan'])->name('plan');
     Route::post('/{user}/expiry', [SaaSAdminController::class, 'setExpiry'])->name('expiry');
     Route::post('/{user}/update', [SaaSAdminController::class, 'updateUser'])->name('update');
     Route::get('/{user}/edit', [SaaSAdminController::class, 'edit'])->name('edit');

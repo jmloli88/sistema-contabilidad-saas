@@ -206,7 +206,7 @@ class SaaSAdminController extends Controller
             ]);
         } else {
             $empresa->subscriptions()->create([
-                'type' => 'default',
+                'type' => 'standard',
                 'stripe_id' => 'manual_' . now()->timestamp,
                 'stripe_status' => 'active',
                 'stripe_price' => 'price_manual',
@@ -215,6 +215,57 @@ class SaaSAdminController extends Controller
         }
 
         return back()->with('success', 'Fecha de vencimiento actualizada.');
+    }
+
+    /**
+     * Change the subscription plan type (standard ↔ premium) for a user's empresa.
+     * Cancels the other type and activates/creates the chosen one.
+     */
+    public function changePlan(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'plan' => 'required|in:standard,premium',
+        ]);
+
+        $empresa = $user->empresa;
+
+        if (! $empresa) {
+            return back()->with('error', 'El usuario no pertenece a ninguna empresa.');
+        }
+
+        $plan = $validated['plan'];
+        $other = $plan === 'premium' ? 'standard' : 'premium';
+
+        // Cancel the other subscription type if it exists
+        $otherSub = $empresa->subscription($other);
+        if ($otherSub) {
+            $otherSub->update(['stripe_status' => 'canceled']);
+        }
+
+        // Create or activate the chosen plan
+        $sub = $empresa->subscription($plan);
+        if ($sub) {
+            $sub->update([
+                'stripe_status' => 'active',
+                'ends_at' => max(($sub->ends_at ?? now()), now())->addDays(30),
+            ]);
+        } else {
+            $empresa->subscriptions()->create([
+                'type' => $plan,
+                'stripe_id' => 'manual_' . now()->timestamp,
+                'stripe_status' => 'active',
+                'stripe_price' => $plan === 'premium' ? 'price_premium' : 'price_standard',
+                'ends_at' => now()->addDays(30),
+            ]);
+        }
+
+        \Log::info('Subscription plan changed', [
+            'user_id' => $user->id,
+            'empresa_id' => $empresa->id,
+            'plan' => $plan,
+        ]);
+
+        return back()->with('success', "Suscripción de {$empresa->nombre} cambiada a " . strtoupper($plan) . ".");
     }
 
     /**

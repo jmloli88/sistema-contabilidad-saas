@@ -56,11 +56,11 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($users as $u)
                                     @php
-                                        $empresaSub = $u->empresa ? $u->empresa->subscription('default') : null;
+                                        $empresaSub = $u->empresa ? $u->empresa->activeSubscription() : null;
                                         $status = $empresaSub?->stripe_status ?? 'none';
                                         $endsAt = $empresaSub?->ends_at;
-                                        $isExpired = $endsAt && $endsAt->isPast();
                                         $isActive = $endsAt && $endsAt->isFuture();
+                                        $planType = $u->empresa ? $u->empresa->activeSubscriptionType() : null;
                                     @endphp
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" style="color: #191c22;">
@@ -82,7 +82,7 @@
                                                 </span>
                                             @elseif($isActive)
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    Activo
+                                                    Activo — {{ strtoupper($planType ?? '') }}
                                                 </span>
                                             @else
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
@@ -134,6 +134,28 @@
                                                         <span class="material-symbols-outlined text-lg">cancel</span>
                                                     </button>
                                                 </form>
+                                                {{-- Upgrade / Downgrade plan --}}
+                                                @if($planType === 'standard')
+                                                <form action="{{ route('saas.admin.plan', $u) }}" method="POST" class="inline"
+                                                      onsubmit="return confirm('¿Actualizar suscripción de {{ $u->name }} a PREMIUM?')">
+                                                    @csrf
+                                                    <input type="hidden" name="plan" value="premium">
+                                                    <button type="submit" title="Actualizar a PREMIUM"
+                                                            class="p-1.5 rounded-xl hover:bg-amber-50 text-amber-500 transition-colors">
+                                                        <span class="material-symbols-outlined text-lg">upgrade</span>
+                                                    </button>
+                                                </form>
+                                                @elseif($planType === 'premium')
+                                                <form action="{{ route('saas.admin.plan', $u) }}" method="POST" class="inline"
+                                                      onsubmit="return confirm('¿Bajar suscripción de {{ $u->name }} a STANDARD?')">
+                                                    @csrf
+                                                    <input type="hidden" name="plan" value="standard">
+                                                    <button type="submit" title="Bajar a STANDARD"
+                                                            class="p-1.5 rounded-xl hover:bg-slate-50 text-slate-400 transition-colors">
+                                                        <span class="material-symbols-outlined text-lg">keyboard_double_arrow_down</span>
+                                                    </button>
+                                                </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

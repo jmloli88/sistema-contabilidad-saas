@@ -64,7 +64,7 @@
                                 @php
                                     $user = auth()->user();
                                     $empresa = $user->empresa;
-                                    $empresaSub = $empresa ? $empresa->subscription('default') : null;
+                                    $empresaSub = $empresa ? $empresa->activeSubscription() : null;
                                     $daysRemaining = $empresaSub?->ends_at ? (int) ceil(now()->diffInDays($empresaSub->ends_at, true)) : null;
                                 @endphp
                                 <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-0">

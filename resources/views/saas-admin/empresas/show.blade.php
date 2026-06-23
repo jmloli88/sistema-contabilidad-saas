@@ -102,9 +102,16 @@
                     </div>
                     @if ($activeSubscription)
                         @php
-                            $sub = $empresa->subscription('default');
+                            $sub = $empresa->activeSubscription();
+                            $planType = $empresa->activeSubscriptionType();
                         @endphp
                         @if ($sub)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Plan</dt>
+                            <dd class="mt-1 text-sm font-semibold" style="color: #191c22;">
+                                {{ strtoupper($planType ?? '') }}
+                            </dd>
+                        </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Vencimiento</dt>
                             <dd class="mt-1 text-sm" style="color: #191c22;">
@@ -114,6 +121,32 @@
                         @endif
                     @endif
                 </dl>
+                @php $anyUser = $empresa->users->first(); @endphp
+                @if($planType ?? null && $anyUser)
+                <div class="mt-4 flex gap-2">
+                    @if($planType === 'standard')
+                    <form action="{{ route('saas.admin.plan', $anyUser) }}" method="POST" class="inline"
+                          onsubmit="return confirm('¿Actualizar suscripción a PREMIUM?')">
+                        @csrf
+                        <input type="hidden" name="plan" value="premium">
+                        <button type="submit" class="inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-white bg-amber-500 rounded-xl hover:bg-amber-600 transition-colors">
+                            <span class="material-symbols-outlined text-base">upgrade</span>
+                            Actualizar a PREMIUM
+                        </button>
+                    </form>
+                    @elseif($planType === 'premium')
+                    <form action="{{ route('saas.admin.plan', $anyUser) }}" method="POST" class="inline"
+                          onsubmit="return confirm('¿Bajar suscripción a STANDARD?')">
+                        @csrf
+                        <input type="hidden" name="plan" value="standard">
+                        <button type="submit" class="inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">
+                            <span class="material-symbols-outlined text-base">keyboard_double_arrow_down</span>
+                            Bajar a STANDARD
+                        </button>
+                    </form>
+                    @endif
+                </div>
+                @endif
             </div>
 
             <!-- Usuarios de la Empresa -->

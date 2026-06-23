@@ -123,10 +123,11 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @forelse($recentEmpresas as $emp)
                                 @php
-                                    $sub = $emp->subscription('default');
+                                    $sub = $emp->activeSubscription();
                                     $status = $sub?->stripe_status ?? 'none';
                                     $endsAt = $sub?->ends_at;
                                     $isActive = $endsAt && $endsAt->isFuture();
+                                    $planType = $emp->activeSubscriptionType();
                                 @endphp
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium" style="color: #191c22;">
@@ -142,7 +143,7 @@
                                             </span>
                                         @elseif($isActive)
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Activo
+                                                Activo — {{ strtoupper($planType ?? '') }}
                                             </span>
                                         @else
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
