@@ -73,15 +73,16 @@
             {{-- Two plan cards --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 {{-- STANDARD --}}
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden {{ $subscriptionType === 'standard' && $isActive ? 'ring-2 ring-indigo-500' : '' }}">
-                    <div class="p-6">
-                        <span class="material-symbols-outlined text-3xl text-gray-400 mb-2 block">star</span>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">STANDARD</h3>
-                        <div class="flex items-baseline gap-1 mb-4">
-                            <span class="text-3xl font-extrabold text-gray-900">R$50</span>
-                            <span class="text-gray-500 text-sm">/mes</span>
-                        </div>
-                        <ul class="space-y-2 text-sm text-gray-600 mb-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col {{ $subscriptionType === 'standard' && $isActive ? 'ring-2 ring-indigo-500' : '' }}">
+                    <div class="p-6 flex flex-col flex-1">
+                        <div class="flex-1">
+                            <span class="material-symbols-outlined text-3xl text-gray-400 mb-2 block">star</span>
+                            <h3 class="text-lg font-bold text-gray-900 mb-1">STANDARD</h3>
+                            <div class="flex items-baseline gap-1 mb-4">
+                                <span class="text-3xl font-extrabold text-gray-900">R$50</span>
+                                <span class="text-gray-500 text-sm">/mes</span>
+                            </div>
+                            <ul class="space-y-2 text-sm text-gray-600 mb-6">
                             <li class="flex items-center gap-2">
                                 <span class="material-symbols-outlined text-base text-green-500">check</span>
                                 Usuarios ilimitados
@@ -115,14 +116,15 @@
                                 Sync Google Calendar
                             </li>
                         </ul>
+                        </div>
 
                         @if ($subscriptionType === 'standard' && $isActive)
-                            <div class="w-full py-3 text-center bg-indigo-50 text-indigo-700 font-semibold rounded-xl text-sm">
+                            <div class="w-full py-3 text-center bg-indigo-50 text-indigo-700 font-semibold rounded-xl text-sm mt-auto">
                                 ✅ Plan actual
                             </div>
                         @else
                             <button onclick="handlePay('standard')"
-                                class="w-full py-3 bg-gray-800 hover:bg-gray-900 text-white font-semibold rounded-xl transition-colors text-sm">
+                                class="w-full py-3 bg-gray-800 hover:bg-gray-900 text-white font-semibold rounded-xl transition-colors text-sm mt-auto">
                                 {{ $isExpired ? 'Renovar' : 'Activar' }} STANDARD — R$ 50/mes
                             </button>
                         @endif
@@ -130,9 +132,10 @@
                 </div>
 
                 {{-- PREMIUM --}}
-                <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl shadow-lg overflow-hidden {{ $subscriptionType === 'premium' && $isActive ? 'ring-2 ring-indigo-300 ring-offset-2' : '' }}">
-                    <div class="p-6 text-white">
-                        <div class="flex items-center gap-2 mb-2">
+                <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl shadow-lg overflow-hidden flex flex-col {{ $subscriptionType === 'premium' && $isActive ? 'ring-2 ring-indigo-300 ring-offset-2' : '' }}">
+                    <div class="p-6 text-white flex flex-col flex-1">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-2">
                             <span class="material-symbols-outlined text-2xl">workspace_premium</span>
                             <span class="text-xs font-semibold uppercase tracking-wider bg-indigo-500 px-2 py-0.5 rounded-full">Recomendado</span>
                         </div>
@@ -163,14 +166,15 @@
                                 Soporte prioritario
                             </li>
                         </ul>
+                        </div>
 
                         @if ($subscriptionType === 'premium' && $isActive)
-                            <div class="w-full py-3 text-center bg-white/20 text-white font-semibold rounded-xl text-sm border border-white/30">
+                            <div class="w-full py-3 text-center bg-white/20 text-white font-semibold rounded-xl text-sm border border-white/30 mt-auto">
                                 ✅ Plan actual
                             </div>
                         @else
                             <button onclick="handlePay('premium')"
-                                class="w-full py-3 bg-white hover:bg-indigo-50 text-indigo-700 font-semibold rounded-xl transition-colors text-sm shadow-sm">
+                                class="w-full py-3 bg-white hover:bg-indigo-50 text-indigo-700 font-semibold rounded-xl transition-colors text-sm shadow-sm mt-auto">
                                 {{ $isExpired ? 'Renovar' : 'Activar' }} PREMIUM — R$ 90/mes
                             </button>
                         @endif
