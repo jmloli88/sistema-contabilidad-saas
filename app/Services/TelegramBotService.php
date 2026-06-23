@@ -21,6 +21,12 @@ class TelegramBotService
             return $this->handleUnauthenticated($telegramUser, $chatId, $text);
         }
 
+        // Enforce PREMIUM subscription — Telegram chat is a PREMIUM-only feature.
+        if (!$telegramUser->user->empresa || !$telegramUser->user->empresa->hasPremium()) {
+            return "⚠️ Tu plan actual (STANDARD) no incluye el chat por Telegram.\n\n"
+                . 'Actualizá a PREMIUM en: ' . url('/billing');
+        }
+
         if (str_starts_with($text, '/')) {
             return $this->handleCommand($text, $telegramUser);
         }

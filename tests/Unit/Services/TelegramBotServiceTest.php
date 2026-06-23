@@ -87,6 +87,15 @@ class TelegramBotServiceTest extends TestCase
         $chatId = 123456789;
         $user = User::factory()->create(['empresa_id' => 1]);
 
+        // Ensure the user's empresa has an active PREMIUM subscription.
+        $user->empresa->subscriptions()->create([
+            'type' => 'premium',
+            'stripe_id' => 'sub_test_premium',
+            'stripe_status' => 'active',
+            'stripe_price' => 'price_premium',
+            'ends_at' => now()->addDays(30),
+        ]);
+
         TelegramUser::create([
             'chat_id' => $chatId,
             'user_id' => $user->id,
@@ -110,6 +119,14 @@ class TelegramBotServiceTest extends TestCase
     {
         $chatId = 123456789;
         $user = User::factory()->create();
+
+        $user->empresa->subscriptions()->create([
+            'type' => 'premium',
+            'stripe_id' => 'sub_test_cmd',
+            'stripe_status' => 'active',
+            'stripe_price' => 'price_premium',
+            'ends_at' => now()->addDays(30),
+        ]);
 
         TelegramUser::create([
             'chat_id' => $chatId,
