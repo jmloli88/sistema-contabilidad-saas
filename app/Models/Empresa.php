@@ -41,8 +41,7 @@ class Empresa extends Model
      */
     public function hasActiveSubscription(): bool
     {
-        $sub = $this->subscription('standard')
-            ?? $this->subscription('premium');
+        $sub = $this->activeSubscription();
 
         if (! $sub) {
             return false;
