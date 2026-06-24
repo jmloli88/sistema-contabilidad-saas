@@ -29,7 +29,9 @@
                 {{-- Brand content --}}
                 <div class="relative z-10 flex flex-col justify-center px-12 xl:px-20 w-full">
                     <div class="mb-4">
-                        <img src="/logo.png" alt="VictCorp" class="w-16 h-auto mb-6 drop-shadow-lg">
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-xl shadow-black/20 mb-6 p-3">
+                            <img src="/logo.png" alt="VictCorp" class="w-full h-auto">
+                        </div>
                         <h1 class="text-3xl xl:text-4xl font-bold text-white tracking-tight mb-3">VictCorp</h1>
                         <h2 class="text-lg xl:text-xl text-cyan-200 font-medium">Sistema de Contabilidad Médica</h2>
                         <p class="mt-4 text-cyan-300/80 text-sm leading-relaxed max-w-sm">
@@ -44,7 +46,9 @@
                 {{-- Mobile branding (visible only on small screens) --}}
                 <div class="lg:hidden absolute top-0 left-0 right-0 bg-gradient-to-r from-blue-900 to-cyan-600 px-6 py-8">
                     <div class="flex items-center gap-3">
-                        <img src="/logo.png" alt="VictCorp" class="w-9 h-auto">
+                        <div class="w-10 h-10 rounded-xl bg-white shadow flex items-center justify-center p-1.5">
+                            <img src="/logo.png" alt="VictCorp" class="w-full h-auto">
+                        </div>
                         <div>
                             <h1 class="text-lg font-bold text-white">VictCorp</h1>
                             <p class="text-xs text-cyan-200">Sistema de Contabilidad Médica</p>

@@ -2,7 +2,9 @@
     <div x-data="{ showPassword: false, loading: false }" class="w-full">
         <!-- Título -->
         <div class="mb-8 text-center">
-            <img src="/logo.png" alt="VictCorp" class="w-14 h-auto mx-auto mb-4 drop-shadow-sm">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white shadow-lg shadow-black/10 mx-auto mb-4 p-2.5">
+                <img src="/logo.png" alt="VictCorp" class="w-full h-auto">
+            </div>
             <h2 class="text-2xl font-bold text-gray-900 mb-1">Acceso Administradores SaaS</h2>
             <p class="text-gray-500 text-sm">Panel de administración de la plataforma</p>
         </div>
