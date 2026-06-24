@@ -24,7 +24,7 @@
                     </div>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
                         class="w-full pl-11 pr-4 py-2.5 text-sm rounded-xl border transition-colors duration-200 
-                            {{ $errors->has('email') ? 'border-red-300 bg-red-50 focus:ring-red-200 focus:border-red-400' : 'border-gray-200 bg-gray-50 focus:ring-indigo-200 focus:border-indigo-400' }}"
+                            {{ $errors->has('email') ? 'border-red-300 bg-red-50 focus:ring-red-200 focus:border-red-400' : 'border-gray-200 bg-gray-50 focus:ring-cyan-200 focus:border-cyan-400' }}"
                         placeholder="tu@email.com">
                 </div>
                 <x-input-error :messages="$errors->get('email')" class="mt-1.5" />
@@ -41,7 +41,7 @@
                     </div>
                     <input :type="showPassword ? 'text' : 'password'" id="password" name="password" required autocomplete="current-password"
                         class="w-full pl-11 pr-12 py-2.5 text-sm rounded-xl border transition-colors duration-200
-                            {{ $errors->has('password') ? 'border-red-300 bg-red-50 focus:ring-red-200 focus:border-red-400' : 'border-gray-200 bg-gray-50 focus:ring-indigo-200 focus:border-indigo-400' }}"
+                            {{ $errors->has('password') ? 'border-red-300 bg-red-50 focus:ring-red-200 focus:border-red-400' : 'border-gray-200 bg-gray-50 focus:ring-cyan-200 focus:border-cyan-400' }}"
                         placeholder="••••••••">
                     <button type="button" @click="showPassword = !showPassword" tabindex="-1"
                             class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 hover:text-gray-600 transition-colors"
@@ -63,13 +63,13 @@
             <!-- Remember Me -->
             <div class="flex items-center">
                 <input type="checkbox" id="remember_me" name="remember"
-                    class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 focus:ring-2 transition-colors">
+                    class="w-4 h-4 rounded border-gray-300 text-cyan-600 focus:ring-cyan-500 focus:ring-2 transition-colors">
                 <label for="remember_me" class="ml-2 text-sm text-gray-600 select-none cursor-pointer">Recordarme</label>
             </div>
 
             <!-- Submit Button -->
             <button type="submit" :disabled="loading"
-                class="w-full flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 rounded-xl transition-all duration-200 disabled:opacity-70 disabled:cursor-wait shadow-sm shadow-indigo-600/20">
+                class="w-full flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-white bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-200 rounded-xl transition-all duration-200 disabled:opacity-70 disabled:cursor-wait shadow-sm shadow-cyan-500/20">
                 {{-- Loading spinner --}}
                 <svg x-show="loading" class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="display: none;">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -94,7 +94,7 @@
                 </div>
                 <p class="text-center text-sm text-gray-600">
                     ¿No tenés cuenta?
-                    <a href="{{ route('register') }}" class="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors">
+                    <a href="{{ route('register') }}" class="font-semibold text-cyan-600 hover:text-cyan-500 transition-colors">
                         Registrate
                     </a>
                 </p>
