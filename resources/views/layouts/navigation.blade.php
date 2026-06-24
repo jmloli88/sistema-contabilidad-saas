@@ -19,7 +19,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
         </button>
-        <span class="text-lg font-bold text-gray-900">Contabilidad</span>
+        <div class="flex items-center gap-2">
+            <img src="/logo.png" alt="VictCorp" class="w-7 h-auto">
+            <span class="text-lg font-bold text-gray-900">Contabilidad</span>
+        </div>
         <div class="w-10"></div>
     </div>
 
@@ -29,9 +32,7 @@
         
         <!-- Logo Section -->
         <div class="px-5 py-5 flex items-center gap-3 border-b border-gray-100">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-cyan-400 to-blue-500">
-                <span class="material-symbols-outlined fill text-xl">account_balance</span>
-            </div>
+            <img src="/logo.png" alt="VictCorp" class="w-10 h-auto">
             <div class="flex-1 min-w-0">
                 <h1 class="text-base font-bold tracking-tight text-gray-900 leading-tight">Contabilidad</h1>
                 @if(Auth::user()->empresa_id)
