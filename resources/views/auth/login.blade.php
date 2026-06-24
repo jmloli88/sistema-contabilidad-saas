@@ -3,7 +3,7 @@
         <div class="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/10 border border-white/20 p-8 sm:p-10">
             {{-- Logo --}}
             <div class="flex justify-center mb-6">
-                <img src="/logo.png" alt="VictCorp" class="w-20 h-auto drop-shadow-lg">
+                <img src="/logo.png" alt="VictCorp" class="w-24 h-auto">
             </div>
 
             {{-- Title --}}
