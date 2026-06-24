@@ -29,48 +29,48 @@
         
         <!-- Logo Section -->
         <div class="px-5 py-5 flex items-center gap-3 border-b border-white/10">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-indigo-600 to-indigo-400">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-cyan-500 to-blue-400">
                 <span class="material-symbols-outlined fill text-xl">admin_panel_settings</span>
             </div>
             <div class="flex-1 min-w-0">
                 <h1 class="text-base font-bold tracking-tight text-slate-100 leading-tight">ContaMed SaaS</h1>
-                <p class="text-[10px] font-medium text-slate-500">Panel de Administración</p>
+                <p class="text-[10px] font-medium text-cyan-400">Panel de Administración</p>
             </div>
         </div>
 
         <!-- Navigation Links -->
         <div class="flex-1 overflow-y-auto py-5 px-3">
             <!-- Navegación Section -->
-            <div class="px-3 mb-2 text-[11px] font-bold uppercase tracking-widest text-slate-500">Navegación</div>
+            <div class="px-3 mb-2 text-[11px] font-bold uppercase tracking-widest text-cyan-400">Navegación</div>
             
             <div class="space-y-1">
                 <!-- Dashboard -->
                 <a href="{{ route('saas.admin.dashboard') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('saas.admin.dashboard') ? 'bg-indigo-500/15 text-indigo-400' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('saas.admin.dashboard') ? 'bg-cyan-500/15 text-cyan-400' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('saas.admin.dashboard') ? 'fill' : '' }}">dashboard</span>
                     <span class="font-medium text-sm">Dashboard</span>
                     @if(request()->routeIs('saas.admin.dashboard'))
-                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                     @endif
                 </a>
 
                 <!-- Usuarios -->
                 <a href="{{ route('saas.admin.index') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('saas.admin.index') ? 'bg-indigo-500/15 text-indigo-400' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('saas.admin.index') ? 'bg-cyan-500/15 text-cyan-400' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('saas.admin.index') ? 'fill' : '' }}">group</span>
                     <span class="font-medium text-sm">Usuarios</span>
                     @if(request()->routeIs('saas.admin.index'))
-                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                     @endif
                 </a>
 
                 <!-- Empresas -->
                 <a href="{{ route('saas.admin.empresas.index') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('saas.admin.empresas*') ? 'bg-indigo-500/15 text-indigo-400' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group {{ request()->routeIs('saas.admin.empresas*') ? 'bg-cyan-500/15 text-cyan-400' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('saas.admin.empresas*') ? 'fill' : '' }}">business</span>
                     <span class="font-medium text-sm">Empresas</span>
                     @if(request()->routeIs('saas.admin.empresas*'))
-                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                        <span class="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                     @endif
                 </a>
             </div>
@@ -79,12 +79,12 @@
         <!-- User Profile Section -->
         <div class="p-4 border-t border-white/10">
             <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white/5">
-                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0 bg-gradient-to-br from-indigo-600 to-indigo-400">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0 bg-gradient-to-br from-cyan-500 to-blue-400">
                     {{ substr(Auth::guard('saas')->user()->name, 0, 1) }}
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-xs font-bold truncate text-slate-100">{{ Auth::guard('saas')->user()->name }}</p>
-                    <p class="text-[10px] truncate text-slate-500">{{ Auth::guard('saas')->user()->email }}</p>
+                    <p class="text-[10px] truncate text-cyan-400">{{ Auth::guard('saas')->user()->email }}</p>
                 </div>
             </div>
             
