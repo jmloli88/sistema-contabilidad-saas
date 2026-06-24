@@ -8,8 +8,7 @@
 
             {{-- Title --}}
             <div class="text-center mb-8">
-                <h1 class="text-xl font-bold text-gray-900">VictCorp</h1>
-                <p class="text-gray-500 text-sm mt-1">Acceso Administradores SaaS</p>
+                <p class="text-gray-500 text-sm">Acceso Administradores SaaS</p>
             </div>
 
             <!-- Session Status -->

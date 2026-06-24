@@ -8,8 +8,7 @@
 
             {{-- Title --}}
             <div class="text-center mb-8">
-                <h1 class="text-xl font-bold text-gray-900">VictCorp</h1>
-                <p class="text-gray-500 text-sm mt-1">Bienvenido de nuevo. Ingresá tus credenciales para continuar.</p>
+                <p class="text-gray-500 text-sm">Bienvenido de nuevo. Ingresá tus credenciales para continuar.</p>
             </div>
 
             <!-- Session Status -->
