@@ -1,11 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="font-bold text-2xl text-gray-800 leading-tight">
-                    Calendario de Pagos
-                </h2>
-                <p class="text-sm text-gray-600 mt-1">Visualiza los pagos programados</p>
+        <div class="flex items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-cyan-600 text-xl fill">calendar_month</span>
+                </div>
+                <div>
+                    <h2 class="font-bold text-xl text-gray-800 leading-tight">
+                        Calendario de Pagos
+                    </h2>
+                    <p class="text-sm text-gray-500 mt-0.5">Visualiza los pagos programados</p>
+                </div>
             </div>
         </div>
     </x-slot>

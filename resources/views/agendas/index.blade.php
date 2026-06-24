@@ -1,9 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Calendario de Agendas') }}
-            </h2>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-cyan-600 text-xl fill">event_note</span>
+                </div>
+                <div>
+                    <h2 class="font-bold text-xl text-gray-800 leading-tight">
+                        {{ __('Calendario de Agendas') }}
+                    </h2>
+                    <p class="text-sm text-gray-500 mt-0.5">Turnos y horarios programados</p>
+                </div>
+            </div>
             <div class="flex flex-wrap gap-2 w-full sm:w-auto" x-data="googleCalendarSync">
                 @if (auth()->user()?->empresa?->hasPremium())
                 <template x-if="connected">

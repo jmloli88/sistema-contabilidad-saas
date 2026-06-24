@@ -1,6 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Gestión de Precios de Exámenes</h2>
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-cyan-600 text-xl fill">biotech</span>
+            </div>
+            <div>
+                <h2 class="font-bold text-xl text-gray-800 leading-tight">Gestión de Precios de Exámenes</h2>
+                <p class="text-sm text-gray-500 mt-0.5">Configurá los precios de los exámenes</p>
+            </div>
+        </div>
     </x-slot>
 
     <div x-data="{ openCreate: {{ $errors->any() ? 'true' : 'false' }} }" class="py-12 min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">

@@ -1,6 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Gestión de Usuarios</h2>
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-cyan-600 text-xl fill">group</span>
+            </div>
+            <div>
+                <h2 class="font-bold text-xl text-gray-800 leading-tight">Gestión de Usuarios</h2>
+                <p class="text-sm text-gray-500 mt-0.5">Administrá los usuarios y permisos</p>
+            </div>
+        </div>
     </x-slot>
 
     <div x-data="userManager" class="py-12 min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">

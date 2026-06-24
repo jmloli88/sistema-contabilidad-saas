@@ -51,7 +51,7 @@
                     <main class="flex-1 overflow-y-auto bg-gray-50">
                         <!-- Page Heading -->
                         @isset($header)
-                            <header class="bg-white shadow z-10">
+                            <header class="bg-gradient-to-r from-cyan-50 via-white to-blue-50 border-b border-cyan-100 z-10">
                                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                                     {{ $header }}
                                 </div>

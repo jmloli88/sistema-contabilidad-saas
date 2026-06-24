@@ -21,7 +21,7 @@
         </button>
         <div class="flex items-center gap-2">
             <img src="/logo.png" alt="VictCorp" class="w-8 h-auto">
-            <span class="text-lg font-bold text-gray-900">Contabilidad</span>
+            <span class="text-lg font-bold text-gray-900">Repases</span>
         </div>
         <div class="w-10"></div>
     </div>
@@ -34,7 +34,7 @@
         <div class="px-5 py-5 flex items-center gap-3 border-b border-gray-100">
             <img src="/logo.png" alt="VictCorp" class="w-12 h-auto">
             <div class="flex-1 min-w-0">
-                <h1 class="text-base font-bold tracking-tight text-gray-900 leading-tight">Contabilidad</h1>
+                <h1 class="text-base font-bold tracking-tight text-gray-900 leading-tight">Repases</h1>
                 @if(Auth::user()->empresa_id)
                     <p class="text-[11px] font-medium truncate text-cyan-500">{{ Auth::user()->empresa->nombre }}</p>
                 @endif
