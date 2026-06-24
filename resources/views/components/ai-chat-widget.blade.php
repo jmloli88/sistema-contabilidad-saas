@@ -1,8 +1,17 @@
 <div x-data="aiChat" class="fixed bottom-6 right-6 z-50">
+    {{-- Backdrop overlay for mobile --}}
+    <div x-show="open" @click="open = false"
+         x-transition:enter="transition-opacity duration-200"
+         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition-opacity duration-200"
+         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black/40 z-40 lg:hidden" style="display: none;">
+    </div>
+
     {{-- Chat toggle button --}}
     <button @click="open = !open"
-            class="w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
-            :class="{ 'ring-2 ring-indigo-300': open }"
+            class="w-14 h-14 bg-cyan-500 hover:bg-cyan-600 text-white rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 z-50 relative"
+            :class="{ 'ring-2 ring-cyan-300': open }"
             aria-label="Abrir chat asistente">
         <span class="material-symbols-outlined text-2xl" x-text="open ? 'close' : 'smart_toy'"></span>
     </button>
@@ -10,27 +19,29 @@
     {{-- Chat panel --}}
     <div x-show="open" x-transition.opacity.duration.200ms
          @keydown.escape.window="open = false"
-         class="absolute bottom-16 right-0 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden"
+         class="fixed inset-0 lg:absolute lg:inset-auto lg:bottom-16 lg:right-0 lg:w-96 bg-white shadow-xl border-0 lg:border lg:border-gray-200 overflow-hidden rounded-none lg:rounded-2xl z-50"
          style="display: none;">
         {{-- Header --}}
-        <div class="bg-indigo-600 text-white px-4 py-3 flex items-center justify-between">
+        <div class="bg-cyan-500 text-white px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined">smart_toy</span>
                 <span class="font-semibold text-sm">VictCorp IA</span>
             </div>
-            <button x-show="messages.length" @click="clearHistory" class="text-indigo-200 hover:text-white" aria-label="Limpiar historial" title="Limpiar historial">
-                <span class="material-symbols-outlined text-lg">delete_sweep</span>
-            </button>
-            <button @click="open = false" class="text-indigo-200 hover:text-white" aria-label="Cerrar chat">
-                <span class="material-symbols-outlined text-lg">close</span>
-            </button>
+            <div class="flex items-center gap-1">
+                <button x-show="messages.length" @click="clearHistory" class="text-cyan-200 hover:text-white p-1.5 rounded-xl hover:bg-white/10" aria-label="Limpiar historial" title="Limpiar historial">
+                    <span class="material-symbols-outlined text-lg">delete_sweep</span>
+                </button>
+                <button @click="open = false" class="text-cyan-200 hover:text-white p-1.5 rounded-xl hover:bg-white/10 lg:hidden" aria-label="Cerrar chat">
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+            </div>
         </div>
 
         {{-- Messages --}}
-        <div class="h-80 overflow-y-auto p-4 space-y-3" x-ref="messages">
+        <div class="h-[calc(100vh-8rem)] lg:h-80 overflow-y-auto p-4 space-y-3 scroll-smooth" x-ref="messages" style="-webkit-overflow-scrolling: touch;">
             <template x-for="msg in messages" :key="msg.id">
                 <div :class="msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
-                    <div :class="msg.role === 'user' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-900'"
+                    <div :class="msg.role === 'user' ? 'bg-cyan-500 text-white' : 'bg-gray-100 text-gray-900'"
                          class="max-w-[80%] px-3 py-2 rounded-xl text-sm whitespace-pre-wrap" x-text="msg.content">
                     </div>
                 </div>
@@ -52,13 +63,13 @@
         </div>
 
         {{-- Input --}}
-        <div class="border-t border-gray-200 p-3">
+        <div class="border-t border-gray-200 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <form @submit.prevent="sendMessage" class="flex gap-2">
                 <input x-model="question" type="text" placeholder="Preguntame algo..."
                        :disabled="loading"
-                       class="flex-1 text-sm border-gray-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 disabled:bg-gray-50 disabled:cursor-not-allowed">
+                       class="flex-1 text-sm border-gray-200 rounded-xl px-3 py-2.5 lg:py-2 focus:ring-2 focus:ring-cyan-200 focus:border-cyan-400 disabled:bg-gray-50 disabled:cursor-not-allowed">
                 <button type="submit" :disabled="!question.trim() || loading"
-                        class="px-3 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+                        class="px-3 py-2.5 min-h-[44px] min-w-[44px] bg-cyan-500 text-white rounded-xl hover:bg-cyan-600 disabled:opacity-50 transition-colors flex items-center justify-center"
                         aria-label="Enviar mensaje">
                     <span class="material-symbols-outlined text-lg">send</span>
                 </button>
@@ -66,7 +77,7 @@
         </div>
 
         {{-- PII Disclaimer --}}
-        <p class="text-[10px] text-gray-400 text-center px-3 pb-2">
+        <p class="text-[10px] text-gray-400 text-center px-3 pb-2 hidden lg:block">
             Las respuestas son generadas por IA. No compartas datos personales de pacientes.
         </p>
     </div>
@@ -83,9 +94,14 @@
             historyLoaded: false,
 
             init() {
-                // Load chat history from the database when the widget is first opened.
-                // After that the conversation lives in-memory until the page is refreshed.
                 this.$watch('open', async (value) => {
+                    // Lock body scroll when chat is open on mobile
+                    if (value) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+
                     if (value && !this.historyLoaded) {
                         this.historyLoaded = true;
                         try {
@@ -105,7 +121,7 @@
                                 await this.$nextTick();
                                 this.scrollToBottom();
                             }
-                        } catch (e) { /* noop — start fresh if history endpoint is unreachable */ }
+                        } catch (e) { /* noop */ }
                     }
                 });
             },
@@ -121,7 +137,6 @@
                 await this.$nextTick();
                 this.scrollToBottom();
 
-                // Create an empty assistant message that we'll fill token-by-token.
                 const assistantId = Date.now() + 1;
                 this.messages.push({ id: assistantId, role: 'assistant', content: '' });
 
@@ -182,7 +197,6 @@
                                 }
 
                                 if (data.token) {
-                                    // Wipe the placeholder text on the first real token.
                                     if (currentStatus !== null) {
                                         currentStatus = null;
                                         msg.content = '';
@@ -190,7 +204,7 @@
                                     msg.content += data.token;
                                     this.scrollToBottom();
                                 }
-                            } catch (e) { /* skip malformed chunk */ }
+                            } catch (e) { /* skip */ }
                         }
                     }
                 } catch (e) {
