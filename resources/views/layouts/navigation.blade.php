@@ -20,7 +20,7 @@
             </svg>
         </button>
         <div class="flex items-center gap-2">
-            <img src="/logo.png" alt="VictCorp" class="w-7 h-auto">
+            <img src="/logo.png" alt="VictCorp" class="w-8 h-auto">
             <span class="text-lg font-bold text-gray-900">Contabilidad</span>
         </div>
         <div class="w-10"></div>
@@ -32,7 +32,7 @@
         
         <!-- Logo Section -->
         <div class="px-5 py-5 flex items-center gap-3 border-b border-gray-100">
-            <img src="/logo.png" alt="VictCorp" class="w-10 h-auto">
+            <img src="/logo.png" alt="VictCorp" class="w-12 h-auto">
             <div class="flex-1 min-w-0">
                 <h1 class="text-base font-bold tracking-tight text-gray-900 leading-tight">Contabilidad</h1>
                 @if(Auth::user()->empresa_id)
