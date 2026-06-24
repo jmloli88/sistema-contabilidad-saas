@@ -83,15 +83,6 @@
                     <span x-text="loading ? 'Iniciando sesión...' : 'Iniciar Sesión'">Iniciar Sesión</span>
                 </button>
 
-                {{-- Register --}}
-                @if (Route::has('register'))
-                    <p class="text-center text-sm text-gray-600 pt-2">
-                        ¿No tenés cuenta?
-                        <a href="{{ route('register') }}" class="font-semibold text-cyan-600 hover:text-cyan-500 transition-colors">
-                            Registrate
-                        </a>
-                    </p>
-                @endif
             </form>
         </div>
     </div>
