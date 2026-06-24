@@ -1,11 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <div>
-                <h2 class="font-bold text-2xl text-gray-800 leading-tight">
-                    Dashboard Financiero
-                </h2>
-                <p class="text-sm text-gray-600 mt-1">Resumen de tu actividad médica</p>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-cyan-600 text-xl fill">dashboard</span>
+                </div>
+                <div>
+                    <h2 class="font-bold text-xl text-gray-800 leading-tight">
+                        Dashboard Financiero
+                    </h2>
+                    <p class="text-sm text-gray-500 mt-0.5">Resumen de tu actividad médica</p>
+                </div>
             </div>
             <div class="hidden sm:flex items-center space-x-2 text-sm text-gray-600">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
