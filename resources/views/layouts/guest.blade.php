@@ -13,49 +13,53 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <style>
+            @keyframes gradient {
+                0%   { background-position: 0% 50%; }
+                50%  { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+            @keyframes float {
+                0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); opacity: 0.4; }
+                25%  { transform: translateY(-30px) translateX(20px) rotate(3deg); opacity: 0.6; }
+                50%  { transform: translateY(-10px) translateX(-10px) rotate(-2deg); opacity: 0.5; }
+                75%  { transform: translateY(-40px) translateX(-20px) rotate(1deg); opacity: 0.3; }
+            }
+            @keyframes floatSlow {
+                0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); opacity: 0.3; }
+                33%  { transform: translateY(-50px) translateX(-30px) rotate(-3deg); opacity: 0.5; }
+                66%  { transform: translateY(-20px) translateX(30px) rotate(2deg); opacity: 0.4; }
+            }
+            @keyframes floatReverse {
+                0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); opacity: 0.35; }
+                40%  { transform: translateY(40px) translateX(-25px) rotate(4deg); opacity: 0.55; }
+                70%  { transform: translateY(15px) translateX(20px) rotate(-1deg); opacity: 0.45; }
+            }
+            .bg-animated {
+                background: linear-gradient(-45deg, #0c4a6e, #0891b2, #06b6d4, #155e75, #0e7490);
+                background-size: 400% 400%;
+                animation: gradient 15s ease infinite;
+            }
+            .floating-shape {
+                position: absolute;
+                border-radius: 9999px;
+                filter: blur(60px);
+                pointer-events: none;
+            }
+        </style>
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen flex">
-            {{-- Left: Branding panel (hidden on mobile) --}}
-            <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-blue-900 via-cyan-800 to-cyan-500">
-                {{-- Decorative circles --}}
-                <div class="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-cyan-400/20 blur-3xl"></div>
-                <div class="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan-300/20 blur-3xl"></div>
-                <div class="absolute top-1/3 right-1/4 w-64 h-64 rounded-full bg-white/5 blur-3xl"></div>
+        <div class="min-h-screen bg-animated relative overflow-hidden flex items-center justify-center p-4 sm:p-6">
+            {{-- Floating decorative shapes --}}
+            <div class="floating-shape w-96 h-96 bg-cyan-400/20 top-10 -left-20" style="animation: float 12s ease-in-out infinite;"></div>
+            <div class="floating-shape w-80 h-80 bg-blue-500/20 bottom-20 -right-20" style="animation: floatSlow 16s ease-in-out infinite 2s;"></div>
+            <div class="floating-shape w-72 h-72 bg-cyan-300/15 top-1/2 left-1/3" style="animation: floatReverse 14s ease-in-out infinite 4s;"></div>
+            <div class="floating-shape w-64 h-64 bg-blue-400/15 bottom-10 left-10" style="animation: float 18s ease-in-out infinite 1s;"></div>
 
-                {{-- Subtle grid pattern --}}
-                <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"></div>
-
-                {{-- Brand content --}}
-                <div class="relative z-10 flex flex-col justify-center px-12 xl:px-20 w-full">
-                    <div class="mb-4">
-                        <img src="/logo.png" alt="VictCorp" class="w-28 h-auto mb-6 drop-shadow-[0_0_24px_rgba(255,255,255,0.15)]">
-                        <h1 class="text-3xl xl:text-4xl font-bold text-white tracking-tight mb-3">VictCorp</h1>
-                        <h2 class="text-lg xl:text-xl text-cyan-200 font-medium">Sistema de Contabilidad Médica</h2>
-                        <p class="mt-4 text-cyan-300/80 text-sm leading-relaxed max-w-sm">
-                            Gestión de repases, clínicas, exámenes y reportes financieros para tu empresa.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Right: Form panel --}}
-            <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-white">
-                {{-- Mobile branding (visible only on small screens) --}}
-                <div class="lg:hidden absolute top-0 left-0 right-0 bg-gradient-to-r from-blue-900 to-cyan-600 px-6 py-8">
-                    <div class="flex items-center gap-3">
-                        <img src="/logo.png" alt="VictCorp" class="w-10 h-auto drop-shadow-[0_0_12px_rgba(255,255,255,0.15)]">
-                        <div>
-                            <h1 class="text-lg font-bold text-white">VictCorp</h1>
-                            <p class="text-xs text-cyan-200">Sistema de Contabilidad Médica</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="w-full max-w-md mx-auto lg:pt-0 pt-28 sm:pt-32">
-                    <div class="mb-8 lg:hidden"></div>
-                    {{ $slot }}
-                </div>
+            {{-- Main card --}}
+            <div class="relative z-10 w-full max-w-md">
+                {{ $slot }}
             </div>
         </div>
     </body>
