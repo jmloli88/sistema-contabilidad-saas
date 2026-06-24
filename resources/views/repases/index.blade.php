@@ -8,7 +8,7 @@
                 <p class="text-sm text-gray-600 mt-1">Gestiona los repases y pagos médicos</p>
             </div>
             @if(Auth::user()->isAdmin())
-                <a href="{{ route('repases.create') }}" class="inline-flex items-center justify-center text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-5 py-2.5 focus:outline-none transition-all duration-200 shadow-lg hover:shadow-xl sm:transform sm:hover:-translate-y-0.5 whitespace-nowrap">
+                <a href="{{ route('repases.create') }}" class="inline-flex items-center justify-center text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 focus:ring-4 focus:ring-cyan-200 font-semibold rounded-xl text-sm px-5 py-2.5 focus:outline-none transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 whitespace-nowrap">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
                     </svg>
@@ -19,7 +19,7 @@
     </x-slot>
 
     <!-- Fondo con degradado sutil -->
-    <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+    <div class="min-h-screen bg-gradient-to-br from-cyan-50/30 via-blue-50/20 to-sky-50/30">
         <div class="py-8 sm:py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <!-- Filtros con diseño moderno -->
@@ -27,7 +27,7 @@
                     <div class="p-6 sm:p-8">
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center space-x-3">
-                                <div class="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl p-2.5">
+                                <div class="bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl p-2.5">
                                     <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"></path>
                                     </svg>
@@ -47,7 +47,7 @@
                                         Clínica
                                     </span>
                                 </label>
-                                <select name="clinica_id" id="clinica_id" class="bg-white border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition-all duration-200 hover:border-gray-300">
+                                <select name="clinica_id" id="clinica_id" class="bg-white border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 block w-full p-3 transition-all duration-200 hover:border-gray-300">
                                     <option value="">Todas las clínicas</option>
                                     @foreach($clinicas as $clinica)
                                         <option value="{{ $clinica->id }}" {{ request('clinica_id') == $clinica->id ? 'selected' : '' }}>
@@ -67,7 +67,7 @@
                                         Estado
                                     </span>
                                 </label>
-                                <select name="estado" id="estado" class="bg-white border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition-all duration-200 hover:border-gray-300">
+                                <select name="estado" id="estado" class="bg-white border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 block w-full p-3 transition-all duration-200 hover:border-gray-300">
                                     <option value="">Todos los estados</option>
                                     <option value="pendiente" {{ request('estado') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                                     <option value="pagado" {{ request('estado') == 'pagado' ? 'selected' : '' }}>Pagado</option>
@@ -84,7 +84,7 @@
                                         Fecha Desde
                                     </span>
                                 </label>
-                                <input type="date" name="fecha_desde" id="fecha_desde" value="{{ request('fecha_desde') }}" class="bg-white border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition-all duration-200 hover:border-gray-300">
+                                <input type="date" name="fecha_desde" id="fecha_desde" value="{{ request('fecha_desde') }}" class="bg-white border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 block w-full p-3 transition-all duration-200 hover:border-gray-300">
                             </div>
 
                             <!-- Filtro por Fecha Hasta -->
@@ -97,12 +97,12 @@
                                         Fecha Hasta
                                     </span>
                                 </label>
-                                <input type="date" name="fecha_hasta" id="fecha_hasta" value="{{ request('fecha_hasta') }}" class="bg-white border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-3 transition-all duration-200 hover:border-gray-300">
+                                <input type="date" name="fecha_hasta" id="fecha_hasta" value="{{ request('fecha_hasta') }}" class="bg-white border-2 border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 block w-full p-3 transition-all duration-200 hover:border-gray-300">
                             </div>
 
                             <!-- Botones -->
                             <div class="md:col-span-2 lg:col-span-4 flex flex-wrap gap-3 pt-2">
-                                <button type="submit" class="flex-1 sm:flex-none text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-3 focus:outline-none transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                <button type="submit" class="flex-1 sm:flex-none text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 focus:ring-4 focus:ring-cyan-200 font-semibold rounded-xl text-sm px-6 py-3 focus:outline-none transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                                     <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
                                     </svg>
@@ -180,7 +180,7 @@
                                         @php
                                             $rowId = 'repase-' . $repase->id;
                                         @endphp
-                                        <tr class="bg-white/50 border-b border-gray-100 hover:bg-indigo-50/50 transition-colors">
+                                        <tr class="bg-white/50 border-b border-gray-100 hover:bg-cyan-50/50 transition-colors">
                                             <td class="px-3 py-4 text-center">
                                                 <input type="checkbox" name="repase_ids[]" value="{{ $repase->id }}" class="repase-checkbox rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
                                             </td>
@@ -223,7 +223,7 @@
                                             <td class="px-6 py-4 text-center">
                                                 <button @click="repasesAbiertos['{{ $rowId }}'] = !repasesAbiertos['{{ $rowId }}']"
                                                         class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
-                                                        :class="repasesAbiertos['{{ $rowId }}'] ? 'bg-teal-100 text-teal-700' : 'bg-gray-100 text-gray-700 hover:bg-teal-100 hover:text-teal-700'">
+                                                        :class="repasesAbiertos['{{ $rowId }}'] ? 'bg-teal-100 text-cyan-700' : 'bg-gray-100 text-gray-700 hover:bg-teal-100 hover:text-cyan-700'">
                                                     <span x-text="repasesAbiertos['{{ $rowId }}'] ? 'Ocultar' : 'Ver'"></span>
                                                     <svg class="w-3.5 h-3.5 ml-1 transition-transform duration-200" :class="repasesAbiertos['{{ $rowId }}'] ? 'rotate-180' : ''" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -273,24 +273,24 @@
                                             x-transition:enter-start="opacity-0 -translate-y-2"
                                             x-transition:enter-end="opacity-100 translate-y-0">
                                             <td colspan="9" class="px-0 py-0">
-                                                <div class="bg-teal-50 border-t-2 border-teal-200 p-4 sm:p-6">
+                                                                                                    <div class="bg-cyan-50 border-t-2 border-cyan-200 p-4 sm:p-6">
                                                     <div class="flex items-center mb-3">
-                                                        <svg class="w-4 h-4 text-teal-600 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
-                                                        <span class="font-semibold text-sm text-teal-800">Desglose de Gastos</span>
+                                                        <svg class="w-4 h-4 text-cyan-600 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                                                        <span class="font-semibold text-sm text-cyan-800">Desglose de Gastos</span>
                                                     </div>
                                                     @if($repase->gastos->isNotEmpty())
                                                         <div class="overflow-x-auto">
                                                             <table class="min-w-full text-xs">
                                                                 <thead>
-                                                                    <tr class="border-b border-teal-200">
-                                                                        <th class="px-3 py-2 text-left font-semibold text-teal-700">Tipo</th>
-                                                                        <th class="px-3 py-2 text-left font-semibold text-teal-700">Descripción</th>
-                                                                        <th class="px-3 py-2 text-right font-semibold text-teal-700">Monto</th>
+                                                                    <tr class="border-b border-cyan-200">
+                                                                        <th class="px-3 py-2 text-left font-semibold text-cyan-700">Tipo</th>
+                                                                        <th class="px-3 py-2 text-left font-semibold text-cyan-700">Descripción</th>
+                                                                        <th class="px-3 py-2 text-right font-semibold text-cyan-700">Monto</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody class="divide-y divide-teal-100">
+                                                                <tbody class="divide-y divide-cyan-100">
                                                                     @foreach($repase->gastos as $gasto)
-                                                                    <tr class="hover:bg-teal-100/50">
+                                                                    <tr class="hover:bg-cyan-100/50">
                                                                         <td class="px-3 py-1.5 text-gray-600 capitalize">{{ $gasto->tipo }}</td>
                                                                         <td class="px-3 py-1.5 text-gray-700">{{ $gasto->descripcion }}</td>
                                                                         <td class="px-3 py-1.5 text-right text-red-600 font-medium">R$ {{ number_format($gasto->monto, 2) }}</td>
@@ -298,8 +298,8 @@
                                                                     @endforeach
                                                                 </tbody>
                                                                 <tfoot>
-                                                                    <tr class="border-t-2 border-teal-300 font-semibold">
-                                                                        <td colspan="2" class="px-3 py-2 text-right text-teal-800">Total Gastos:</td>
+                                                                    <tr class="border-t-2 border-cyan-300 font-semibold">
+                                                                        <td colspan="2" class="px-3 py-2 text-right text-cyan-800">Total Gastos:</td>
                                                                         <td class="px-3 py-2 text-right text-red-700">R$ {{ number_format($repase->total_gastos, 2) }}</td>
                                                                     </tr>
                                                                 </tfoot>
@@ -353,11 +353,11 @@
 
                                     <!-- Acciones -->
                                     <div class="flex gap-2 pt-3 border-t border-gray-200">
-                                        <a href="{{ route('repases.show', $repase) }}" class="flex-1 text-center text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none">
+                                        <a href="{{ route('repases.show', $repase) }}" class="flex-1 text-center text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none">
                                             Ver
                                         </a>
                                         @if(Auth::user()->isAdmin())
-                                            <a href="{{ route('repases.edit', $repase) }}" class="flex-1 text-center text-white bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none">
+                                            <a href="{{ route('repases.edit', $repase) }}" class="flex-1 text-center text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none">
                                                 Editar
                                             </a>
                                             @if($repase->estado === 'pendiente')
