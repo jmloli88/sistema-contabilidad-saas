@@ -13,8 +13,8 @@
                 </div>
             </div>
             @if(Auth::user()->isAdmin())
-                <a href="{{ route('repases.create') }}" class="inline-flex items-center justify-center text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 focus:ring-4 focus:ring-cyan-200 font-semibold rounded-xl text-sm px-5 py-2.5 focus:outline-none transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 whitespace-nowrap">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <a href="{{ route('repases.create') }}" class="flex-1 sm:flex-none bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-xl text-sm inline-flex items-center justify-center gap-1.5">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
                     </svg>
                     Nuevo Repase
