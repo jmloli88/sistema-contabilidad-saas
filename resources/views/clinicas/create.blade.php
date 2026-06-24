@@ -20,7 +20,7 @@
 
                         <div class="mb-5">
                             <x-input-label for="direccion" :value="__('Dirección')" />
-                            <textarea id="direccion" name="direccion" rows="3" class="border-gray-200 focus:ring-2 focus:ring-indigo-200 rounded-xl shadow-sm block mt-1 w-full transition-all duration-200">{{ old('direccion') }}</textarea>
+                            <textarea id="direccion" name="direccion" rows="3" class="border-gray-200 focus:ring-2 focus:ring-cyan-200 rounded-xl shadow-sm block mt-1 w-full transition-all duration-200">{{ old('direccion') }}</textarea>
                             <x-input-error :messages="$errors->get('direccion')" class="mt-2" />
                         </div>
 
@@ -34,7 +34,7 @@
                             <a href="{{ route('clinicas.index') }}" class="text-gray-600 hover:text-gray-900">
                                 Cancelar
                             </a>
-                            <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 bg-indigo-600 border border-transparent rounded-xl w-full sm:w-auto font-semibold text-sm text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md">
+                            <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 bg-cyan-500 border border-transparent rounded-xl w-full sm:w-auto font-semibold text-sm text-white hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md">
                                 Guardar
                             </button>
                         </div>

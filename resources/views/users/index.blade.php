@@ -64,7 +64,7 @@
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-2">
                                                 <button @click="openEdit(@js($u->id), @js($u->name), @js(strstr($u->email, '@', true)), @js($u->role))"
-                                                         class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-indigo-600 transition-colors duration-200" title="Editar">
+                                                         class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-cyan-600 transition-colors duration-200" title="Editar">
                                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
                                                 </button>
                                                 @if($u->id !== auth()->id())
@@ -92,7 +92,7 @@
                             <span class="text-xs font-medium px-2 py-0.5 rounded mt-1 inline-block {{ $u->role === 'administrador' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">{{ ucfirst($u->role) }}</span>
                             <div class="flex gap-2 mt-3 pt-3 border-t">
                                 <button @click="openEdit(@js($u->id), @js($u->name), @js(strstr($u->email, '@', true)), @js($u->role))"
-                                        class="flex-1 text-center text-white bg-indigo-700 hover:bg-indigo-800 rounded-lg text-sm px-4 py-2">Editar</button>
+                                        class="flex-1 text-center text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg text-sm px-4 py-2">Editar</button>
                                 @if($u->id !== auth()->id())
                                     <x-confirm-modal message="¿Está seguro de eliminar este usuario?" action="{{ route('users.destroy', $u) }}" method="DELETE">
                                         <button type="button" class="w-full text-white bg-red-700 hover:bg-red-800 rounded-lg text-sm px-4 py-2">Eliminar</button>
@@ -120,14 +120,14 @@
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Nombre</label>
                         <input type="text" name="name" x-model="createName" required
-                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                         @error('name')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Correo Electrónico</label>
                         <div class="flex items-center">
                             <input type="text" name="email_local" x-model="createEmailLocal" required placeholder="nombre"
-                                   class="flex-1 text-sm border-gray-300 rounded-l-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                   class="flex-1 text-sm border-gray-300 rounded-l-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                             <span class="inline-flex items-center px-3 py-2 text-sm text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md font-medium">{{ '@' . $emailDomain }}</span>
                         </div>
                         @error('email_local')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
@@ -135,7 +135,7 @@
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Rol</label>
                         <select name="role" x-model="createRole" required
-                                class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                             <option value="administrador">Administrador</option>
                             <option value="usuario">Usuario</option>
                         </select>
@@ -143,16 +143,16 @@
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Contraseña</label>
                         <input type="password" name="password" required
-                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Confirmar Contraseña</label>
                         <input type="password" name="password_confirmation" required
-                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                     </div>
                     <div class="flex justify-end gap-2 pt-2">
                         <button type="button" @click="openCreate = false" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">Cancelar</button>
-                        <button type="submit" class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700">Crear Usuario</button>
+                        <button type="submit" class="px-4 py-2 text-sm text-white bg-cyan-600 rounded-md hover:bg-cyan-700">Crear Usuario</button>
                     </div>
                 </form>
             </div>
@@ -171,20 +171,20 @@
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Nombre</label>
                         <input type="text" name="name" x-model="editName" required
-                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Correo Electrónico</label>
                         <div class="flex items-center">
                             <input type="text" name="email_local" x-model="editEmailLocal" required
-                                   class="flex-1 text-sm border-gray-300 rounded-l-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                   class="flex-1 text-sm border-gray-300 rounded-l-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                             <span class="inline-flex items-center px-3 py-2 text-sm text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md font-medium">{{ '@' . $emailDomain }}</span>
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Rol</label>
                         <select name="role" x-model="editRole" required
-                                class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                             <option value="administrador">Administrador</option>
                             <option value="usuario">Usuario</option>
                         </select>
@@ -192,16 +192,16 @@
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Nueva Contraseña (dejar vacío para no cambiar)</label>
                         <input type="password" name="password"
-                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Confirmar Nueva Contraseña</label>
                         <input type="password" name="password_confirmation"
-                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                               class="w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-cyan-500">
                     </div>
                     <div class="flex justify-end gap-2 pt-2">
                         <button type="button" @click="openEditModal = false" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">Cancelar</button>
-                        <button type="submit" class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700">Guardar Cambios</button>
+                        <button type="submit" class="px-4 py-2 text-sm text-white bg-cyan-600 rounded-md hover:bg-cyan-700">Guardar Cambios</button>
                     </div>
                 </form>
             </div>

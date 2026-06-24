@@ -43,7 +43,7 @@
                     <div class="p-6 sm:p-8">
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center space-x-3">
-                                <div class="bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl p-2.5">
+                                <div class="bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl p-2.5">
                                     <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"></path>
                                     </svg>
@@ -101,7 +101,7 @@
 
                             <!-- Botón de filtrar -->
                             <div class="md:col-span-3 flex justify-end">
-                                <button type="submit" class="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <button type="submit" class="bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-purple-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
                                     <span class="flex items-center">
                                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
@@ -121,7 +121,7 @@
                         <a href="{{ route('predictivo.ingresos') }}" class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="p-6">
                                 <div class="flex items-center justify-between mb-4">
-                                    <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-3">
+                                    <div class="bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl p-3">
                                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
                                         </svg>
@@ -147,7 +147,7 @@
                         <a href="{{ route('predictivo.gastos') }}" class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="p-6">
                                 <div class="flex items-center justify-between mb-4">
-                                    <div class="bg-gradient-to-br from-red-500 to-pink-600 rounded-xl p-3">
+                                    <div class="bg-gradient-to-br from-rose-300 to-pink-400 rounded-xl p-3">
                                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                                         </svg>
@@ -178,7 +178,7 @@
                         <a href="{{ route('predictivo.capacidad') }}" class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="p-6">
                                 <div class="flex items-center justify-between mb-4">
-                                    <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-3">
+                                    <div class="bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl p-3">
                                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01.293.707V12a1 1 0 102 0V9a1 1 0 01.293-.707L13.586 6H12a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293A1 1 0 0112 9v3a3 3 0 11-6 0V9a1 1 0 01.293-.707L8.586 6H7a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                                         </svg>
@@ -204,7 +204,7 @@
                         <a href="{{ route('predictivo.tendencias') }}" class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="p-6">
                                 <div class="flex items-center justify-between mb-4">
-                                    <div class="bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl p-3">
+                                    <div class="bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl p-3">
                                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                         </svg>

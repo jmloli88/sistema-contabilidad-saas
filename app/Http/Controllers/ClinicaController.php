@@ -50,9 +50,13 @@ class ClinicaController extends Controller
      * @param StoreClinicaRequest $request
      * @return RedirectResponse
      */
-    public function store(StoreClinicaRequest $request): RedirectResponse
+    public function store(StoreClinicaRequest $request): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
     {
         $clinica = Clinica::create($request->validated());
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Clínica creada exitosamente.', 'clinica' => $clinica]);
+        }
 
         return redirect()
             ->route('clinicas.show', $clinica)

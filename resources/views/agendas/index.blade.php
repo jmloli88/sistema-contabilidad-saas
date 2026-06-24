@@ -18,7 +18,7 @@
                     <form method="POST" action="{{ route('google-calendar.sync') }}" class="inline" x-data="{ syncing: false }" @submit="syncing = true">
                         @csrf
                         <button type="submit" :disabled="syncing"
-                                class="flex-1 sm:flex-none bg-indigo-500 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-wait text-white font-bold py-2 px-4 rounded-xl text-sm inline-flex items-center gap-1"
+                                class="flex-1 sm:flex-none bg-cyan-500 hover:bg-cyan-600 disabled:opacity-60 disabled:cursor-wait text-white font-bold py-2 px-4 rounded-xl text-sm inline-flex items-center gap-1"
                                 title="Sincronizar agendas con Google Calendar">
                             <span class="material-symbols-outlined text-base" x-text="syncing ? 'hourglass_top' : 'sync'"></span>
                             <span x-text="syncing ? 'Sincronizando...' : 'Sincronizar'"></span>
@@ -29,7 +29,7 @@
                 <button onclick="openExportModal()" class="flex-1 sm:flex-none bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl text-sm">
                     Exportar
                 </button>
-                <button onclick="openCreateModal()" class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl text-sm">
+                <button onclick="openCreateModal()" class="flex-1 sm:flex-none bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-xl text-sm">
                     Nueva Agenda
                 </button>
             </div>
@@ -45,7 +45,7 @@
                         <label for="filtro-clinica" class="block text-sm font-medium text-gray-700 mb-2">
                             Filtrar por clínica:
                         </label>
-                        <select id="filtro-clinica" class="mt-1 block w-full sm:w-64 rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
+                        <select id="filtro-clinica" class="mt-1 block w-full sm:w-64 rounded-xl border-gray-200 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 text-sm">
                             <option value="">Todas las clínicas</option>
                             @foreach($clinicas as $clinica)
                                 <option value="{{ $clinica->id }}">{{ $clinica->nombre }}</option>
@@ -237,7 +237,7 @@
                     
                     <div class="mb-3 sm:mb-4">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Clínica *</label>
-                        <select id="clinica_id" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
+                        <select id="clinica_id" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 text-sm">
                             <option value="">Seleccione una clínica</option>
                             @foreach($clinicas as $clinica)
                                 <option value="{{ $clinica->id }}">{{ $clinica->nombre }}</option>
@@ -247,28 +247,28 @@
 
                     <div class="mb-3 sm:mb-4">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Fecha *</label>
-                        <input type="date" id="fecha" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
+                        <input type="date" id="fecha" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 text-sm">
                     </div>
 
                     <div class="mb-3 sm:mb-4">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Doctor *</label>
-                        <input type="text" id="doctor" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm" placeholder="Nombre del doctor">
+                        <input type="text" id="doctor" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 text-sm" placeholder="Nombre del doctor">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-4">
                         <div>
                             <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Hora Inicio *</label>
-                            <input type="time" id="hora_inicio" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
+                            <input type="time" id="hora_inicio" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 text-sm">
                         </div>
                         <div>
                             <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Hora Fin *</label>
-                            <input type="time" id="hora_fin" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
+                            <input type="time" id="hora_fin" required class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 text-sm">
                         </div>
                     </div>
 
                     <div id="tipoRepeticionContainer" class="mb-3 sm:mb-4">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Tipo de Agenda *</label>
-                        <select id="tipo_repeticion" class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm">
+                        <select id="tipo_repeticion" class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 text-sm">
                             <option value="unica">Única</option>
                             <option value="repetitiva">Repetitiva</option>
                         </select>
@@ -276,7 +276,7 @@
 
                     <div id="diasRepeticionContainer" class="mb-3 sm:mb-4 hidden">
                         <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Frecuencia de Repetición *</label>
-                        <select id="frecuencia_repeticion" class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 text-sm mb-3">
+                        <select id="frecuencia_repeticion" class="w-full rounded-xl border-gray-200 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 text-sm mb-3">
                             <option value="7">Semanal (cada 7 días)</option>
                             <option value="14">Quincenal (cada 14 días)</option>
                             <option value="mensual">Mensual (mismo día de la semana)</option>
@@ -285,7 +285,7 @@
                         
                         <div id="diasPersonalizadosContainer" class="hidden">
                             <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Repetir cada (días) *</label>
-                            <input type="number" id="dias_repeticion" min="1" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-indigo-500 text-sm" placeholder="Ej: 21 para cada 3 semanas">
+                            <input type="number" id="dias_repeticion" min="1" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-cyan-500 text-sm" placeholder="Ej: 21 para cada 3 semanas">
                         </div>
                         
                         <p class="text-xs text-gray-500 mt-2">Las agendas se crearán hasta diciembre del año actual</p>
@@ -306,7 +306,7 @@
                             <button type="button" onclick="closeModal()" class="flex-1 sm:flex-none px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 text-sm">
                                 Cancelar
                             </button>
-                            <button type="submit" class="flex-1 sm:flex-none px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm">
+                            <button type="submit" class="flex-1 sm:flex-none px-4 py-2 bg-cyan-500 text-white rounded-md hover:bg-cyan-600 text-sm">
                                 Guardar
                             </button>
                         </div>

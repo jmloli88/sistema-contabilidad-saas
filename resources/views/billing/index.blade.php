@@ -132,7 +132,7 @@
                             </div>
                         @else
                             <button onclick="handlePay('standard')"
-                                class="w-full py-3 bg-gray-800 hover:bg-gray-900 text-white font-semibold rounded-xl transition-colors text-sm mt-auto">
+                                class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-xl transition-colors text-sm mt-auto">
                                 {{ $isExpired ? 'Renovar' : 'Activar' }} STANDARD — R$ 50/mes
                             </button>
                         @endif
@@ -201,7 +201,7 @@
 
                     <div class="mt-5 flex flex-col sm:flex-row gap-3">
                         <button id="card-submit-btn"
-                            class="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors shadow-sm">
+                            class="flex-1 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-xl transition-colors shadow-sm">
                             <span class="flex items-center justify-center gap-2">
                                 <span class="material-symbols-outlined text-lg">lock</span>
                                 <span id="payment-btn-text">Pagar R$ 50,00</span>

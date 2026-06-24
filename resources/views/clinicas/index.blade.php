@@ -13,18 +13,17 @@
                 </div>
             </div>
             @if(Auth::user()->isAdmin())
-                <a href="{{ route('clinicas.create') }}" class="inline-flex items-center justify-center text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 font-semibold rounded-xl text-sm px-5 py-2.5 min-h-[44px] focus:outline-none transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap touch-manipulation">
+                <button onclick="openClinicaModal()" class="inline-flex items-center justify-center text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 font-semibold rounded-xl text-sm px-5 py-2.5 min-h-[44px] focus:outline-none transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap touch-manipulation">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
                     </svg>
                     Nueva Clínica
-                </a>
+                </button>
             @endif
         </div>
     </x-slot>
 
-    <!-- Fondo con degradado sutil -->
-    <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+    <div x-data="clinicaModal()" class="min-h-screen bg-gradient-to-br from-cyan-50/30 via-white to-blue-50/30">
         <div class="py-8 sm:py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 @if($clinicas->isEmpty())
@@ -38,7 +37,7 @@
                             <p class="mt-1 text-sm text-gray-500">Comienza registrando una nueva clínica.</p>
                             @if(Auth::user()->isAdmin())
                                 <div class="mt-6">
-                                    <a href="{{ route('clinicas.create') }}" class="inline-flex items-center text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold rounded-xl text-sm px-6 py-3 focus:outline-none transition-all duration-200 shadow-lg hover:shadow-xl">
+                                    <button onclick="openClinicaModal()" class="inline-flex items-center text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 focus:ring-4 focus:ring-cyan-200 font-semibold rounded-xl text-sm px-6 py-3 focus:outline-none transition-all duration-200 shadow-lg hover:shadow-xl">
                                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
                                         </svg>
@@ -63,10 +62,10 @@
                                 </thead>
                                 <tbody>
                                     @foreach($clinicas as $clinica)
-                                        <tr class="bg-white/50 border-b border-gray-200 hover:bg-indigo-50/50 transition-colors">
+                                        <tr class="bg-white/50 border-b border-gray-200 hover:bg-cyan-50/50 transition-colors">
                                             <td class="px-6 py-4">
                                                 <div class="flex items-center">
-                                                    <svg class="w-4 h-4 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                    <svg class="w-4 h-4 mr-2 text-cyan-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"></path>
                                                     </svg>
                                                     <span class="font-medium text-gray-900">{{ $clinica->nombre }}</span>
@@ -102,12 +101,12 @@
                                                     @if(Auth::user()->isAdmin())
                                                         <!-- Botón Editar -->
                                                         <a href="{{ route('clinicas.edit', $clinica) }}" 
-                                                           class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 touch-manipulation text-indigo-600"
+                                                           class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-100 touch-manipulation text-cyan-600"
                                                            title="Editar">
                                                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                                                             </svg>
-                                                        </a>
+                                        </button>
                                                         <!-- Botón Eliminar -->
                                                         <form action="{{ route('clinicas.destroy', $clinica) }}" method="POST" class="inline">
                                                             @csrf
@@ -165,17 +164,17 @@
 
                                     <!-- Acciones -->
                                     <div class="flex gap-2 pt-3 border-t border-gray-200">
-                                        <a href="{{ route('clinicas.show', $clinica) }}" class="flex-1 text-center text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none">
+                                        <a href="{{ route('clinicas.show', $clinica) }}" class="flex-1 text-center text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none">
                                             Ver
                                         </a>
                                         @if(Auth::user()->isAdmin())
-                                            <a href="{{ route('clinicas.edit', $clinica) }}" class="flex-1 text-center text-white bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none">
+                                            <a href="{{ route('clinicas.edit', $clinica) }}" class="flex-1 text-center text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none">
                                                 Editar
                                             </a>
                                             <form action="{{ route('clinicas.destroy', $clinica) }}" method="POST" class="flex-1">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="w-full text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none" onclick="return confirm('¿Está seguro de eliminar esta clínica?')">
+                                                <button type="submit" class="w-full text-white bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 focus:ring-4 focus:ring-red-200 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none" onclick="return confirm('¿Está seguro de eliminar esta clínica?')">
                                                     Eliminar
                                                 </button>
                                             </form>
@@ -194,4 +193,82 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Nueva Clínica -->
+    <div id="clinicaModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <button type="button" onclick="closeClinicaModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Nueva Clínica</h3>
+            <form id="clinicaForm" class="space-y-4">
+                @csrf
+                <div>
+                    <label for="modal_nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                    <input type="text" id="modal_nombre" name="nombre" required
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-cyan-200 focus:border-cyan-400 transition-colors">
+                    <p id="modal-nombre-error" class="mt-1 text-xs text-red-600 hidden"></p>
+                </div>
+                <div>
+                    <label for="modal_direccion" class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                    <textarea id="modal_direccion" name="direccion" rows="2"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-cyan-200 focus:border-cyan-400 transition-colors"></textarea>
+                </div>
+                <div>
+                    <label for="modal_telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                    <input type="text" id="modal_telefono" name="telefono"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-cyan-200 focus:border-cyan-400 transition-colors">
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeClinicaModal()" class="px-5 py-2.5 text-sm font-semibold text-cyan-700 bg-white border border-cyan-200 rounded-xl hover:bg-cyan-50 transition-colors">Cancelar</button>
+                    <button type="submit" id="modal-save-btn" class="px-5 py-2.5 text-sm font-semibold text-white bg-cyan-500 rounded-xl hover:bg-cyan-600 transition-colors shadow-sm">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openClinicaModal() {
+            document.getElementById('clinicaModal').classList.remove('hidden');
+        }
+        function closeClinicaModal() {
+            document.getElementById('clinicaModal').classList.add('hidden');
+            document.getElementById('modal-nombre-error').classList.add('hidden');
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('clinicaForm');
+            if (!form) return;
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const btn = document.getElementById('modal-save-btn');
+                btn.disabled = true;
+                btn.textContent = 'Guardando...';
+                try {
+                    const res = await fetch('{{ route("clinicas.store") }}', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                        body: JSON.stringify({ nombre: document.getElementById('modal_nombre').value, direccion: document.getElementById('modal_direccion').value, telefono: document.getElementById('modal_telefono').value }),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                        if (data.errors?.nombre) {
+                            const errEl = document.getElementById('modal-nombre-error');
+                            errEl.textContent = data.errors.nombre[0];
+                            errEl.classList.remove('hidden');
+                        } else {
+                            alert(data.message || 'Error al guardar.');
+                        }
+                        return;
+                    }
+                    closeClinicaModal();
+                    window.location.reload();
+                } catch (e) {
+                    alert('Error de conexión. Intentá de nuevo.');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Guardar';
+                }
+            });
+        });
+    </script>
 </x-app-layout>

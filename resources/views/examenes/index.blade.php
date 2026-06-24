@@ -295,7 +295,7 @@
                     <p class="text-xs text-gray-500">El precio con nota debe ser mayor que el precio sin nota.</p>
                     <div class="flex justify-end gap-2 pt-2">
                         <button type="button" @click="openCreate = false" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 touch-manipulation min-h-[44px]">Cancelar</button>
-                        <button type="submit" class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700 touch-manipulation min-h-[44px]">Guardar Examen</button>
+                        <button type="submit" class="px-4 py-2 text-sm text-white bg-cyan-600 rounded-md hover:bg-cyan-700 touch-manipulation min-h-[44px]">Guardar Examen</button>
                     </div>
                 </form>
             </div>
