@@ -1,4 +1,37 @@
-<div x-data="confirmModal" x-init="init()"></div>
+<div x-data="confirmModal" x-init="init()">
+    <template x-teleport="body">
+        <div x-show="open" x-cloak
+             class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <div x-show="open"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 @click.away="cancel()"
+                 class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+                <div class="text-center">
+                    <div class="mx-auto w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-amber-600 text-2xl fill">warning</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Confirmar acción</h3>
+                    <p class="text-sm text-gray-600 mb-6" x-text="message"></p>
+                    <div class="flex gap-3">
+                        <button @click="cancel()"
+                                class="flex-1 px-4 py-2.5 text-sm font-semibold text-cyan-700 bg-white border border-cyan-200 rounded-xl hover:bg-cyan-50 transition-colors">
+                            Cancelar
+                        </button>
+                        <button @click="confirm()"
+                                class="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-cyan-500 rounded-xl hover:bg-cyan-600 transition-colors shadow-sm">
+                            Confirmar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
 
 @push('scripts')
 <script>
@@ -17,7 +50,6 @@
                     });
                 };
 
-                // Auto-confirm on form submit with data-confirm attribute
                 document.addEventListener('submit', (e) => {
                     const msg = e.target.getAttribute('data-confirm');
                     if (msg) {
@@ -47,36 +79,3 @@
     });
 </script>
 @endpush
-
-<template x-teleport="body">
-    <div x-show="open" x-cloak
-         class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-        <div x-show="open"
-             x-transition:enter="transition ease-out duration-200"
-             x-transition:enter-start="opacity-0 scale-95"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-150"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95"
-             @click.away="cancel()"
-             class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
-            <div class="text-center">
-                <div class="mx-auto w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-4">
-                    <span class="material-symbols-outlined text-amber-600 text-2xl fill">warning</span>
-                </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Confirmar acción</h3>
-                <p class="text-sm text-gray-600 mb-6" x-text="message"></p>
-                <div class="flex gap-3">
-                    <button @click="cancel()"
-                            class="flex-1 px-4 py-2.5 text-sm font-semibold text-cyan-700 bg-white border border-cyan-200 rounded-xl hover:bg-cyan-50 transition-colors">
-                        Cancelar
-                    </button>
-                    <button @click="confirm()"
-                            class="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-cyan-500 rounded-xl hover:bg-cyan-600 transition-colors shadow-sm">
-                        Confirmar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
