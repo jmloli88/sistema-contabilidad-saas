@@ -23,7 +23,7 @@
         </div>
     </x-slot>
 
-    <div x-data="clinicaModal()" class="min-h-screen bg-gradient-to-br from-cyan-50/30 via-white to-blue-50/30">
+    <div class="min-h-screen bg-gradient-to-br from-cyan-50/30 via-white to-blue-50/30">
         <div class="py-8 sm:py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 @if($clinicas->isEmpty())
