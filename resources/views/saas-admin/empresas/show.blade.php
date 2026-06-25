@@ -1,4 +1,4 @@
-<x-saas-layout>
+﻿<x-saas-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl leading-tight" style="color: #191c22;">
@@ -126,7 +126,7 @@
                 <div class="mt-4 flex gap-2">
                     @if($planType === 'standard')
                     <form action="{{ route('saas.admin.plan', $anyUser) }}" method="POST" class="inline"
-                          onsubmit="return confirm('¿Actualizar suscripción a PREMIUM?')">
+                          data-confirm="¿Actualizar suscripción a PREMIUM?">
                         @csrf
                         <input type="hidden" name="plan" value="premium">
                         <button type="submit" class="inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-white bg-amber-500 rounded-xl hover:bg-amber-600 transition-colors">
@@ -136,7 +136,7 @@
                     </form>
                     @elseif($planType === 'premium')
                     <form action="{{ route('saas.admin.plan', $anyUser) }}" method="POST" class="inline"
-                          onsubmit="return confirm('¿Bajar suscripción a STANDARD?')">
+                          data-confirm="¿Bajar suscripción a STANDARD?">
                         @csrf
                         <input type="hidden" name="plan" value="standard">
                         <button type="submit" class="inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">

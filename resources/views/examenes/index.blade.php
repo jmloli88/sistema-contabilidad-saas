@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <x-slot name="header">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-cyan-100 flex items-center justify-center flex-shrink-0">
@@ -13,18 +13,6 @@
 
     <div x-data="{ openCreate: {{ $errors->any() ? 'true' : 'false' }} }" class="py-12 min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Messages -->
-            @if(session('success'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
-
             <!-- Nuevo Examen Button -->
             <div class="mb-4 flex justify-end">
                 <button @click="openCreate = true" 
@@ -142,7 +130,7 @@
 
                                             @if($examen->repase_count === 0)
                                                 <form action="{{ route('examenes.destroy', $examen) }}" method="POST" class="inline"
-                                                      onsubmit="return confirm('¿Está seguro de eliminar este examen? Esta acción no se puede deshacer.');">
+                                                       data-confirm="¿Está seguro de eliminar este examen? Esta acción no se puede deshacer.">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" 
@@ -242,7 +230,7 @@
                                     </form>
                                     @if($examen->repase_count === 0)
                                         <form action="{{ route('examenes.destroy', $examen) }}" method="POST" class="flex-1"
-                                              onsubmit="return confirm('¿Está seguro de eliminar este examen? Esta acción no se puede deshacer.');">
+                                              data-confirm="¿Está seguro de eliminar este examen? Esta acción no se puede deshacer."
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" 

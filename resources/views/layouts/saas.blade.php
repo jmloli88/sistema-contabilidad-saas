@@ -59,25 +59,63 @@
                         @endisset
 
                         <!-- Toast Notifications -->
-                        @if(session('success') || session('error') || session('warning'))
-                        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
-                             x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2"
-                             x-transition:leave="transition ease-in duration-200" x-transition:leave-end="opacity-0 translate-y-2"
-                             class="fixed top-4 right-4 z-50 max-w-sm">
-                            <div class="flex items-center p-4 rounded-2xl shadow-lg border
-                                {{ session('success') ? 'bg-green-50 border-green-200 text-green-800' : '' }}
-                                {{ session('error') ? 'bg-red-50 border-red-200 text-red-800' : '' }}
-                                {{ session('warning') ? 'bg-amber-50 border-amber-200 text-amber-800' : '' }}">
-                                <span class="material-symbols-outlined mr-3 text-lg">
-                                    {{ session('success') ? 'check_circle' : (session('error') ? 'error' : 'warning') }}
-                                </span>
-                                <p class="text-sm font-medium flex-1">{{ session('success') ?? session('error') ?? session('warning') }}</p>
-                                <button @click="show = false" class="ml-3 text-current opacity-50 hover:opacity-100">
-                                    <span class="material-symbols-outlined text-base">close</span>
-                                </button>
-                            </div>
+                        <div x-data="toaster" class="fixed top-4 right-4 z-[9999] space-y-2 w-80 max-w-[calc(100vw-2rem)] pointer-events-none">
+                            <template x-for="toast in toasts" :key="toast.id">
+                                <div x-show="toast.visible"
+                                     x-transition:enter="transition ease-out duration-300"
+                                     x-transition:enter-start="opacity-0 translate-x-4"
+                                     x-transition:enter-end="opacity-100 translate-x-0"
+                                     x-transition:leave="transition ease-in duration-200"
+                                     x-transition:leave-start="opacity-100 translate-x-0"
+                                     x-transition:leave-end="opacity-0 translate-x-4"
+                                     :class="toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 
+                                             toast.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : 
+                                             'bg-amber-50 border-amber-200 text-amber-800'"
+                                     class="flex items-center gap-2 px-4 py-3 rounded-xl border shadow-lg text-sm pointer-events-auto">
+                                    <span class="material-symbols-outlined text-base" 
+                                          x-text="toast.type === 'success' ? 'check_circle' : toast.type === 'error' ? 'error' : 'warning'"></span>
+                                    <span class="flex-1" x-text="toast.message"></span>
+                                    <button @click="dismiss(toast.id)" class="text-current opacity-50 hover:opacity-100 shrink-0">
+                                        <span class="material-symbols-outlined text-sm">close</span>
+                                    </button>
+                                </div>
+                            </template>
                         </div>
-                        @endif
+
+                        <script>
+                            document.addEventListener('alpine:init', () => {
+                                Alpine.data('toaster', () => ({
+                                    toasts: [],
+                                    init() {
+                                        const flashData = document.getElementById('flash-data');
+                                        if (flashData) {
+                                            try {
+                                                const data = JSON.parse(flashData.textContent);
+                                                data.forEach(d => this.show(d.message, d.type));
+                                            } catch(e) {}
+                                            flashData.remove();
+                                        }
+                                        window.addEventListener('toast', e => this.show(e.detail.message, e.detail.type));
+                                    },
+                                    show(message, type = 'success') {
+                                        const id = Date.now() + Math.random();
+                                        this.toasts.push({ id, message, type, visible: true });
+                                        setTimeout(() => this.dismiss(id), 4000);
+                                    },
+                                    dismiss(id) {
+                                        const t = this.toasts.find(t => t.id === id);
+                                        if (t) t.visible = false;
+                                        setTimeout(() => { this.toasts = this.toasts.filter(t => t.id !== id); }, 300);
+                                    }
+                                }));
+                            });
+                        </script>
+
+                        <div id="flash-data" class="hidden">@json(array_filter([
+                            session('success') ? ['message' => session('success'), 'type' => 'success'] : null,
+                            session('error') ? ['message' => session('error'), 'type' => 'error'] : null,
+                            session('warning') ? ['message' => session('warning'), 'type' => 'warning'] : null,
+                        ]))</div>
 
                         {{ $slot }}
                     </main>

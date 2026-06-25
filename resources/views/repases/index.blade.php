@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div class="flex items-center gap-3">
@@ -256,13 +256,13 @@
                                                         </a>
                                                         
                                                         @if($repase->estado === 'pendiente')
-                                                            <form action="{{ route('repases.destroy', $repase) }}" method="POST" class="inline">
+                                                             <form action="{{ route('repases.destroy', $repase) }}" method="POST" class="inline" data-confirm="¿Está seguro de eliminar este repase?">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" 
                                                                         class="inline-flex items-center justify-center w-9 h-9 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-all duration-200 hover:scale-110"
                                                                         title="Eliminar"
-                                                                        onclick="return confirm('¿Está seguro de eliminar este repase?')">
+                                                                        >
                                                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                                                                     </svg>
@@ -366,10 +366,10 @@
                                                 Editar
                                             </a>
                                             @if($repase->estado === 'pendiente')
-                                                <form action="{{ route('repases.destroy', $repase) }}" method="POST" class="flex-1">
+                                                 <form action="{{ route('repases.destroy', $repase) }}" method="POST" class="flex-1" data-confirm="¿Está seguro de eliminar este repase?">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="w-full text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none" onclick="return confirm('¿Está seguro de eliminar este repase?')">
+                                                    <button type="submit" class="w-full text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none" >
                                                         Eliminar
                                                     </button>
                                                 </form>

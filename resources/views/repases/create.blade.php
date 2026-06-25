@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Nuevo Repase Médico
@@ -774,14 +774,14 @@
                     
                     // Validar que tipo_precio esté seleccionado
                     if (!this.tipoPrecio) {
-                        alert('Debe seleccionar un tipo de precio.');
+                        window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Debe seleccionar un tipo de precio.', type: 'warning' } }));
                         return;
                     }
                     
                     // Validar que haya al menos un examen con cantidad > 0
                     const tieneExamenes = Object.values(this.examenes).some(cantidad => cantidad > 0);
                     if (!tieneExamenes) {
-                        alert('Debe agregar al menos un examen con cantidad mayor a 0.');
+                        window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Debe agregar al menos un examen con cantidad mayor a 0.', type: 'warning' } }));
                         return;
                     }
                     
@@ -793,7 +793,7 @@
                                       '¿Desea ver o editar el repase existente?\n\n' +
                                       'Haga clic en "Aceptar" para ver el repase existente, o "Cancelar" para quedarse en esta página.';
                         
-                        if (confirm(mensaje)) {
+                        if (await window.__confirm(mensaje)) {
                             window.location.href = this.repaseDuplicadoUrl;
                         }
                         return;

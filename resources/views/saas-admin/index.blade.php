@@ -1,4 +1,4 @@
-<x-saas-layout>
+﻿<x-saas-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight" style="color: #191c22;">
             {{ __('Panel de Administración SaaS') }}
@@ -127,7 +127,7 @@
                                                 </a>
                                                 {{-- Cancelar --}}
                                                 <form action="{{ route('saas.admin.cancel', $u) }}" method="POST" class="inline"
-                                                      onsubmit="return confirm('¿Cancelar suscripción de {{ $u->name }}?')">
+                                                      data-confirm="¿Cancelar suscripción de {{ $u->name }}?">
                                                     @csrf
                                                     <button type="submit" title="Cancelar suscripción"
                                                             class="p-1.5 rounded-xl hover:bg-red-50 text-red-500 transition-colors">
@@ -137,7 +137,7 @@
                                                 {{-- Upgrade / Downgrade plan --}}
                                                 @if($planType === 'standard')
                                                 <form action="{{ route('saas.admin.plan', $u) }}" method="POST" class="inline"
-                                                      onsubmit="return confirm('¿Actualizar suscripción de {{ $u->name }} a PREMIUM?')">
+                                                      data-confirm="¿Actualizar suscripción de {{ $u->name }} a PREMIUM?">
                                                     @csrf
                                                     <input type="hidden" name="plan" value="premium">
                                                     <button type="submit" title="Actualizar a PREMIUM"
@@ -147,7 +147,7 @@
                                                 </form>
                                                 @elseif($planType === 'premium')
                                                 <form action="{{ route('saas.admin.plan', $u) }}" method="POST" class="inline"
-                                                      onsubmit="return confirm('¿Bajar suscripción de {{ $u->name }} a STANDARD?')">
+                                                      data-confirm="¿Bajar suscripción de {{ $u->name }} a STANDARD?">
                                                     @csrf
                                                     <input type="hidden" name="plan" value="standard">
                                                     <button type="submit" title="Bajar a STANDARD"

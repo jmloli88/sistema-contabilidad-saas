@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div class="flex items-center gap-3">
@@ -729,16 +729,16 @@
                         }
                     }
                     
-                    alert(mensaje);
+                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: mensaje, type: 'success' } }));
                     closeModal();
                     calendar.refetchEvents();
                 } else {
-                    alert(data.message || 'Error al guardar la agenda');
+                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: data.message || 'Error al guardar la agenda', type: 'error' } }));
                 }
             })
             .catch(error => {
                 console.error('Error completo:', error);
-                alert('Error al guardar la agenda: ' + error.message);
+                window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Error al guardar la agenda: ' + error.message, type: 'error' } }));
             });
         }
 
@@ -769,17 +769,17 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert(data.message);
+                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: data.message, type: data.success ? 'success' : 'error' } }));
                     closeDeleteModal();
                     closeModal();
                     calendar.refetchEvents();
                 } else {
-                    alert(data.message || 'Error al eliminar la agenda');
+                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: data.message || 'Error al eliminar la agenda', type: 'error' } }));
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al eliminar la agenda');
+                window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Error al eliminar la agenda', type: 'error' } }));
             });
         }
 
@@ -801,7 +801,7 @@
         function exportCalendar() {
             const monthInput = document.getElementById('export_month').value;
             if (!monthInput) {
-                alert('Por favor seleccione un mes');
+                window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Por favor seleccione un mes', type: 'warning' } }));
                 return;
             }
 
@@ -935,11 +935,11 @@
                         // Cerrar modal
                         closeExportModal();
                         
-                        alert('Calendario exportado exitosamente');
+                        window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Calendario exportado exitosamente', type: 'success' } }));
                     }, 'image/jpeg', 0.95);
                 }).catch(error => {
                     console.error('Error al exportar:', error);
-                    alert('Error al exportar el calendario');
+                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Error al exportar el calendario', type: 'error' } }));
                     exportCalendar.destroy();
                     document.body.removeChild(exportContainer);
                     exportBtn.textContent = originalText;

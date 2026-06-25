@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Detalle del Repase
@@ -501,7 +501,7 @@
             @if($repase->estado === 'pendiente')
                 <div class="bg-white rounded-2xl shadow-md border border-gray-100">
                     <div class="p-6">
-                        <form action="{{ route('repases.destroy', $repase) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar este repase? Esta acción no se puede deshacer.')">
+                        <form action="{{ route('repases.destroy', $repase) }}" method="POST" data-confirm="¿Está seguro de eliminar este repase? Esta acción no se puede deshacer.">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl">

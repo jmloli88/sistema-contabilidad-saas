@@ -1,4 +1,4 @@
-<x-saas-layout>
+﻿<x-saas-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl leading-tight" style="color: #191c22;">
@@ -57,7 +57,7 @@
                                                 </a>
                                                 <form action="{{ route('saas.admin.empresas.destroy', $emp->id) }}"
                                                       method="POST" class="inline"
-                                                      onsubmit="return confirm('¿Eliminar la empresa {{ $emp->nombre }}? Esta acción no se puede deshacer si tiene datos asociados.')">
+                                                      data-confirm="¿Eliminar la empresa {{ $emp->nombre }}? Esta acción no se puede deshacer si tiene datos asociados.">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" title="Eliminar"

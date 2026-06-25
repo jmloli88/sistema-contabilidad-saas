@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="border-t pt-6">
-                        <form action="{{ route('clinicas.destroy', $clinica) }}" method="POST" onsubmit="return confirm('¿Está seguro de eliminar esta clínica? Esta acción no se puede deshacer.');">
+                        <form action="{{ route('clinicas.destroy', $clinica) }}" method="POST" data-confirm="¿Está seguro de eliminar esta clínica? Esta acción no se puede deshacer.">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
