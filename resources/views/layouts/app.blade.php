@@ -143,11 +143,12 @@
                             });
                         </script>
 
-                        <div id="flash-data" class="hidden">@json(array_filter([
+                        @php $flashMessages = array_filter([
                             session('success') ? ['message' => session('success'), 'type' => 'success'] : null,
                             session('error') ? ['message' => session('error'), 'type' => 'error'] : null,
                             session('warning') ? ['message' => session('warning'), 'type' => 'warning'] : null,
-                        ]))</div>
+                        ]); @endphp
+                        <div id="flash-data" class="hidden">@json($flashMessages)</div>
 
                         <x-confirm-modal />
 
