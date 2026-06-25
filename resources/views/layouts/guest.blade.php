@@ -36,7 +36,7 @@
                 50%  { transform: translateX(-6%) translateY(5px) scaleY(1.1); }
             }
             .bg-animated {
-                background: linear-gradient(-45deg, #0c4a6e, #0891b2, #06b6d4, #22d3ee, #0e7490, #06b6d4);
+                background: linear-gradient(-45deg, #0a1628, #112240, #1a2a4a, #1e3a5f, #152238, #0f1a2e);
                 background-size: 300% 300%;
                 animation: gradient 10s ease infinite;
             }
@@ -64,23 +64,23 @@
             {{-- Wave layers — positioned at mid-height --}}
             <div class="wave bottom-32 h-64 opacity-30" style="animation: wave1 12s ease-in-out infinite;">
                 <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-                    <path fill="#06b6d4" d="M0,160 C120,260 240,60 480,160 C720,260 840,100 960,180 C1080,260 1200,100 1320,200 L1440,160 L1440,320 L0,320 Z"/>
+                    <path fill="#1e3a5f" d="M0,160 C120,260 240,60 480,160 C720,260 840,100 960,180 C1080,260 1200,100 1320,200 L1440,160 L1440,320 L0,320 Z"/>
                 </svg>
             </div>
             <div class="wave bottom-28 h-56 opacity-20" style="animation: wave2 14s ease-in-out infinite 1s;">
                 <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-                    <path fill="#0891b2" d="M0,224 C96,128 192,96 288,160 C480,288 576,128 768,192 C960,256 1056,160 1152,192 C1296,224 1392,160 1440,128 L1440,320 L0,320 Z"/>
+                    <path fill="#162d50" d="M0,224 C96,128 192,96 288,160 C480,288 576,128 768,192 C960,256 1056,160 1152,192 C1296,224 1392,160 1440,128 L1440,320 L0,320 Z"/>
                 </svg>
             </div>
             <div class="wave bottom-24 h-48 opacity-15" style="animation: wave3 16s ease-in-out infinite 3s;">
                 <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-                    <path fill="#0e7490" d="M0,192 C240,288 384,128 576,160 C816,192 960,256 1200,192 C1320,160 1380,192 1440,224 L1440,320 L0,320 Z"/>
+                    <path fill="#0f2440" d="M0,192 C240,288 384,128 576,160 C816,192 960,256 1200,192 C1320,160 1380,192 1440,224 L1440,320 L0,320 Z"/>
                 </svg>
             </div>
 
             {{-- Top floating shapes for depth --}}
-            <div class="floating-shape w-80 h-80 bg-cyan-400/10 -top-20 -right-20" style="animation: wave2 18s ease-in-out infinite;"></div>
-            <div class="floating-shape w-64 h-64 bg-blue-500/8 top-1/4 -left-20" style="animation: wave1 14s ease-in-out infinite 5s;"></div>
+            <div class="floating-shape w-80 h-80 bg-blue-950/20 -top-20 -right-20" style="animation: wave2 18s ease-in-out infinite;"></div>
+            <div class="floating-shape w-64 h-64 bg-indigo-950/15 top-1/4 -left-20" style="animation: wave1 14s ease-in-out infinite 5s;"></div>
 
             {{-- Main card --}}
             <div class="relative z-10 w-full max-w-md">
